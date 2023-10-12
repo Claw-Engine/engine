@@ -8,11 +8,14 @@ Baixe algum **release** que corresponda à sua versão da Claw. A pasta terá o 
 > setx /M PATH "%PATH%;C:\Local\Do Meu\Clawssets"
 ```
 
-Já para compilar os assets, basta utilizar o comando:
+Já para compilar os assets, basta utilizar o comando "Clawssets" em uma dessas formas:
 
 ```
 > Clawssets [config].cb
-``` 
+> Clawssets
+```
+
+Caso não digite o nome do arquivo de configuração, o compilador irá procurar um arquivo **.cb** na pasta. Se não encontrar, ele pedirá que você especifique o caminho inteiro.
 
 # Como os arquivos funcionam?
 A pasta "Guides" tem uma explicação para o arquivo de configuração e para os arquivos exportáveis, incluindo explicações sobre como eles são exportados.
