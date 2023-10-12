@@ -1,0 +1,1 @@
+﻿@START Clawssets.exe "%1"

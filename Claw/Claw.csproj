@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <ExportDir>$(SolutionDir)..\Claw Engine\Claw\</ExportDir>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{673096A4-9F32-4D37-83B2-AD0DAA73CA45}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Claw</RootNamespace>
+    <AssemblyName>Claw</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <DocumentationFile>bin\Debug\Claw.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\Claw.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animator.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="Audio\Audio.cs" />
+    <Compile Include="Color.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\RandomExtensions.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameComponents.cs" />
+    <Compile Include="GameComponentCollection.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="Graphics\Blend.cs" />
+    <Compile Include="Graphics\BlendFactory.cs" />
+    <Compile Include="Graphics\BlendMode.cs" />
+    <Compile Include="Graphics\BlendFunction.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Draw.cs" />
+    <Compile Include="Graphics\Flip.cs" />
+    <Compile Include="Graphics\Systems\HUD.cs" />
+    <Compile Include="Graphics\NineSlice.cs" />
+    <Compile Include="Graphics\Systems\Parallax.cs" />
+    <Compile Include="Graphics\Renderer.cs" />
+    <Compile Include="Graphics\RenderTarget.cs" />
+    <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Graphics\SpriteFont.cs" />
+    <Compile Include="Graphics\Systems\TextConfig.cs" />
+    <Compile Include="Graphics\Systems\TextEnums.cs" />
+    <Compile Include="Graphics\Systems\TextRenderer.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\TextureAtlas.cs" />
+    <Compile Include="GameComponentTypes.cs" />
+    <Compile Include="Input\Buttons.cs" />
+    <Compile Include="Input\ControllerTypes.cs" />
+    <Compile Include="Input\GameController.cs" />
+    <Compile Include="Input\Input.cs" />
+    <Compile Include="Input\KeyboardState.cs" />
+    <Compile Include="Input\Keys.cs" />
+    <Compile Include="Input\MouseButtons.cs" />
+    <Compile Include="Input\MouseState.cs" />
+    <Compile Include="Input\Systems\CheatCode.cs" />
+    <Compile Include="Input\Systems\InputTags.cs" />
+    <Compile Include="Input\Systems\TaggedInput.cs" />
+    <Compile Include="Input\Systems\TaggedPlayer.cs" />
+    <Compile Include="Line.cs" />
+    <Compile Include="Mathf.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleEmitter.cs" />
+    <Compile Include="Particles\ParticleEmitterConfig.cs" />
+    <Compile Include="Particles\ParticleValue.cs" />
+    <Compile Include="Physics\PlatBody.cs" />
+    <Compile Include="Physics\RayCaster.cs" />
+    <Compile Include="Polygon.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quaternion.cs" />
+    <Compile Include="Rectangle.cs" />
+    <Compile Include="Save.cs" />
+    <Compile Include="SceneManager.cs" />
+    <Compile Include="Wrappers\Clawdio.cs" />
+    <Compile Include="Wrappers\SDL.cs" />
+    <Compile Include="TagManager.cs" />
+    <Compile Include="Tiled\Chunk.cs" />
+    <Compile Include="Tiled\Layer.cs" />
+    <Compile Include="Tiled\Map.cs" />
+    <Compile Include="Tiled\Object.cs" />
+    <Compile Include="Tiled\Property.cs" />
+    <Compile Include="Tiled\Tiled.cs" />
+    <Compile Include="Tiled\Tileset.cs" />
+    <Compile Include="Tilemap.cs" />
+    <Compile Include="Time.cs" />
+    <Compile Include="Utils\ComponentSortingFilteringCollection.cs" />
+    <Compile Include="Utils\StringCrypt.cs" />
+    <Compile Include="Vector3.cs" />
+    <Compile Include="Vector2.cs" />
+    <Compile Include="Window.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Clawdio.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (
+if not exist "$(ExportDir)" mkdir "$(ExportDir)" /Y
+xcopy "$(TargetDir)$(TargetFileName)" "$(ExportDir)" /Y
+xcopy "$(TargetDir)$(AssemblyName).xml" "$(ExportDir)" /Y
+xcopy "$(TargetDir)SDL2.dll" "$(ExportDir)" /Y
+xcopy "$(TargetDir)Clawdio.dll" "$(ExportDir)" /Y
+xcopy "$(TargetDir)Newtonsoft.Json.dll" "$(ExportDir)" /Y
+xcopy "$(TargetDir)Newtonsoft.Json.xml" "$(ExportDir)" /Y
+)</PostBuildEvent>
+  </PropertyGroup>
+</Project>

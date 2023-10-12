@@ -1,0 +1,11 @@
+﻿{
+    "FontName": "Arial",
+    "Size": 22,
+    "Spacing": 0,
+    "Style": "Regular",
+
+    "CharacterRegions": [
+        { "Start": 32, "End": 126 },
+        { "Start": 127, "End": 252 }
+    ]
+}
