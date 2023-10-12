@@ -102,7 +102,6 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Save.cs" />
     <Compile Include="SceneManager.cs" />
-    <Compile Include="Wrappers\Clawdio.cs" />
     <Compile Include="Wrappers\SDL.cs" />
     <Compile Include="TagManager.cs" />
     <Compile Include="Tiled\Chunk.cs" />
@@ -121,9 +120,6 @@
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Clawdio.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="SDL2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

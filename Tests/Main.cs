@@ -29,7 +29,6 @@ namespace Tests
             Font = Asset.Load<SpriteFont>("Fonts/font");
 
             SoundEffect sfx = Asset.Load<SoundEffect>("Sounds/honk");
-            sfx.PlayTest();
         }
         
         protected override void Step()

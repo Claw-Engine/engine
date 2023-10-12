@@ -8,43 +8,90 @@ namespace Claw.Audio
     /// </summary>
     public class Audio
     {
-        private readonly IntPtr audio;
-
-        internal Audio(IntPtr audio) => this.audio = audio;
-
-        public void PlayTest()
+        public readonly int SampleRate;
+        public readonly byte Channels;
+        /// <summary>
+        /// Volume do áudio (entre 0 a 1).
+        /// </summary>
+        public float Volume
         {
-            SDL.SDL_AudioSpec want = new SDL.SDL_AudioSpec(), have;
-
-            Clawdio.set_want(ref want, audio);
-
-            uint dev = SDL.SDL_OpenAudioDevice(IntPtr.Zero, 0, ref want, out have, (int)SDL.SDL_AUDIO_ALLOW_FORMAT_CHANGE);
-            
-            SDL.SDL_PauseAudioDevice(dev, 0);
+            get => volume;
+            set => volume = Mathf.Clamp(value, 0, 1);
         }
+        private float volume = 1;
+
+        internal Audio(int sampleRate, byte channels)
+        {
+            SampleRate = sampleRate;
+            Channels = channels;
+        }
+
+        /// <summary>
+        /// Recebe o tamanho do som em samples.
+        /// </summary>
+        public virtual ushort Length() => 0;
     }
     /// <summary>
     /// Representa um efeito sonoro no jogo.
     /// </summary>
     public class SoundEffect : Audio
     {
-        internal SoundEffect(IntPtr audio) : base(audio) { }
+        private int[] samples;
+
+        public SoundEffect(int sampleRate, byte channels, int[] samples) : base(sampleRate, channels) => this.samples = samples;
 
         /// <summary>
         /// Carrega um efeito sonoro.
         /// </summary>
-        internal static SoundEffect LoadSFX(string filePath) => new SoundEffect(Clawdio.read_audio(filePath, false));
+        internal static SoundEffect LoadSFX(string filePath)
+        {
+            StreamReader reader = new StreamReader(filePath);
+            BinaryReader binReader = new BinaryReader(reader.BaseStream);
+            int sampleRate = binReader.ReadInt32();
+            byte channels = binReader.ReadByte();
+            ushort size = binReader.ReadUInt16();
+            int[] samples = new int[size];
+
+            for (int i = 0; i < size; i++) samples[i] = binReader.ReadInt32();
+
+            binReader.Close();
+            reader.Close();
+
+            return new SoundEffect(sampleRate, channels, samples);
+        }
+
+        /// <summary>
+        /// Recebe o tamanho do som em samples.
+        /// </summary>
+        public override ushort Length() => (ushort)samples.Length;
     }
     /// <summary>
     /// Representa uma música no jogo.
     /// </summary>
     public class Music : Audio
     {
-        internal Music(IntPtr audio) : base(audio) { }
+        private const int AudioStart = 7; // INT32, BYTE, USHORT
+        private ushort size;
+        private BinaryReader reader;
+
+        internal Music(int sampleRate, byte channels) : base(sampleRate, channels) { }
 
         /// <summary>
         /// Carrega uma música.
         /// </summary>
-        internal static SoundEffect LoadMusic(string filePath) => new SoundEffect(Clawdio.read_audio(filePath, true));
+        internal static Music LoadMusic(string filePath)
+        {
+            BinaryReader reader = new BinaryReader(new StreamReader(filePath).BaseStream);
+            int sampleRate = reader.ReadInt32();
+            byte channels = reader.ReadByte();
+            ushort size = reader.ReadUInt16();
+
+            return new Music(sampleRate, channels) { size = size, reader = reader };
+        }
+
+        /// <summary>
+        /// Recebe o tamanho do som em samples.
+        /// </summary>
+        public override ushort Length() => size;
     }
 }

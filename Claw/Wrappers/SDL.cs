@@ -8171,11 +8171,7 @@ namespace Claw
 
         /* userdata refers to a void*, stream to a Uint8 */
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void SDL_AudioCallback(
-            IntPtr userdata,
-            IntPtr stream,
-            int len
-        );
+        public unsafe delegate void SDL_AudioCallback(void* userdata, byte* stream, int len);
 
         [DllImport(nativeLibName, EntryPoint = "SDL_AudioInit", CallingConvention = CallingConvention.Cdecl)]
         private static extern unsafe int INTERNAL_SDL_AudioInit(
