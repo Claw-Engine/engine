@@ -8291,11 +8291,10 @@ namespace Claw
         );
 
         /* format refers to an SDL_AudioFormat */
-        /* This overload allows raw pointers to be passed for dst and src. */
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SDL_MixAudioFormat(
-            IntPtr dst,
-            IntPtr src,
+        public static unsafe extern void SDL_MixAudioFormat(
+            byte* dst,
+            byte* src,
             ushort format,
             uint len,
             int volume
@@ -8332,7 +8331,7 @@ namespace Claw
             IntPtr device,
             int iscapture,
             ref SDL_AudioSpec desired,
-            out SDL_AudioSpec obtained,
+            IntPtr obtained,
             int allowed_changes
         );
 

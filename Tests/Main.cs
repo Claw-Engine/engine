@@ -1,5 +1,6 @@
 ﻿using System;
 using Claw;
+using Claw.Input;
 using Claw.Graphics;
 using Claw.Audio;
 using Claw.Utils;
@@ -29,6 +30,8 @@ namespace Tests
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
             SFX = Asset.Load<SoundEffect>("Sounds/honk");
+
+            Audio.Play(SFX.CreateInstance(), AudioGroup.SoundEffect);
         }
         
         protected override void Step()

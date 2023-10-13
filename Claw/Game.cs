@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Claw.Graphics;
+using Claw.Audio;
 
 namespace Claw
 {
@@ -12,6 +13,7 @@ namespace Claw
         public static Game Instance { get; private set; }
         public Window Window { get; private set; }
         public Renderer Renderer { get; private set; }
+        public AudioManager Audio { get; private set; }
         public Tilemap Tilemap
         {
             get => tilemap;
@@ -39,6 +41,7 @@ namespace Claw
         {
             Window?.Dispose();
             Renderer?.Dispose();
+            Audio?.Dispose();
 
             if (components != null)
             {
@@ -52,6 +55,7 @@ namespace Claw
 
             Window = null;
             Renderer = null;
+            Audio = null;
             isRunning = false;
         }
 
@@ -73,6 +77,7 @@ namespace Claw
                     Instance = this;
                     Window = new Window(window);
                     Renderer = new Renderer(renderer);
+                    Audio = new AudioManager();
                     Renderer.ClearColor = Color.CornflowerBlue;
                     components = new GameComponentCollection();
                 }

@@ -49,6 +49,9 @@
     <Compile Include="Animator.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Audio\Audio.cs" />
+    <Compile Include="Audio\AudioGroup.cs" />
+    <Compile Include="Audio\AudioInstance.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />

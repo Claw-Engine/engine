@@ -8,25 +8,31 @@ namespace Claw.Audio
     /// </summary>
     public class Audio
     {
-        public readonly int SampleRate;
-        public readonly byte Channels;
+        public int SampleRate => audio.freq;
+        public byte Channels => audio.channels;
+        public virtual ushort Length => 0;
+        internal SDL.SDL_AudioSpec audio;
 
         internal Audio(int sampleRate, byte channels)
         {
-            SampleRate = sampleRate;
-            Channels = channels;
+            audio = new SDL.SDL_AudioSpec();
+            audio.freq = sampleRate;
+            audio.channels = channels;
+            audio.format = AudioManager.AudioFormat;
+            audio.samples = AudioManager.BufferSize;
         }
 
         /// <summary>
-        /// Recebe o tamanho do som em samples.
+        /// Cria um <see cref="AudioInstance"/> deste áudio.
         /// </summary>
-        public virtual ushort Length() => 0;
+        public AudioInstance CreateInstance() => new AudioInstance(this);
     }
     /// <summary>
     /// Representa um efeito sonoro no jogo.
     /// </summary>
     public class SoundEffect : Audio
     {
+        public override ushort Length => (ushort)samples.Length;
         private readonly int[] samples;
 
         public SoundEffect(int sampleRate, byte channels, int[] samples) : base(sampleRate, channels) => this.samples = samples;
@@ -50,17 +56,13 @@ namespace Claw.Audio
 
             return new SoundEffect(sampleRate, channels, samples);
         }
-
-        /// <summary>
-        /// Recebe o tamanho do som em samples.
-        /// </summary>
-        public override ushort Length() => (ushort)samples.Length;
     }
     /// <summary>
     /// Representa uma música no jogo.
     /// </summary>
-    public class Music : Audio
+    public class Music : Audio, IDisposable
     {
+        public override ushort Length => size;
         private const int AudioStart = 7; // INT32, BYTE, USHORT
         private ushort size;
         private BinaryReader file;
@@ -69,6 +71,14 @@ namespace Claw.Audio
         {
             this.size = size;
             this.file = file;
+        }
+        ~Music() => Dispose();
+
+        public void Dispose()
+        {
+            file?.Close();
+
+            file = null;
         }
 
         /// <summary>
@@ -83,10 +93,5 @@ namespace Claw.Audio
 
             return new Music(sampleRate, channels, size, reader);
         }
-
-        /// <summary>
-        /// Recebe o tamanho do som em samples.
-        /// </summary>
-        public override ushort Length() => size;
     }
 }
