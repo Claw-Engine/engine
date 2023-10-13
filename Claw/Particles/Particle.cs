@@ -12,6 +12,7 @@ namespace Claw.Particles
     internal class Particle
     {
         public static List<Particle> Pool = new List<Particle>();
+        private static readonly Vector2 origin = new Vector2(.5f);
 
         private float lifeTime, rotation, rotate, counter = 0;
         private Vector2 position;
@@ -131,7 +132,7 @@ namespace Claw.Particles
             if (spriteArea.IsGradient) partArea = spriteArea.GetValue(emitter, true);
         }
 
-        public void Update()
+        public void Step()
         {
             UpdateValues();
 
@@ -152,15 +153,6 @@ namespace Claw.Particles
                 Pool.Add(this);
             }
         }
-
-        public void Draw()
-        {
-            Vector2 origin = new Vector2(.5f);
-
-            if (partArea.HasValue && sprite != null) origin = partArea.Value.Size * .5f;
-            else if (sprite != null) origin = new Vector2(sprite.Width, sprite.Height) * .5f;
-
-            Graphics.Draw.Sprite(sprite, position + emitter.DrawOffset, partArea, partColor ?? Color.White, rotation, origin + emitter.ParticleOriginDistortion, partScale ?? Vector2.One, Flip.None);
-        }
+        public void Render() => Draw.Sprite(sprite, position + emitter.DrawOffset, partArea, partColor ?? Color.White, rotation, origin + emitter.ParticleOriginDistortion, partScale ?? Vector2.One, 0);
     }
 }

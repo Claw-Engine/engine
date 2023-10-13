@@ -10,15 +10,6 @@ namespace Claw.Audio
     {
         public readonly int SampleRate;
         public readonly byte Channels;
-        /// <summary>
-        /// Volume do áudio (entre 0 a 1).
-        /// </summary>
-        public float Volume
-        {
-            get => volume;
-            set => volume = Mathf.Clamp(value, 0, 1);
-        }
-        private float volume = 1;
 
         internal Audio(int sampleRate, byte channels)
         {
@@ -36,7 +27,7 @@ namespace Claw.Audio
     /// </summary>
     public class SoundEffect : Audio
     {
-        private int[] samples;
+        private readonly int[] samples;
 
         public SoundEffect(int sampleRate, byte channels, int[] samples) : base(sampleRate, channels) => this.samples = samples;
 
@@ -72,9 +63,13 @@ namespace Claw.Audio
     {
         private const int AudioStart = 7; // INT32, BYTE, USHORT
         private ushort size;
-        private BinaryReader reader;
+        private BinaryReader file;
 
-        internal Music(int sampleRate, byte channels) : base(sampleRate, channels) { }
+        internal Music(int sampleRate, byte channels, ushort size, BinaryReader file) : base(sampleRate, channels)
+        {
+            this.size = size;
+            this.file = file;
+        }
 
         /// <summary>
         /// Carrega uma música.
@@ -86,7 +81,7 @@ namespace Claw.Audio
             byte channels = reader.ReadByte();
             ushort size = reader.ReadUInt16();
 
-            return new Music(sampleRate, channels) { size = size, reader = reader };
+            return new Music(sampleRate, channels, size, reader);
         }
 
         /// <summary>

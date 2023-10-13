@@ -80,12 +80,12 @@ namespace Claw.Particles
 
             if (!PauseParticles)
             {
-                for (int i = particles.Count - 1; i >= 0; i--) particles[i].Update();
+                for (int i = particles.Count - 1; i >= 0; i--) particles[i].Step();
             }
         }
         public void Render()
         {
-            for (int i = particles.Count - 1; i >= 0; i--) particles[i].Draw();
+            for (int i = particles.Count - 1; i >= 0; i--) particles[i].Render();
         }
     }
 }

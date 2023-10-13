@@ -9,6 +9,7 @@ namespace Tests
     public class Main : Game
     {
         public static SpriteFont Font;
+        public static SoundEffect SFX;
         private ComponentSortingFilteringCollection<IUpdateable> updateables;
         private ComponentSortingFilteringCollection<IDrawable> drawables;
 
@@ -27,8 +28,7 @@ namespace Tests
             TextureAtlas.AddSprites(Asset.Load<Sprite[]>("MainAtlas"));
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
-
-            SoundEffect sfx = Asset.Load<SoundEffect>("Sounds/honk");
+            SFX = Asset.Load<SoundEffect>("Sounds/honk");
         }
         
         protected override void Step()
