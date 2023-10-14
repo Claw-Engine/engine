@@ -60,7 +60,7 @@ namespace Clawssets.Builder.Data
             switch (bitDepth)
             {
                 case 8: return Normalize(reader.ReadSByte(), sbyte.MinValue, sbyte.MaxValue);
-                case 16: return Normalize(reader.ReadInt16(), ushort.MinValue, ushort.MaxValue);
+                case 16: return Normalize(reader.ReadInt16(), short.MinValue, short.MaxValue);
                 case 24: return Normalize(reader.ReadInt24(), Int24.MinValue, Int24.MaxValue);
                 default: return Normalize(reader.ReadInt32(), int.MinValue, int.MaxValue);
             }
