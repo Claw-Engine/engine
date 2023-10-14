@@ -8,18 +8,14 @@ namespace Claw.Audio
     /// </summary>
     public class Audio
     {
-        public int SampleRate => audio.freq;
-        public byte Channels => audio.channels;
+        public readonly int SampleRate;
+        public readonly Channels Channels;
         public virtual ushort Length => 0;
-        internal SDL.SDL_AudioSpec audio;
 
         internal Audio(int sampleRate, byte channels)
         {
-            audio = new SDL.SDL_AudioSpec();
-            audio.freq = sampleRate;
-            audio.channels = channels;
-            audio.format = AudioManager.AudioFormat;
-            audio.samples = AudioManager.BufferSize;
+            SampleRate = sampleRate;
+            Channels = channels >= 2 ? Channels.Stereo : Channels.Mono;
         }
     }
     /// <summary>

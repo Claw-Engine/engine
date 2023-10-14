@@ -49,6 +49,7 @@
     <Compile Include="Animator.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Audio\Audio.cs" />
+    <Compile Include="Audio\Channels.cs" />
     <Compile Include="Audio\SoundEffectGroup.cs" />
     <Compile Include="Audio\SoundEffectInstance.cs" />
     <Compile Include="Audio\AudioManager.cs" />
