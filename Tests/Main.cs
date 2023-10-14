@@ -11,6 +11,7 @@ namespace Tests
     {
         public static SpriteFont Font;
         public static SoundEffect SFX;
+        public static Music Music;
         private ComponentSortingFilteringCollection<IUpdateable> updateables;
         private ComponentSortingFilteringCollection<IDrawable> drawables;
 
@@ -30,6 +31,9 @@ namespace Tests
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
             SFX = Asset.Load<SoundEffect>("Sounds/honk");
+            //Music = Asset.Load<Music>("Sounds/music");
+
+            //Audio.SetMusic(Music);
         }
         
         protected override void Step()

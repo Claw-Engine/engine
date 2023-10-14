@@ -42,7 +42,7 @@ namespace Clawssets.Builder.Data
                 }
                 else if (bitDepth != -1 && header.CompareHeader("data"))
                 {
-                    audio.Samples = new float[chunkSize / audio.Channels];
+                    audio.Samples = new float[chunkSize / (bitDepth / 8)];
                     
                     for (int i = 0; i < audio.Samples.Length; i++) audio.Samples[i] = ReadSample(bitDepth, reader);
                 }

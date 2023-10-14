@@ -112,7 +112,7 @@ namespace Claw.Audio
         {
             float sample = file.ReadSingle();
 
-            if (file.BaseStream.Position >= AudioStart + size) file.BaseStream.Position = AudioStart;
+            if (file.BaseStream.Position >= AudioStart + size * 4) file.BaseStream.Position = AudioStart;
 
             return sample;
         }

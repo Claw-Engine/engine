@@ -20,17 +20,25 @@ namespace Claw.Audio
         /// <summary>
         /// Volume geral (entre 0 e 1).
         /// </summary>
-        public float MasterVolume = 1;
+        public float MasterVolume
+        {
+            get => masterVolume;
+            set => masterVolume = Mathf.Clamp(value, 0, 1);
+        }
         /// <summary>
         /// Volume geral das músicas (entre 0 e 1).
         /// </summary>
-        public float MusicVolume = 1;
+        public float MusicVolume
+        {
+            get => musicVolume;
+            set => musicVolume = Mathf.Clamp(value, 0, 1);
+        }
         /// <summary>
         /// Evento executado quando um efeito sonoro termina, sem loop.
         /// </summary>
         public event Action<SoundEffectInstance> OnSoundEffectEnd;
 
-        private float fadeMultipliyer = 1;
+        private float fadeMultipliyer = 1, masterVolume = 1, musicVolume = 1;
         internal ushort musicOffset = 0;
         private Music music, nextMusic;
         private float[] groupVolumes;
@@ -115,6 +123,9 @@ namespace Claw.Audio
             nextMusic = music;
         }
 
+        /// <summary>
+        /// Callback de manuseio do buffer de áudio.
+        /// </summary>
         private unsafe void AudioCallback(void* userData, byte* stream, int length)
         {
             if (music != nextMusic) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
@@ -132,45 +143,22 @@ namespace Claw.Audio
 
                 if (music != null)
                 {
-                    sample = MasterVolume * (MusicVolume * fadeMultipliyer) * music.GetSample();
+                    sample = music.GetSample() * (musicVolume * fadeMultipliyer);
 
-                    if (music.Channels == Channels.Stereo)
-                    {
-                        buffer[i] = sample * .5f;
-                        buffer[i + 1] = sample * .5f;
-                    }
-                    else
-                    {
-                        buffer[i] = sample;
-                        buffer[i + 1] = sample;
-                    }
+                    SetSample(buffer, i, sample, music.Channels);
                 }
 
-                if (soundEffects.Count != 0)
+                for (int j = 0; j < soundEffects.Count; j++)
                 {
-                    for (int j = 0; j < soundEffects.Count; j++)
+                    current = soundEffects[j];
+                    sample = current.GetSample(out finished) * groupVolumes[(int)current.Group];
+
+                    SetSample(buffer, i, sample, current.audio.Channels);
+
+                    if (finished && !current.IsLooped)
                     {
-                        current = soundEffects[j];
-                        sample = MasterVolume * groupVolumes[(int)current.Group] * current.GetSample(out finished);
-                        sample = Mathf.Clamp(buffer[i] + sample, -1, 1);
-
-                        if (current.audio.Channels == Channels.Stereo)
-                        {
-                            sample *= .5f;
-                            buffer[i] = sample;
-                            buffer[i + 1] = sample;
-                        }
-                        else
-                        {
-                            buffer[i] = sample;
-                            buffer[i + 1] = sample;
-                        }
-
-                        if (finished &&  !current.IsLooped)
-                        {
-                            OnSoundEffectEnd?.Invoke(current);
-                            RemoveAt(soundEffects, j);
-                        }
+                        OnSoundEffectEnd?.Invoke(current);
+                        RemoveAt(soundEffects, j);
                     }
                 }
             }
@@ -181,6 +169,21 @@ namespace Claw.Audio
                 fadeMultipliyer = 1;
                 musicOffset = 0;
             }
+        }
+        /// <summary>
+        /// Seta um sample em um índice e no seguinte.
+        /// </summary>
+        private unsafe void SetSample(float* buffer, int index, float sample, Channels channels)
+        {
+            sample *= masterVolume;
+
+            if (channels == Channels.Stereo) sample *= .5f;
+
+            float sample1 = Mathf.Clamp(buffer[index] + sample, -1, 1),
+                sample2 = Mathf.Clamp(buffer[index + 1] + sample, -1, 1);
+
+            buffer[index] = sample1;
+            buffer[index + 1] = sample2;
         }
         /// <summary>
         /// Remove um item da lista, sem se preocupar com a ordem.
