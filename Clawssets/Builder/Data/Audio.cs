@@ -15,7 +15,7 @@ namespace Clawssets.Builder.Data
         {
             public int SampleRate;
             public byte Channels;
-            public int[] Samples;
+            public float[] Samples;
         }
         
         /// <summary>

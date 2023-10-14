@@ -30,12 +30,12 @@ namespace Tests
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
             SFX = Asset.Load<SoundEffect>("Sounds/honk");
-
-            Audio.Play(SFX.CreateInstance(), AudioGroup.SoundEffect);
         }
         
         protected override void Step()
         {
+            if (Input.KeyPressed(Keys.Space)) Audio.Play(SFX.CreateInstance(SoundEffectGroup.SoundEffect));
+
             updateables.ForEach((u) => u.Step());
         }
 
