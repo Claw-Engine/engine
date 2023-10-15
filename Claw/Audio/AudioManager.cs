@@ -71,11 +71,11 @@ namespace Claw.Audio
 
         public void Dispose()
         {
-            soundEffects?.Clear();
+            soundEffects.Clear();
 
             groupVolumes = null;
-            soundEffects = null;
-            music = null;
+            nextMusic = null;
+            want.callback = null;
 
             if (device != 0)
             {

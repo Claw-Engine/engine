@@ -73,7 +73,7 @@ namespace Claw.Audio
             set => volume = Mathf.Clamp(value, 0, 1);
         }
         public override long Length => file.BaseStream.Length / 4;
-        private const int AudioStart = 5; // INT32, BYTE
+        private const int AudioStart = 13; // INT32, BYTE, INT64
         private float volume = 1;
         private BinaryReader file;
 
