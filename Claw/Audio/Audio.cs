@@ -10,7 +10,7 @@ namespace Claw.Audio
     {
         public readonly int SampleRate;
         public readonly Channels Channels;
-        public virtual ushort Length => 0;
+        public virtual long Length => 0;
 
         internal Audio(int sampleRate, byte channels)
         {
@@ -23,7 +23,7 @@ namespace Claw.Audio
     /// </summary>
     public class SoundEffect : Audio
     {
-        public override ushort Length => (ushort)samples.Length;
+        public override long Length => samples.LongLength;
         private readonly float[] samples;
         
         /// <param name="samples">Valores entre -1 e 1.</param>
@@ -43,10 +43,10 @@ namespace Claw.Audio
             BinaryReader binReader = new BinaryReader(reader.BaseStream);
             int sampleRate = binReader.ReadInt32();
             byte channels = binReader.ReadByte();
-            ushort size = binReader.ReadUInt16();
+            long size = binReader.ReadInt64();
             float[] samples = new float[size];
 
-            for (int i = 0; i < size; i++) samples[i] = binReader.ReadSingle();
+            for (long i = 0; i < size; i++) samples[i] = binReader.ReadSingle();
 
             binReader.Close();
             reader.Close();
@@ -72,17 +72,12 @@ namespace Claw.Audio
             get => volume;
             set => volume = Mathf.Clamp(value, 0, 1);
         }
-        public override ushort Length => size;
-        private const int AudioStart = 7; // INT32, BYTE, USHORT
+        public override long Length => file.BaseStream.Length / 4;
+        private const int AudioStart = 5; // INT32, BYTE
         private float volume = 1;
-        private ushort size;
         private BinaryReader file;
 
-        internal Music(int sampleRate, byte channels, ushort size, BinaryReader file) : base(sampleRate, channels)
-        {
-            this.size = size;
-            this.file = file;
-        }
+        internal Music(int sampleRate, byte channels, BinaryReader file) : base(sampleRate, channels) => this.file = file;
         ~Music() => Dispose();
 
         public void Dispose()
@@ -100,11 +95,14 @@ namespace Claw.Audio
             BinaryReader reader = new BinaryReader(new StreamReader(filePath).BaseStream);
             int sampleRate = reader.ReadInt32();
             byte channels = reader.ReadByte();
-            ushort size = reader.ReadUInt16();
 
-            return new Music(sampleRate, channels, size, reader);
+            return new Music(sampleRate, channels, reader);
         }
 
+        /// <summary>
+        /// Reseta a posição da stream.
+        /// </summary>
+        internal void ResetPosition() => file.BaseStream.Position = AudioStart;
         /// <summary>
         /// Retorna o próximo sample.
         /// </summary>
@@ -112,7 +110,7 @@ namespace Claw.Audio
         {
             float sample = file.ReadSingle();
 
-            if (file.BaseStream.Position >= AudioStart + size * 4) file.BaseStream.Position = AudioStart;
+            if (file.BaseStream.Position >= file.BaseStream.Length) file.BaseStream.Position = AudioStart;
 
             return sample;
         }

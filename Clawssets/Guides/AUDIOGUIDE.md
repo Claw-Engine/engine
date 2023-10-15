@@ -4,5 +4,5 @@ O compilador suporta as extensões `.wav(PCM)`.
 Os áudios são salvos num formato cru, sem nenhum tipo de compressão:
 
 ```
-[int:TaxaDeSamples][byte:Canais][ushort:NúmeroDeSamples][float[]:Samples]
+[int:TaxaDeSamples][byte:Canais][long:NúmeroDeSamples][float[]:Samples]
 ```

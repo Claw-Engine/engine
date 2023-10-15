@@ -45,9 +45,9 @@ namespace Clawssets.Builder
         {
             writer.Write(sound.SampleRate);
             writer.Write(sound.Channels);
-            writer.Write((ushort)sound.Samples.Length);
+            writer.Write(sound.Samples.LongLength);
 
-            for (int i = 0; i < sound.Samples.Length; i++) writer.Write(sound.Samples[i]);
+            for (long i = 0; i < sound.Samples.Length; i++) writer.Write(sound.Samples[i]);
         }
     }
 }

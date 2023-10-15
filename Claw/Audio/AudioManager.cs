@@ -16,7 +16,7 @@ namespace Claw.Audio
         /// <summary>
         /// Velocidade de transição entre músicas.
         /// </summary>
-        public float FadeSpeed = .1f;
+        public static float FadeSpeed = .01f;
         /// <summary>
         /// Volume geral (entre 0 e 1).
         /// </summary>
@@ -39,7 +39,6 @@ namespace Claw.Audio
         public event Action<SoundEffectInstance> OnSoundEffectEnd;
 
         private float fadeMultipliyer = 1, masterVolume = 1, musicVolume = 1;
-        internal ushort musicOffset = 0;
         private Music music, nextMusic;
         private float[] groupVolumes;
         private List<SoundEffectInstance> soundEffects;
@@ -119,8 +118,10 @@ namespace Claw.Audio
         public void SetMusic(Music music)
         {
             if (this.music == null) this.music = music;
-
+            
             nextMusic = music;
+
+            if (music != null) music.ResetPosition();
         }
 
         /// <summary>
@@ -128,7 +129,8 @@ namespace Claw.Audio
         /// </summary>
         private unsafe void AudioCallback(void* userData, byte* stream, int length)
         {
-            if (music != nextMusic) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
+            if (music != nextMusic && fadeMultipliyer != 0) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
+            else if (music == nextMusic && fadeMultipliyer != 1) fadeMultipliyer = Math.Min(fadeMultipliyer + Math.Abs(FadeSpeed), 1);
 
             length /= 4;
             float* buffer = (float*)stream;
@@ -143,17 +145,17 @@ namespace Claw.Audio
 
                 if (music != null)
                 {
-                    sample = music.GetSample() * (musicVolume * fadeMultipliyer);
+                    sample = music.GetSample();
 
-                    SetSample(buffer, i, sample, music.Channels);
+                    SetSample(buffer, i, sample, (musicVolume * fadeMultipliyer), music.Channels);
                 }
 
                 for (int j = 0; j < soundEffects.Count; j++)
                 {
                     current = soundEffects[j];
-                    sample = current.GetSample(out finished) * groupVolumes[(int)current.Group];
+                    sample = current.GetSample(out finished);
 
-                    SetSample(buffer, i, sample, current.audio.Channels);
+                    SetSample(buffer, i, sample, groupVolumes[(int)current.Group], current.audio.Channels);
 
                     if (finished && !current.IsLooped)
                     {
@@ -163,19 +165,14 @@ namespace Claw.Audio
                 }
             }
 
-            if (fadeMultipliyer == 0)
-            {
-                music = nextMusic;
-                fadeMultipliyer = 1;
-                musicOffset = 0;
-            }
+            if (fadeMultipliyer == 0) music = nextMusic;
         }
         /// <summary>
         /// Seta um sample em um índice e no seguinte.
         /// </summary>
-        private unsafe void SetSample(float* buffer, int index, float sample, Channels channels)
+        private unsafe void SetSample(float* buffer, int index, float sample, float volume, Channels channels)
         {
-            sample *= masterVolume;
+            sample *= masterVolume * volume;
 
             if (channels == Channels.Stereo) sample *= .5f;
 

@@ -44,7 +44,7 @@ namespace Clawssets.Builder.Data
                 {
                     audio.Samples = new float[chunkSize / (bitDepth / 8)];
                     
-                    for (int i = 0; i < audio.Samples.Length; i++) audio.Samples[i] = ReadSample(bitDepth, reader);
+                    for (long i = 0; i < audio.Samples.Length; i++) audio.Samples[i] = ReadSample(bitDepth, reader);
                 }
                 else reader.BaseStream.Position += chunkSize;
             }
@@ -59,18 +59,13 @@ namespace Clawssets.Builder.Data
         {
             switch (bitDepth)
             {
-                case 8: return Normalize(reader.ReadSByte(), sbyte.MinValue, sbyte.MaxValue);
-                case 16: return Normalize(reader.ReadInt16(), short.MinValue, short.MaxValue);
-                case 24: return Normalize(reader.ReadInt24(), Int24.MinValue, Int24.MaxValue);
-                default: return Normalize(reader.ReadInt32(), int.MinValue, int.MaxValue);
+                case 8: return Normalize(reader.ReadSByte(), bitDepth);
+                case 16: return Normalize(reader.ReadInt16(), bitDepth);
+                case 24: return Normalize(reader.ReadInt24(), bitDepth);
+                default: return Normalize(reader.ReadInt32(), bitDepth);
             }
         }
-        private static float Normalize(float value, int min, int max)
-        {
-            if (value >= 0) return value / max;
-
-            return -(value / min);
-        }
+        private static float Normalize(float value, int bitDepth) => (float)(value / Math.Pow(2, bitDepth - 1));
 
         /// <summary>
         /// Representa um inteiro de 24 bits.
