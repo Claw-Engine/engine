@@ -57,7 +57,7 @@ namespace Claw.Audio
         /// <summary>
         /// Retorna um sample específico.
         /// </summary>
-        internal float GetSample(ushort position) => samples[position];
+        internal float GetSample(long position) => samples[position];
     }
     /// <summary>
     /// Representa uma música no jogo.

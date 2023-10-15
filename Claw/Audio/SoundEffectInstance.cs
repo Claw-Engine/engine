@@ -19,7 +19,7 @@ namespace Claw.Audio
         }
         public readonly SoundEffectGroup Group;
         private float volume = 1;
-        internal ushort offset = 0;
+        internal long offset = 0;
         internal SoundEffect audio;
 
         public SoundEffectInstance(SoundEffect audio, SoundEffectGroup group)
