@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Claw.Audio;
 
 namespace Clawssets.Builder.Data
 {
@@ -16,6 +17,39 @@ namespace Clawssets.Builder.Data
             public int SampleRate;
             public byte Channels;
             public float[] Samples;
+
+            /// <summary>
+            /// Padroniza o sample rate para <see cref="AudioManager.SampleRate"/>
+            /// </summary>
+            public void Resample()
+            {
+                if (SampleRate != AudioManager.SampleRate)
+                {
+                    float factor = 0;
+                    float[] resampled = null;
+
+                    if (AudioManager.SampleRate > SampleRate) // Upsample
+                    {
+                        factor = (float)AudioManager.SampleRate / SampleRate;
+                        resampled = new float[(long)(Samples.LongLength * factor)];
+
+                        for (long i = 0; i < Samples.LongLength; i++)
+                        {
+                            long index = (long)(i * factor);
+
+                            if (index != resampled.LongLength - 1)
+                            {
+                                for (int j = 1; j < factor; j++) resampled[index + j] = Samples[i];
+                            }
+
+                            resampled[index] = Samples[i];
+                        }
+
+                        SampleRate = AudioManager.SampleRate;
+                        Samples = resampled;
+                    }
+                }
+            }
         }
         
         /// <summary>
@@ -38,6 +72,7 @@ namespace Clawssets.Builder.Data
             }
 
             binReader.Close();
+            result?.Resample();
 
             return result;
         }

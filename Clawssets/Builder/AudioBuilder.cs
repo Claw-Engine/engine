@@ -43,7 +43,6 @@ namespace Clawssets.Builder
         /// </summary>
         private static void Write(this BinaryWriter writer, Audio.Description sound)
         {
-            writer.Write(sound.SampleRate);
             writer.Write(sound.Channels);
             writer.Write(sound.Samples.LongLength);
 

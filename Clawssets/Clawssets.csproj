@@ -62,6 +62,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Data Type\Int24.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -66,19 +66,5 @@ namespace Clawssets.Builder.Data
             }
         }
         private static float Normalize(float value, int bitDepth) => (float)(value / Math.Pow(2, bitDepth - 1));
-
-        /// <summary>
-        /// Representa um inteiro de 24 bits.
-        /// </summary>
-        private struct Int24
-        {
-            public const int MaxValue = 8_388_607, MinValue = -8_388_608;
-            private int value;
-
-            public static implicit operator int(Int24 value) => value.value;
-            public static implicit operator Int24(byte[] bytes) => new Int24() { value = (bytes[0] << 16) | (bytes[1] << 8) | bytes[2] };
-        }
-
-        private static Int24 ReadInt24(this BinaryReader reader) => reader.ReadBytes(3);
     }
 }

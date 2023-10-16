@@ -5,10 +5,11 @@ using Claw.Extensions;
 namespace Claw.Audio
 {
     /// <summary>
-    /// Controla os áudios.
+    /// Representa o controle de áudios do jogo.
     /// </summary>
     public sealed class AudioManager : IDisposable
     {
+        public const int SampleRate = 48000;
         /// <summary>
         /// Máximo de efeitos sonoros simultâneos.
         /// </summary>
@@ -17,6 +18,8 @@ namespace Claw.Audio
         /// Velocidade de transição entre músicas.
         /// </summary>
         public static float FadeSpeed = .01f;
+
+        public bool PauseMusic = false;
         /// <summary>
         /// Volume geral (entre 0 e 1).
         /// </summary>
@@ -49,13 +52,13 @@ namespace Claw.Audio
 
         internal unsafe AudioManager()
         {
-            want.freq = 48000;
+            want.freq = SampleRate * 2;
             want.channels = 2;
             want.samples = BufferSize;
             want.format = AudioFormat;
             want.callback = AudioCallback;
 
-            device = SDL.SDL_OpenAudioDevice(IntPtr.Zero, 0, ref want, IntPtr.Zero, (int)SDL.SDL_AUDIO_ALLOW_ANY_CHANGE);
+            device = SDL.SDL_OpenAudioDevice(IntPtr.Zero, 0, ref want, IntPtr.Zero, 0);
 
             if (device == 0) throw new Exception("O sistema não conseguiu iniciar o AudioManager!");
 
@@ -100,7 +103,7 @@ namespace Claw.Audio
         /// </summary>
         public void Play(SoundEffectInstance soundEffect)
         {
-            if (soundEffects.Count < MaxConcurrent)
+            if (soundEffect != null && soundEffects.Count < MaxConcurrent)
             {
                 soundEffect.offset = 0;
 
@@ -129,8 +132,11 @@ namespace Claw.Audio
         /// </summary>
         private unsafe void AudioCallback(void* userData, byte* stream, int length)
         {
-            if (music != nextMusic && fadeMultipliyer != 0) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
-            else if (music == nextMusic && fadeMultipliyer != 1) fadeMultipliyer = Math.Min(fadeMultipliyer + Math.Abs(FadeSpeed), 1);
+            if (!PauseMusic)
+            {
+                if (music != nextMusic && fadeMultipliyer != 0) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
+                else if (music == nextMusic && fadeMultipliyer != 1) fadeMultipliyer = Math.Min(fadeMultipliyer + Math.Abs(FadeSpeed), 1);
+            }
 
             length /= 4;
             float* buffer = (float*)stream;
@@ -143,24 +149,28 @@ namespace Claw.Audio
                 buffer[i] = 0;
                 buffer[i + 1] = 0;
 
-                if (music != null)
+                if (!PauseMusic && music != null)
                 {
                     sample = music.GetSample();
 
                     SetSample(buffer, i, sample, (musicVolume * fadeMultipliyer), music.Channels);
                 }
 
-                for (int j = 0; j < soundEffects.Count; j++)
+                for (int j = soundEffects.Count - 1; j >= 0; j--)
                 {
                     current = soundEffects[j];
-                    sample = current.GetSample(out finished);
-
-                    SetSample(buffer, i, sample, groupVolumes[(int)current.Group], current.audio.Channels);
-
-                    if (finished && !current.IsLooped)
+                    
+                    if (current != null)
                     {
-                        OnSoundEffectEnd?.Invoke(current);
-                        RemoveAt(soundEffects, j);
+                        sample = current.GetSample(out finished);
+
+                        SetSample(buffer, i, sample, groupVolumes[(int)current.Group], current.audio.Channels);
+
+                        if (finished && !current.IsLooped)
+                        {
+                            OnSoundEffectEnd?.Invoke(current);
+                            RemoveAt(soundEffects, j);
+                        }
                     }
                 }
             }
@@ -172,6 +182,8 @@ namespace Claw.Audio
         /// </summary>
         private unsafe void SetSample(float* buffer, int index, float sample, float volume, Channels channels)
         {
+            if (sample == 0) return;
+
             sample *= masterVolume * volume;
 
             if (channels == Channels.Stereo) sample *= .5f;

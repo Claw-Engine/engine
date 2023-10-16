@@ -60,7 +60,6 @@
     <None Include="Assets\Tests.cb" />
     <Content Include="Assets\collision_tiles.png" />
     <None Include="Assets\font.csf" />
-    <Content Include="Assets\honk.wav" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

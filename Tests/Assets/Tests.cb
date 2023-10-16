@@ -6,6 +6,3 @@ collision_tiles.png
 
 #SpriteFont:Fonts
 font.csf
-
-#Audio:Sounds
-honk.wav

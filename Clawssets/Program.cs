@@ -10,6 +10,11 @@ namespace Clawssets
         {
             string configFile = string.Empty;
 
+#if DEBUG
+            configFile = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Tests/Assets/Tests.cb"));
+
+            Console.WriteLine("Compilando \"{0}\"...", configFile);
+#else
             if (args.Length > 0 && args[0].Length > 0) configFile = args[0];
             else
             {
@@ -32,6 +37,7 @@ namespace Clawssets
 
                 configFile = Console.ReadLine();
             }
+#endif
 
             if (configFile.Length > 0)
             {

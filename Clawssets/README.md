@@ -24,7 +24,8 @@ A pasta "Guides" tem uma explicação para o arquivo de configuração e para os
 Abaixo, a lista de dependências, com os motivos:
 * Claw:
     * Para acessar as estruturas do Claw.Tiled;
-    * Para acessar o Claw.Graphics.SpriteFont.Glyph.
+    * Para acessar o Claw.Graphics.SpriteFont.Glyph;
+	* Para acessar o Claw.Audio.AudioManager.SampleRate.
 * Newtonsoft.Json:
     * Para carregar os mapas **.json** e **.tmj** do Tiled;
     * Para carregar as descrições de fonte **.csf**.

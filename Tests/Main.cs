@@ -10,8 +10,6 @@ namespace Tests
     public class Main : Game
     {
         public static SpriteFont Font;
-        public static SoundEffect SFX;
-        public static Music Music;
         private ComponentSortingFilteringCollection<IUpdateable> updateables;
         private ComponentSortingFilteringCollection<IDrawable> drawables;
 
@@ -30,16 +28,10 @@ namespace Tests
             TextureAtlas.AddSprites(Asset.Load<Sprite[]>("MainAtlas"));
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
-            SFX = Asset.Load<SoundEffect>("Sounds/honk");
-            //Music = Asset.Load<Music>("Sounds/music");
-
-            //Audio.SetMusic(Music);
         }
         
         protected override void Step()
         {
-            if (Input.KeyPressed(Keys.Space)) Audio.Play(SFX.CreateInstance(SoundEffectGroup.SoundEffect));
-
             updateables.ForEach((u) => u.Step());
         }
 

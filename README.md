@@ -11,8 +11,7 @@ Pelos sistemas já terem sido testados em infinitos jogos, dificilmente as coisa
 **Importante**: A versão só começará a contar assim que o áudio estiver pronto.
 
 ## Tarefas pendentes (ordem de prioridade)
-- Suporte para áudio (em andamento);
 - Templates para o Visual Studio;
-- Página web para documentação;
+- Documentação;
 - (?) Remover dependência do Newtonsoft.Json do Claw.Save;
 - Suporte para shaders.
