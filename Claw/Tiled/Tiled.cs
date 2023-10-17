@@ -142,7 +142,9 @@ namespace Claw.Tiled
                             if (GetPropertyValue(tObject.properties, "TiledIgnore", "bool", false)) continue;
                             else if (GetPropertyValue(tObject.properties, "NotGameObject", "bool", false))
                             {
-                                Config.Instantiate<object>(tObject.type);
+                                object obj = Config.Instantiate<object>(tObject.type);
+
+                                foreach (Property property in tObject.properties) SetProp(obj, property);
 
                                 continue;
                             }
@@ -222,17 +224,17 @@ namespace Claw.Tiled
         /// <summary>
         /// Seta o valor da propriedade de um objeto.
         /// </summary>
-        private static void SetProp(GameObject gameObject, Property property)
+        private static void SetProp(object @object, Property property)
         {
-            if (gameObject != null)
+            if (@object != null)
             {
-                var propInfo = gameObject.GetType().GetProperty(property.name);
+                System.Reflection.PropertyInfo propInfo = @object.GetType().GetProperty(property.name);
                 
                 if (propInfo != null)
                 {
-                    if (property.type == "color") propInfo.SetValue(gameObject, new Color(property.value.ToString(), Color.HexFormat.ARGB));
-                    else if (property.type == "int") propInfo.SetValue(gameObject, Convert.ToInt32(property.value));
-                    else propInfo.SetValue(gameObject, property.value);
+                    if (property.type == "color") propInfo.SetValue(@object, new Color(property.value.ToString(), Color.HexFormat.ARGB));
+                    else if (property.type == "int") propInfo.SetValue(@object, Convert.ToInt32(property.value));
+                    else propInfo.SetValue(@object, property.value);
                 }
             }
         }
