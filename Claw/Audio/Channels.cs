@@ -3,5 +3,5 @@
     /// <summary>
     /// Define os tipos de distribuição de canais.
     /// </summary>
-    public enum Channels { Mono = 1, Stereo = 2 }
+    public enum Channels : byte { Mono = 1, Stereo = 2 }
 }

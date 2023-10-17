@@ -140,8 +140,15 @@ namespace Claw.Tiled
                         foreach (Object tObject in layer.objects)
                         {
                             if (GetPropertyValue(tObject.properties, "TiledIgnore", "bool", false)) continue;
+                            else if (GetPropertyValue(tObject.properties, "NotGameObject", "bool", false))
+                            {
+                                Config.Instantiate<object>(tObject.type);
 
-                            var gameObject = Config.Instantiate(tObject.type, new Vector2(tObject.x, tObject.y));
+                                continue;
+                            }
+
+                            GameObject gameObject = Config.Instantiate<GameObject>(tObject.type);
+                            gameObject.Position = new Vector2(tObject.x, tObject.y);
                             gameObject.Name = tObject.name;
                             gameObject.Rotation = tObject.rotation;
 
@@ -240,7 +247,7 @@ namespace Claw.Tiled
 
         public Config(string prefixNamespace)
         {
-            this.prefixNamespace = prefixNamespace + ".";
+            this.prefixNamespace = prefixNamespace;
             assemblyName = Game.Instance.GetType().Assembly.FullName;
         }
         
@@ -251,17 +258,11 @@ namespace Claw.Tiled
         {
             for (int i = 0; i < palettes.Length; i++) this.palettes.Add(palettes[i], palettesTexture[i]);
         }
-
+        
         /// <summary>
-        /// Cria a instância de um objeto.
+        /// Cria uma instância, com base no namespace.
         /// </summary>
-        internal GameObject Instantiate(string type, Vector2 position)
-        {
-            var gO = (GameObject)Activator.CreateInstance(assemblyName, prefixNamespace + type).Unwrap();
-            gO.Position = position;
-            
-            return gO;
-        }
+        internal T Instantiate<T>(string type) => (T)Activator.CreateInstance(assemblyName, string.Format("{0}.{1}", prefixNamespace, type)).Unwrap();
 
         /// <summary>
         /// Checa se uma paleta existe no <see cref="palettes"/>.

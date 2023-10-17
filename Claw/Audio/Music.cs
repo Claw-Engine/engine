@@ -42,9 +42,9 @@ namespace Claw.Audio
         internal static Music LoadMusic(string filePath)
         {
             BinaryReader reader = new BinaryReader(new StreamReader(filePath).BaseStream);
-            byte channels = reader.ReadByte();
+            Channels channels = (Channels)reader.ReadByte();
 
-            return new Music((Channels)channels, reader);
+            return new Music(channels, reader);
         }
 
         /// <summary>

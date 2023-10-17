@@ -15,8 +15,8 @@ namespace Claw.Audio
         /// <param name="samples">Valores entre -1 e 1.</param>
         public SoundEffect(Channels channels, float[] samples)
         {
+            Channels = channels;
             this.samples = samples;
-            Channels = Channels;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Claw.Audio
         {
             StreamReader reader = new StreamReader(filePath);
             BinaryReader binReader = new BinaryReader(reader.BaseStream);
-            byte channels = binReader.ReadByte();
+            Channels channels = (Channels)binReader.ReadByte();
             long size = binReader.ReadInt64();
             float[] samples = new float[size];
 
@@ -40,7 +40,7 @@ namespace Claw.Audio
             binReader.Close();
             reader.Close();
 
-            return new SoundEffect((Channels)channels, samples);
+            return new SoundEffect(channels, samples);
         }
 
         /// <summary>

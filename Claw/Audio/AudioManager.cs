@@ -52,7 +52,7 @@ namespace Claw.Audio
 
         internal unsafe AudioManager()
         {
-            want.freq = SampleRate * 2;
+            want.freq = SampleRate;
             want.channels = 2;
             want.samples = BufferSize;
             want.format = AudioFormat;
@@ -141,7 +141,6 @@ namespace Claw.Audio
             length /= 4;
             float* buffer = (float*)stream;
             bool finished;
-            float sample;
             SoundEffectInstance current;
 
             for (int i = 0; i < length; i += 2)
@@ -151,9 +150,9 @@ namespace Claw.Audio
 
                 if (!PauseMusic && music != null)
                 {
-                    sample = music.GetSample();
+                    SetSample(buffer, i, music.GetSample(), (musicVolume * fadeMultipliyer), music.Channels);
 
-                    SetSample(buffer, i, sample, (musicVolume * fadeMultipliyer), music.Channels);
+                    if (music.Channels == Channels.Stereo) SetSample(buffer, i + 1, music.GetSample(), (musicVolume * fadeMultipliyer), 0);
                 }
 
                 for (int j = soundEffects.Count - 1; j >= 0; j--)
@@ -162,9 +161,9 @@ namespace Claw.Audio
                     
                     if (current != null)
                     {
-                        sample = current.GetSample(out finished);
-
-                        SetSample(buffer, i, sample, groupVolumes[(int)current.Group], current.audio.Channels);
+                        SetSample(buffer, i, current.GetSample(out finished), groupVolumes[(int)current.Group], current.audio.Channels);
+                        
+                        if (!finished && current.audio.Channels == Channels.Stereo) SetSample(buffer, i + 1, current.GetSample(out finished), groupVolumes[(int)current.Group], 0);
 
                         if (finished && !current.IsLooped)
                         {
@@ -178,7 +177,8 @@ namespace Claw.Audio
             if (fadeMultipliyer == 0) music = nextMusic;
         }
         /// <summary>
-        /// Seta um sample em um índice e no seguinte.
+        /// <para>Faz a mixagem de um sample no buffer.</para>
+        /// <para>Se o sample for mono, então divide o som dele entre os dois lados.</para>
         /// </summary>
         private unsafe void SetSample(float* buffer, int index, float sample, float volume, Channels channels)
         {
@@ -186,13 +186,13 @@ namespace Claw.Audio
 
             sample *= masterVolume * volume;
 
-            if (channels == Channels.Stereo) sample *= .5f;
+            if (channels == Channels.Mono)
+            {
+                sample *= .5f;
+                buffer[index + 1] = Mathf.Clamp(buffer[index + 1] + sample, -1, 1);
+            }
 
-            float sample1 = Mathf.Clamp(buffer[index] + sample, -1, 1),
-                sample2 = Mathf.Clamp(buffer[index + 1] + sample, -1, 1);
-
-            buffer[index] = sample1;
-            buffer[index + 1] = sample2;
+            buffer[index] = Mathf.Clamp(buffer[index] + sample, -1, 1);
         }
         /// <summary>
         /// Remove um item da lista, sem se preocupar com a ordem.

@@ -42,10 +42,10 @@ namespace Claw.Audio
                 offset = 0;
                 finished = true;
             }
-            
+
             float value = audio.GetSample(offset);
             offset++;
-            
+
             return value;
         }
     }

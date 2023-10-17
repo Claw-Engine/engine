@@ -23,31 +23,32 @@ namespace Clawssets.Builder.Data
             /// </summary>
             public void Resample()
             {
-                if (SampleRate != AudioManager.SampleRate)
+                if (AudioManager.SampleRate > SampleRate)
                 {
-                    float factor = 0;
-                    float[] resampled = null;
-
-                    if (AudioManager.SampleRate > SampleRate) // Upsample
+                    float factor = (float)AudioManager.SampleRate / SampleRate;
+                    float[] resampled = new float[(long)(Samples.LongLength * factor)];
+                    
+                    for (long i = 0; i < Samples.LongLength; i += Channels)
                     {
-                        factor = (float)AudioManager.SampleRate / SampleRate;
-                        resampled = new float[(long)(Samples.LongLength * factor)];
+                        long index = (long)(i * factor);
 
-                        for (long i = 0; i < Samples.LongLength; i++)
+                        if (index != resampled.LongLength - 1)
                         {
-                            long index = (long)(i * factor);
-
-                            if (index != resampled.LongLength - 1)
+                            for (int j = 1; j < factor; j++)
                             {
-                                for (int j = 1; j < factor; j++) resampled[index + j] = Samples[i];
-                            }
+                                resampled[index + j] = Samples[i];
 
-                            resampled[index] = Samples[i];
+                                if (Channels == 2) resampled[index + j + 1] = Samples[i + 1];
+                            }
                         }
 
-                        SampleRate = AudioManager.SampleRate;
-                        Samples = resampled;
+                        resampled[index] = Samples[i];
+
+                        if (Channels == 2) resampled[index + 1] = Samples[i + 1];
                     }
+
+                    SampleRate = AudioManager.SampleRate;
+                    Samples = resampled;
                 }
             }
         }

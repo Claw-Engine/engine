@@ -34,7 +34,7 @@ namespace Clawssets.Builder
 
             for (int i = 0; i < lines.Length; i++)
             {
-                if (lines[i].Length > 0)
+                if (lines[i].Length > 0 && !lines[i].StartsWith("|"))
                 {
                     bool isBegin = lines[i].StartsWith("#");
 
