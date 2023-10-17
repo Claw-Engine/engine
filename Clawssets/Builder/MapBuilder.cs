@@ -46,7 +46,7 @@ namespace Clawssets.Builder
                 binWriter.Close();
             }
 
-            Console.WriteLine("Grupo {0} compilado com sucesso!", group.Name);
+            Console.WriteLine("Grupo \"{0}\" compilado com sucesso!", group.Name);
         }
 
         #region Extensões do BinaryWriter

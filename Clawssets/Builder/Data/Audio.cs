@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Claw.Audio;
+using Clawssets.Builder.Readers;
 
 namespace Clawssets.Builder.Data
 {

@@ -8,13 +8,20 @@ namespace Clawssets
     {
         public static void Main(string[] args)
         {
+#if DEBUG
+            Debug();
+#else
+            Release(args);
+#endif
+        }
+
+        /// <summary>
+        /// Código executado no programa publicado.
+        /// </summary>
+        private static void Release(string[] args)
+        {
             string configFile = string.Empty;
 
-#if DEBUG
-            configFile = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Tests/Assets/Tests.cb"));
-
-            Console.WriteLine("Compilando \"{0}\"...", configFile);
-#else
             if (args.Length > 0 && args[0].Length > 0) configFile = args[0];
             else
             {
@@ -37,19 +44,23 @@ namespace Clawssets
 
                 configFile = Console.ReadLine();
             }
-#endif
 
             if (configFile.Length > 0)
             {
-                AssetBuilder builder = new AssetBuilder(configFile);
-
-                builder.Build();
-                builder.CopyToOutputs();
+                Console.WriteLine("Compilando \"{0}\"...\n", configFile);
+                AssetBuilder.BuildAssets(configFile);
             }
+        }
+        /// <summary>
+        /// Código executado nos testes.
+        /// </summary>
+        private static void Debug()
+        {
+            string configFile = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Tests/Assets/Tests.cb"));
 
-#if DEBUG
+            Console.WriteLine("Compilando \"{0}\"...\n", configFile);
+            AssetBuilder.BuildAssets(configFile);
             Console.ReadLine();
-#endif
         }
     }
 }

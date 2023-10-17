@@ -28,4 +28,5 @@ Abaixo, a lista de dependências, com os motivos:
 	* Para acessar o Claw.Audio.AudioManager.SampleRate.
 * Newtonsoft.Json:
     * Para carregar os mapas **.json** e **.tmj** do Tiled;
-    * Para carregar as descrições de fonte **.csf**.
+    * Para carregar as descrições de fonte **.csf**;
+	* Para escrever e carregar os arquivos de cachê **.cache**.

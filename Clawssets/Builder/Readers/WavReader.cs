@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using Clawssets.Builder.Data;
 
-namespace Clawssets.Builder.Data
+namespace Clawssets.Builder.Readers
 {
     /// <summary>
     /// Leitor de WAV.
@@ -44,7 +45,7 @@ namespace Clawssets.Builder.Data
                 {
                     audio.Samples = new float[chunkSize / (bitDepth / 8)];
                     
-                    for (long i = 0; i < audio.Samples.Length; i++) audio.Samples[i] = ReadSample(bitDepth, reader);
+                    for (long i = 0; i < audio.Samples.Length; i++) audio.Samples[i] = reader.ReadChannel(bitDepth);
                 }
                 else reader.BaseStream.Position += chunkSize;
             }
@@ -53,18 +54,9 @@ namespace Clawssets.Builder.Data
 
             return audio;
         }
-        
+        /// <summary>
+        /// Compara o header wav com uma string.
+        /// </summary>
         private static bool CompareHeader(this char[] a, string b) => a[0] == b[0] && a[1] == b[1] && a[2] == b[2] && a[3] == b[3];
-        private static float ReadSample(int bitDepth, BinaryReader reader)
-        {
-            switch (bitDepth)
-            {
-                case 8: return Normalize(reader.ReadSByte(), bitDepth);
-                case 16: return Normalize(reader.ReadInt16(), bitDepth);
-                case 24: return Normalize(reader.ReadInt24(), bitDepth);
-                default: return Normalize(reader.ReadInt32(), bitDepth);
-            }
-        }
-        private static float Normalize(float value, int bitDepth) => (float)(value / Math.Pow(2, bitDepth - 1));
     }
 }

@@ -9,6 +9,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+.bin/
+
 /packages
 /.vs
 

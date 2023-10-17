@@ -32,7 +32,9 @@ level1.tmj
 level2.json
 ```
 
-As primeiras linhas são para os diretórios de saída. <br />
-Em seguida, o caractere "#" indica um grupo de assets, no formato "[Tipo]:[NomeDoGrupo]". <br />
-Qualquer linha que comece com "|" será ignorada. <br />
-A utilização do nome do grupo vai variar entre os tipos. Em geral, o nome do grupo diz respeito a pasta (caminho relativo) em que os arquivos ficarão nos diretórios de exportação. Porém, no caso de texturas, esse nome vai determinar o caminho do arquivo para o texture atlas.
+* As primeiras linhas são para os diretórios de saída.
+* Em seguida, o caractere "#" indica um grupo de assets, no formato "[Tipo]:[NomeDoGrupo]".
+* Qualquer linha que comece com "|" será ignorada.
+* A utilização do nome do grupo vai variar entre os tipos. Em geral, o nome do grupo diz respeito a pasta (caminho relativo) em que os arquivos ficarão nos diretórios de exportação. Porém, no caso de texturas, esse nome vai determinar o caminho do arquivo para o texture atlas.
+* Os grupos, depois de interpretados, serão compilados na ordem LIFO. Por isso, o recomendado é que os seus subgrupos sejam definidos **depois** do grupo pai.
+* A compilação gera uma pasta ".bin" que serve como cachê para evitar recompilações desnecessárias. Caso acabe mexendo nessa pasta sem querer, pasta apagar ela.

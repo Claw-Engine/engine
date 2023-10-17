@@ -9,7 +9,7 @@ namespace Clawssets.Builder
     public class AssetGroup
     {
         /// <summary>
-        /// Nome do arquivo/Caminho pasta.
+        /// Nome do caminho do arquivo/pasta.
         /// </summary>
         public string Name;
         public AssetType Type;

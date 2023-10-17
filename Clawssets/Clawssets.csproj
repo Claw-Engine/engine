@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,9 +49,11 @@
     <Compile Include="Builder\AssetType.cs" />
     <Compile Include="Builder\AtlasBuilder.cs" />
     <Compile Include="Builder\AssetBuilder.cs" />
+    <Compile Include="Builder\BuilderCache.cs" />
     <Compile Include="Builder\Data\Audio.cs" />
     <Compile Include="Builder\Data\Kerning.cs" />
-    <Compile Include="Builder\Data\WavReader.cs" />
+    <Compile Include="Builder\Readers\SoundFunctions.cs" />
+    <Compile Include="Builder\Readers\WavReader.cs" />
     <Compile Include="Builder\FontBuilder.cs" />
     <Compile Include="Builder\MapBuilder.cs" />
     <Compile Include="Builder\AudioBuilder.cs" />
