@@ -6,6 +6,4 @@ Baixe um **release** da engine e adicione as dlls ao seu projeto. Não tem segre
 A documentação se encontra aqui: [place_holder].
 
 # Dependências
-Abaixo, a lista de dependências, com os motivos:
-* SDL2: Para o back-end da engine;
-* Newtonsoft.Json: Para o Claw.Save.
+A única dependência da Claw é o **SDL2**, para o back-end.

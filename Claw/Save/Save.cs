@@ -2,31 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Claw.Utils;
 
-namespace Claw
+namespace Claw.Save
 {
     /// <summary>
     /// Funções prontas para lidar com um save.
     /// </summary>
     public static class Save
     {
-        /// <summary>
-        /// Configurações usadas para ler e escrever os arquivos json.
-        /// </summary>
-        public static JsonSerializerSettings Settings { get; private set; } = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.All,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-            Formatting = Formatting.None
-        };
-        private const int amount = 10;
+        private const int Amount = 10;
         private static bool useCrypt = true;
         private static string path = string.Empty;
-        private static Dictionary<string, Dictionary<string, object>> save;
+        private static Sections save;
 
         /// <summary>
         /// Abre o save.
@@ -42,12 +30,12 @@ namespace Claw
 
             if (content.Length > 0)
             {
-                if (useCrypt) content = StringCrypt.AllCrypt(content, false, amount);
+                if (useCrypt) content = StringCrypt.AllCrypt(content, false, Amount);
 
-                save = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, object>>>(content, Settings);
+                save = SaveConvert.Deserialize(content);
             }
 
-            if (save == null) save = new Dictionary<string, Dictionary<string, object>>();
+            if (save == null) save = new Sections();
         }
 
         /// <summary>
@@ -57,7 +45,7 @@ namespace Claw
         {
             if (save != null)
             {
-                if (!SectionExists(section)) save.Add(section, new Dictionary<string, object>());
+                if (!SectionExists(section)) save.Add(section, new Keys());
 
                 if (!KeyExists(section, key)) save[section].Add(key, null);
 
@@ -75,21 +63,8 @@ namespace Claw
             {
                 if (!SectionExists(section)) return defaultValue;
                 else if (!KeyExists(section, key)) return defaultValue;
-                
-                if (typeof(T) == typeof(int) && save[section][key].GetType() == typeof(Int64))
-                {
-                    object integger = Convert.ToInt32(save[section][key]);
 
-                    return (T)integger;
-                }
-                else if (typeof(T) == typeof(int[]) && save[section][key].GetType() == typeof(Int64[]))
-                {
-                    object array = (int[])save[section][key];
-
-                    return (T)array;
-                }
-
-                return save[section][key] is JObject ? ((JObject)save[section][key]).ToObject<T>() : (T)save[section][key];
+                return (T)save[section][key];
             }
             else throw new Exception("O save não está aberto!");
         }
@@ -102,9 +77,10 @@ namespace Claw
             if (path.Length > 0)
             {
                 save.Clear();
-                File.Delete(path);
-                FileStream f = File.Create(path);
-                f.Close();
+                File.WriteAllText(path, string.Empty);
+
+                save = null;
+                path = string.Empty;
             }
             else throw new Exception("O save não está aberto!");
         }
@@ -146,30 +122,14 @@ namespace Claw
         /// </summary>
         public static void Close()
         {
-            string filePath = path;
-            string json = CloseJson();
+            string content = SaveConvert.Serialize(save);
 
-            if (filePath.Length > 0) File.WriteAllText(filePath, json);
-        }
-        /// <summary>
-        /// Fecha o save, retornando um json.
-        /// </summary>
-        private static string CloseJson()
-        {
+            if (useCrypt) content = StringCrypt.AllCrypt(content, true, Amount);
+
+            if (path.Length > 0) File.WriteAllText(path, content);
+
+            save = null;
             path = string.Empty;
-
-            if (save != null)
-            {
-                string json = JsonConvert.SerializeObject(save, Settings);
-
-                if (useCrypt) json = StringCrypt.AllCrypt(json, true, amount);
-                
-                save = null;
-
-                return json;
-            }
-
-            return string.Empty;
         }
     }
 }
