@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+using System.Reflection;
 using System.Globalization;
 using Claw.Graphics;
 using Claw.Extensions;
@@ -24,7 +22,7 @@ namespace Claw.Tiled
 
         private static List<GameObject> waiting;
         private static Dictionary<int, LinkObjectData> links;
-        
+
         /// <summary>
         /// Carrega um mapa do Tiled.
         /// </summary>
@@ -115,7 +113,7 @@ namespace Claw.Tiled
                         hasTile = true;
                         var drawOrder = GetPropertyValue(layer.properties, "DrawOrder", "int", tiledMap.LayerCount);
                         var priority = Mathf.Clamp(GetPropertyValue(layer.properties, "Priority", "float", 0), 0, 1);
-                        
+
                         if (layer.chunks.Length == 0) tiledMap.AddLayer(drawOrder, layer.name, layer.visible, priority, layer.opacity, new Color(layer.tintcolor), layer.data);
                         else
                         {
@@ -202,7 +200,7 @@ namespace Claw.Tiled
                                         else
                                         {
                                             property.value = links[objID].Me;
-                                            
+
                                             SetProp(gameObject, property);
                                         }
                                     }
@@ -228,8 +226,8 @@ namespace Claw.Tiled
         {
             if (@object != null)
             {
-                System.Reflection.PropertyInfo propInfo = @object.GetType().GetProperty(property.name);
-                
+                PropertyInfo propInfo = @object.GetType().GetProperty(property.name);
+
                 if (propInfo != null)
                 {
                     if (property.type == "color") propInfo.SetValue(@object, new Color(property.value.ToString(), Color.HexFormat.ARGB));
@@ -252,7 +250,7 @@ namespace Claw.Tiled
             this.prefixNamespace = prefixNamespace;
             assemblyName = Game.Instance.GetType().Assembly.FullName;
         }
-        
+
         /// <summary>
         /// Adiciona as paletas do Tiled.
         /// </summary>
@@ -260,7 +258,7 @@ namespace Claw.Tiled
         {
             for (int i = 0; i < palettes.Length; i++) this.palettes.Add(palettes[i], palettesTexture[i]);
         }
-        
+
         /// <summary>
         /// Cria uma instância, com base no namespace.
         /// </summary>
