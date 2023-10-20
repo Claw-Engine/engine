@@ -14,7 +14,7 @@ namespace Claw.Save
         private static readonly string SectionFormat = "[{0}]", ReferenceFormat = "#{0}", ReferenceValueFormat = " = #{0}",
             NewKeyFormat = "{0}{1} = ", OldKeyFormat = "{0}{1},", ValueFormat = "{0},",
             StringFormat = "\"{0}\"", CharFormat = "'{0}'", TypeFormat = "({0})",
-            PairFormat = "{0}: {1},";
+            PairFormat = "{0}:{1}, ";
         private static readonly string NewLine = Environment.NewLine;
 
         private Sections save;
@@ -77,7 +77,7 @@ namespace Claw.Save
         /// <summary>
         /// Transforma um valor em string.
         /// </summary>
-        private string Stringfy(object value, int tabCount = 0)
+        private string Stringfy(object value)
         {
             if (value == null) return "NULL";
             else
@@ -104,8 +104,8 @@ namespace Claw.Save
                                     foreach (dynamic element in enumerable)
                                     {
                                         builder.Append('[');
-                                        builder.AppendFormat(ValueFormat, Stringfy(element.Key, tabCount + 1));
-                                        builder.AppendFormat(ValueFormat, Stringfy(element.Value, tabCount + 1));
+                                        builder.AppendFormat(ValueFormat, Stringfy(element.Key));
+                                        builder.AppendFormat(ValueFormat, Stringfy(element.Value));
                                         builder.Remove(builder.Length - 1, 1);
                                         builder.Append(']');
                                         builder.Append(',');
@@ -113,7 +113,7 @@ namespace Claw.Save
                                 }
                                 else
                                 {
-                                    foreach (dynamic element in enumerable) builder.AppendFormat(ValueFormat, Stringfy(element, tabCount + 1));
+                                    foreach (dynamic element in enumerable) builder.AppendFormat(ValueFormat, Stringfy(element));
                                 }
 
                                 builder.Remove(builder.Length - 1, 1);
@@ -122,7 +122,7 @@ namespace Claw.Save
                             else if (type.IsObject())
                             {
                                 builder.Append("{ ");
-                                builder.Append(ObjectToString(value, tabCount + 1));
+                                builder.Append(ObjectToString(value));
                                 builder.Append(" }");
                             }
                             else builder.Append(value.ToString().Replace(',', '.'));
@@ -136,7 +136,7 @@ namespace Claw.Save
         /// <summary>
         /// Transforma um objeto em string.
         /// </summary>
-        private string ObjectToString(object instance, int tabCount)
+        private string ObjectToString(object instance)
         {
             Type type = instance.GetType();
             StringBuilder builder = new StringBuilder();
@@ -153,7 +153,7 @@ namespace Claw.Save
 
                 string name = attribute == null || attribute.Name == null ? fields[i].Name : attribute.Name;
 
-                builder.AppendFormat(PairFormat, name, Stringfy(fields[i].GetValue(instance), tabCount + 1));
+                builder.AppendFormat(PairFormat, name, Stringfy(fields[i].GetValue(instance)));
             }
 
             for (int i = 0; i < properties.Length; i++)
@@ -166,10 +166,10 @@ namespace Claw.Save
 
                 string name = attribute == null || attribute.Name == null ? properties[i].Name : attribute.Name;
 
-                builder.AppendFormat(PairFormat, name, Stringfy(properties[i].GetValue(instance), tabCount + 1));
+                builder.AppendFormat(PairFormat, name, Stringfy(properties[i].GetValue(instance)));
             }
 
-            builder.Remove(builder.Length - 1, 1);
+            builder.Remove(builder.Length - 2, 2);
 
             return builder.ToString();
         }
