@@ -12,9 +12,9 @@ namespace Claw.Save
     /// <summary>
     /// Interface para valores do save.
     /// </summary>
-    internal interface ISaveValue
+    public interface ISaveValue
     {
-        object Cast(Type type);
+        object Cast(Type type, Dictionary<ISaveValue, object> references);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ namespace Claw.Save
         /// <summary>
         /// Converte um <see cref="SaveObject"/> em um objeto.
         /// </summary>
-        public object Cast(Type type)
+        public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
             object instance = Activator.CreateInstance(type);
 
@@ -50,7 +50,19 @@ namespace Claw.Save
 
             foreach (KeyValuePair<string, object> pair in internalDictionary)
             {
-                if (pair.Value is ISaveValue) setters[pair.Key].Item1(instance, ((ISaveValue)pair.Value).Cast(setters[pair.Key].Item2));
+                if (pair.Value is ISaveValue)
+                {
+                    KeyValuePair<ISaveValue, object> found = references.FirstOrDefault((p) => p.Key == pair.Value);
+
+                    if (found.Equals(default(KeyValuePair<ISaveValue, object>)))
+                    {
+                        object value = ((ISaveValue)pair.Value).Cast(setters[pair.Key].Item2, references);
+
+                        setters[pair.Key].Item1(instance, value);
+                        references.Add(((ISaveValue)pair.Value), value);
+                    }
+                    else setters[pair.Key].Item1(instance, found.Value);
+                }
                 else setters[pair.Key].Item1(instance, Convert.ChangeType(pair.Value, setters[pair.Key].Item2));
             }
 
@@ -145,7 +157,7 @@ namespace Claw.Save
         /// <summary>
         /// Converte o <see cref="SaveArray"/> em um <see cref="IEnumerable{T}"/>.
         /// </summary>
-        public object Cast(Type type)
+        public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
             if (type.GetInterface("ICollection") != null)
             {
@@ -156,7 +168,7 @@ namespace Claw.Save
                     result = Activator.CreateInstance(type);
                     Type[] types = type.GetGenericArguments();
 
-                    FillDictionary(result, types[0], types[1]);
+                    FillDictionary(result, types[0], types[1], references);
                 }
                 else if (type.IsArray)
                 {
@@ -168,13 +180,13 @@ namespace Claw.Save
                     {
                         result[index] = element;
                         index++;
-                    });
+                    }, references);
                 }
                 else if (type.IsGenericType)
                 {
                     result = Activator.CreateInstance(type);
                     
-                    FillList(type.GetGenericArguments()[0], result.Add);
+                    FillList(type.GetGenericArguments()[0], result.Add, references);
                 }
                 else throw new ArgumentException(string.Format("\"{0}\" é inválido!", type.FullName));
 
@@ -185,13 +197,13 @@ namespace Claw.Save
         /// <summary>
         /// Preenche os elementos de uma lista com os deste <see cref="SaveArray"/>
         /// </summary>
-        private void FillList(Type type, Action<dynamic> add)
+        private void FillList(Type type, Action<dynamic> add, Dictionary<ISaveValue, object> references)
         {
             for (int i = 0; i < Count; i++)
             {
                 dynamic result = null;
 
-                if (Items[i] is ISaveValue) result = ((ISaveValue)Items[i]).Cast(type);
+                if (Items[i] is ISaveValue) result = GetValue((ISaveValue)Items[i], type, references);
                 else result = Convert.ChangeType(Items[i], type);
 
                 add(result);
@@ -200,7 +212,7 @@ namespace Claw.Save
         /// <summary>
         /// Preenche um dicionário com os elementos deste <see cref="SaveArray"/>.
         /// </summary>
-        private void FillDictionary(dynamic dictionary, Type keyType, Type valueType)
+        private void FillDictionary(dynamic dictionary, Type keyType, Type valueType, Dictionary<ISaveValue, object> references)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -210,15 +222,33 @@ namespace Claw.Save
                     dynamic key = pair[0];
                     dynamic value = pair[1];
 
-                    if (key is ISaveValue) key = ((ISaveValue)key).Cast(keyType);
+                    if (key is ISaveValue) key = GetValue((ISaveValue)key, keyType, references);
                     else key = Convert.ChangeType(key, keyType);
 
-                    if (value is ISaveValue) value = ((ISaveValue)value).Cast(valueType);
+                    if (value is ISaveValue) value = GetValue((ISaveValue)value, valueType, references);
                     else value = Convert.ChangeType(value, valueType);
 
                     dictionary.Add(key, value);
                 }
             }
+        }
+        /// <summary>
+        /// Se o valor não estiver nas referências, faz o casting e adiciona. Se estiver, retorna ele.
+        /// </summary>
+        private object GetValue(ISaveValue value, Type type, Dictionary<ISaveValue, object> references)
+        {
+            KeyValuePair<ISaveValue, object> found = references.FirstOrDefault((p) => p.Key == value);
+            object result = null;
+
+            if (found.Equals(default(KeyValuePair<ISaveValue, object>)))
+            {
+                result = value.Cast(type, references);
+
+                references.Add(value, result);
+            }
+            else result = found.Value;
+
+            return result;
         }
     }
 }

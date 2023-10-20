@@ -15,6 +15,7 @@ namespace Claw.Save
         private static bool useCrypt = true;
         private static string path = string.Empty;
         private static Sections save;
+        private static Dictionary<ISaveValue, object> references;
 
         /// <summary>
         /// Abre o save.
@@ -23,6 +24,7 @@ namespace Claw.Save
         {
             Save.path = path;
             Save.useCrypt = useCrypt;
+            references = new Dictionary<ISaveValue, object>();
             string content = string.Empty;
 
             if (!File.Exists(path)) File.Create(path).Close();
@@ -65,7 +67,7 @@ namespace Claw.Save
 
                 Type type = typeof(T);
 
-                if (save[section][key] is ISaveValue) return (T)((ISaveValue)save[section][key]).Cast(type);
+                if (save[section][key] is ISaveValue) return (T)((ISaveValue)save[section][key]).Cast(type, references);
 
                 return (T)save[section][key];
             }
@@ -132,6 +134,7 @@ namespace Claw.Save
             if (path.Length > 0) File.WriteAllText(path, content);
 
             save = null;
+            references = null;
             path = string.Empty;
         }
     }
