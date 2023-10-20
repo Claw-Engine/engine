@@ -44,6 +44,8 @@ namespace Claw.Save
         /// </summary>
         public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
+            if (references.ContainsKey(this)) return references[this];
+
             object instance = Activator.CreateInstance(type);
 
             SetupSetters(type, out Dictionary<string, (PropertySetter, Type)> setters);
@@ -159,6 +161,8 @@ namespace Claw.Save
         /// </summary>
         public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
+            if (references.ContainsKey(this)) return references[this];
+
             if (type.GetInterface("ICollection") != null)
             {
                 dynamic result = null;
