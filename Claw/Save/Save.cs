@@ -68,6 +68,7 @@ namespace Claw.Save
                 Type type = typeof(T);
 
                 if (save[section][key] is ISaveValue) return (T)((ISaveValue)save[section][key]).Cast(type, references);
+                else if (type.IsEnum) return (T)Enum.Parse(type, (string)save[section][key]);
 
                 return (T)save[section][key];
             }
