@@ -48,6 +48,8 @@ namespace Claw.Save
 
             object instance = Activator.CreateInstance(type);
 
+            references.Add(this, instance);
+
             SetupSetters(type, out Dictionary<string, (PropertySetter, Type)> setters);
 
             foreach (KeyValuePair<string, object> pair in internalDictionary)
@@ -172,6 +174,7 @@ namespace Claw.Save
                     result = Activator.CreateInstance(type);
                     Type[] types = type.GetGenericArguments();
 
+                    references.Add(this, result);
                     FillDictionary(result, types[0], types[1], references);
                 }
                 else if (type.IsArray)
@@ -180,6 +183,7 @@ namespace Claw.Save
                     result = Array.CreateInstance(arrayType, Count);
                     int index = 0;
 
+                    references.Add(this, result);
                     FillList(arrayType, (element) =>
                     {
                         result[index] = element;
@@ -189,7 +193,8 @@ namespace Claw.Save
                 else if (type.IsGenericType)
                 {
                     result = Activator.CreateInstance(type);
-                    
+
+                    references.Add(this, result);
                     FillList(type.GetGenericArguments()[0], result.Add, references);
                 }
                 else throw new ArgumentException(string.Format("\"{0}\" é inválido!", type.FullName));
