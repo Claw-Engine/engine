@@ -38,6 +38,18 @@ namespace Tests
             Save.Write("Other2", "GenericArr", new List<int>[] { new List<int> { 10, 12 } });
             Save.Write("Other2", "Tuple", (10, 2));
             Save.Write("Ref", "Ref", dict);
+
+            SaveObject obj = new SaveObject();
+            obj["X"] = 5.5f;
+            obj["Y"] = 10;
+
+            Save.Write("SaveObj", "SaveObj", obj);
+
+            SaveArray arr = new SaveArray();
+
+            arr.Add(10);
+            arr.Add(12);
+            Save.Write("SaveArr", "SaveArr", arr);
             Save.Close();
         }
         private void LoadContent()

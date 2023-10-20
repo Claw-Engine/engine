@@ -95,29 +95,42 @@ namespace Claw.Save
                         default:
                             if (type.GetInterface("IEnumerable") != null)
                             {
-                                dynamic enumerable = value;
-
-                                builder.Append('[');
-
-                                if (type.GetInterface("IDictionary") != null)
+                                if (value is SaveObject obj)
                                 {
-                                    foreach (dynamic element in enumerable)
-                                    {
-                                        builder.Append('[');
-                                        builder.AppendFormat(ValueFormat, Stringfy(element.Key));
-                                        builder.AppendFormat(ValueFormat, Stringfy(element.Value));
-                                        builder.Remove(builder.Length - 1, 1);
-                                        builder.Append(']');
-                                        builder.Append(',');
-                                    }
+                                    builder.Append("{ ");
+
+                                    foreach (KeyValuePair<string, object> pair in obj) builder.AppendFormat(PairFormat, pair.Key, Stringfy(pair.Value));
+
+                                    builder.Remove(builder.Length - 2, 2);
+
+                                    builder.Append(" }");
                                 }
                                 else
                                 {
-                                    foreach (dynamic element in enumerable) builder.AppendFormat(ValueFormat, Stringfy(element));
-                                }
+                                    dynamic enumerable = value;
 
-                                builder.Remove(builder.Length - 1, 1);
-                                builder.Append(']');
+                                    builder.Append('[');
+
+                                    if (type.GetInterface("IDictionary") != null)
+                                    {
+                                        foreach (dynamic element in enumerable)
+                                        {
+                                            builder.Append('[');
+                                            builder.AppendFormat(ValueFormat, Stringfy(element.Key));
+                                            builder.AppendFormat(ValueFormat, Stringfy(element.Value));
+                                            builder.Remove(builder.Length - 1, 1);
+                                            builder.Append(']');
+                                            builder.Append(',');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (dynamic element in enumerable) builder.AppendFormat(ValueFormat, Stringfy(element));
+                                    }
+
+                                    builder.Remove(builder.Length - 1, 1);
+                                    builder.Append(']');
+                                }
                             }
                             else if (type.IsObject())
                             {

@@ -47,9 +47,8 @@ namespace Claw.Save
             {
                 if (!SectionExists(section)) save.Add(section, new Keys());
 
-                if (!KeyExists(section, key)) save[section].Add(key, null);
-
-                save[section][key] = value;
+                if (!save[section].Keys.Contains(key)) save[section].Add(key, value);
+                else save[section][key] = value;
             }
             else throw new Exception("O save não está aberto!");
         }
@@ -62,7 +61,11 @@ namespace Claw.Save
             if (save != null)
             {
                 if (!SectionExists(section)) return defaultValue;
-                else if (!KeyExists(section, key)) return defaultValue;
+                else if (!save[section].Keys.Contains(key)) return defaultValue;
+
+                Type type = typeof(T);
+
+                if (save[section][key] is ISaveValue) return (T)((ISaveValue)save[section][key]).Cast(type);
 
                 return (T)save[section][key];
             }

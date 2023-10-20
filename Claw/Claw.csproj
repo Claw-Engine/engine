@@ -105,6 +105,7 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Save\Save.cs" />
     <Compile Include="Save\SaveConvert.cs" />
+    <Compile Include="Save\SaveData.cs" />
     <Compile Include="Save\SaveReader.cs" />
     <Compile Include="Save\SaveWriter.cs" />
     <Compile Include="Save\Shortcuts.cs" />
