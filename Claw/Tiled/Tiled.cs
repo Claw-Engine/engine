@@ -20,7 +20,7 @@ namespace Claw.Tiled
         public static Config Config;
         private static Sprite notFoundPalette;
 
-        private static List<GameObject> waiting;
+        private static List<IGameComponent> waiting;
         private static Dictionary<int, LinkObjectData> links;
 
         /// <summary>
@@ -48,14 +48,14 @@ namespace Claw.Tiled
 
             if (map.layers == null || map.layers.Length == 0) return;
 
-            waiting = new List<GameObject>();
+            waiting = new List<IGameComponent>();
             links = new Dictionary<int, LinkObjectData>();
             var hasTile = LayerForeach(map.layers, tiledMap);
             links = null;
 
             if (AddAllAtOnce)
             {
-                foreach (GameObject gameObject in waiting) Game.Instance.Components.Add(gameObject);
+                foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
             }
 
             waiting = null;
@@ -135,88 +135,107 @@ namespace Claw.Tiled
                         hasTile = hasTile || groupHasTile;
                         break;
                     case "objectgroup"://Layer de objetos
-                        foreach (Object tObject in layer.objects)
-                        {
-                            if (GetPropertyValue(tObject.properties, "TiledIgnore", "bool", false)) continue;
-                            else if (GetPropertyValue(tObject.properties, "NotGameObject", "bool", false))
-                            {
-                                object obj = Config.Instantiate<object>(tObject.type);
-
-                                foreach (Property property in tObject.properties) SetProp(obj, property);
-
-                                continue;
-                            }
-
-                            GameObject gameObject = Config.Instantiate<GameObject>(tObject.type);
-                            gameObject.Position = new Vector2(tObject.x, tObject.y);
-                            gameObject.Name = tObject.name;
-                            gameObject.Rotation = tObject.rotation;
-
-                            if (!links.ContainsKey(tObject.id)) links.Add(tObject.id, new LinkObjectData() { Me = gameObject, WaitingMe = new List<Tuple<int, string>>() });
-                            else
-                            {
-                                for (int i = links[tObject.id].WaitingMe.Count - 1; i >= 0; i--)
-                                {
-                                    var tuple = links[tObject.id].WaitingMe[i];
-
-                                    SetProp(links[tuple.Item1].Me, new Property() { name = tuple.Item2, type = "object", value = gameObject });
-                                    links[tObject.id].WaitingMe.RemoveAt(i);
-                                }
-                            }
-
-                            foreach (Property property in tObject.properties)
-                            {
-                                if (property.name == "Tags")
-                                {
-                                    string[] tags = GetPropertyValue(tObject.properties, "Tags", "string", string.Empty).Split(',');
-
-                                    for (int i = 0; i < tags.Length; i++) gameObject.AddTag(tags[i].ToLower());
-                                }
-                                else if (property.name == "Scale")
-                                {
-                                    if (property.type == "string")
-                                    {
-                                        if (property.value.ToString().Contains(','))
-                                        {
-                                            string[] value = property.value.ToString().Replace(" ", "").Split(',');
-                                            gameObject.Scale = new Vector2(float.Parse(value[0]), float.Parse(value[1]));
-                                        }
-                                        else
-                                        {
-                                            string value = property.value.ToString().Replace(" ", "");
-                                            gameObject.Scale = new Vector2(float.Parse(value));
-                                        }
-                                    }
-                                    else if (property.type == "int" || property.type == "float") gameObject.Scale = new Vector2(Convert.ToSingle(property.value));
-                                }
-                                else if (property.name == "Color") gameObject.Color = new Color(property.value.ToString(), Color.HexFormat.ARGB);
-                                else if (property.type == "object")
-                                {
-                                    int objID = Convert.ToInt32(property.value);
-
-                                    if (links.ContainsKey(objID))
-                                    {
-                                        if (links[objID].Me == null) links[objID].WaitingMe.Add(new Tuple<int, string>(tObject.id, property.name));
-                                        else
-                                        {
-                                            property.value = links[objID].Me;
-
-                                            SetProp(gameObject, property);
-                                        }
-                                    }
-                                    else links.Add(objID, new LinkObjectData() { Me = null, WaitingMe = new List<Tuple<int, string>>() { new Tuple<int, string>(tObject.id, property.name) } });
-                                }
-                                else SetProp(gameObject, property);
-                            }
-
-                            if (!AddAllAtOnce) Game.Instance.Components.Add(gameObject);
-                            else waiting.Add(gameObject);
-                        }
+                        foreach (Object tObject in layer.objects) HandleObject(tObject);
                         break;
                 }
             }
 
             return hasTile;
+        }
+
+        /// <summary>
+        /// Lida com a conversão de um objeto do Tiled.
+        /// </summary>
+        private static void HandleObject(Object tObject)
+        {
+            if (GetPropertyValue(tObject.properties, "TiledIgnore", "bool", false)) return;
+
+            object obj = null;
+
+            if (GetPropertyValue(tObject.properties, "NotGameObject", "bool", false)) obj = Config.Instantiate<object>(tObject.type);
+            else
+            {
+                GameObject gO = Config.Instantiate<GameObject>(tObject.type);
+                gO.Position = new Vector2(tObject.x, tObject.y);
+                gO.Name = tObject.name;
+                gO.Rotation = tObject.rotation;
+                obj = gO;
+            }
+
+            if (!links.ContainsKey(tObject.id)) links.Add(tObject.id, new LinkObjectData() { Me = obj, WaitingMe = new List<Tuple<int, string>>() });
+            else
+            {
+                for (int i = links[tObject.id].WaitingMe.Count - 1; i >= 0; i--)
+                {
+                    var tuple = links[tObject.id].WaitingMe[i];
+
+                    SetProp(links[tuple.Item1].Me, new Property() { name = tuple.Item2, type = "object", value = obj });
+                    links[tObject.id].WaitingMe.RemoveAt(i);
+                }
+            }
+
+            if (obj is GameObject gameObject) SetupGameObject(gameObject, tObject);
+            else
+            {
+                foreach (Property property in tObject.properties) SetProp(obj, property);
+            }
+
+            if (obj is IGameComponent component)
+            {
+                if (!AddAllAtOnce) Game.Instance.Components.Add(component);
+                else waiting.Add(component);
+            }
+        }
+
+        /// <summary>
+        /// Prepara as propriedades de um gameobject.
+        /// </summary>
+        private static void SetupGameObject(GameObject gameObject, Object tObject)
+        {
+            foreach (Property property in tObject.properties)
+            {
+                if (property.name == "Tags")
+                {
+                    string[] tags = GetPropertyValue(tObject.properties, "Tags", "string", string.Empty).Split(',');
+
+                    for (int i = 0; i < tags.Length; i++) gameObject.AddTag(tags[i].ToLower());
+                }
+                else if (property.name == "Scale")
+                {
+                    if (property.type == "string")
+                    {
+                        if (property.value.ToString().Contains(','))
+                        {
+                            string[] value = property.value.ToString().Replace(" ", "").Split(',');
+                            gameObject.Scale = new Vector2(float.Parse(value[0]), float.Parse(value[1]));
+                        }
+                        else
+                        {
+                            string value = property.value.ToString().Replace(" ", "");
+                            gameObject.Scale = new Vector2(float.Parse(value));
+                        }
+                    }
+                    else if (property.type == "int" || property.type == "float") gameObject.Scale = new Vector2(Convert.ToSingle(property.value));
+                }
+                else if (property.name == "Color") gameObject.Color = new Color(property.value.ToString(), Color.HexFormat.ARGB);
+                else if (property.type == "object")
+                {
+                    int objID = Convert.ToInt32(property.value);
+
+                    if (links.ContainsKey(objID))
+                    {
+                        if (links[objID].Me == null) links[objID].WaitingMe.Add(new Tuple<int, string>(tObject.id, property.name));
+                        else
+                        {
+                            property.value = links[objID].Me;
+
+                            SetProp(gameObject, property);
+                        }
+                    }
+                    else links.Add(objID, new LinkObjectData() { Me = null, WaitingMe = new List<Tuple<int, string>>() { new Tuple<int, string>(tObject.id, property.name) } });
+                }
+                else SetProp(gameObject, property);
+            }
         }
 
         /// <summary>
@@ -288,7 +307,7 @@ namespace Claw.Tiled
     /// </summary>
     internal struct LinkObjectData
     {
-        public GameObject Me;
+        public object Me;
         public List<Tuple<int, string>> WaitingMe;
     }
 }
