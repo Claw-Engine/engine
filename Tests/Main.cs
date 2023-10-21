@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Claw;
-using Claw.Input;
 using Claw.Graphics;
 using Claw.Utils;
-using Claw.Save;
 
 namespace Tests
 {

@@ -75,7 +75,7 @@ namespace Claw.Save
 
             if (content[index] == '"' || content[index] == '\'')
             {
-                string text = GetString(out bool isChar);
+                string text = GetString(out bool isChar, true);
 
                 if (isChar) result = text[0];
                 else result = text;
@@ -206,33 +206,42 @@ namespace Claw.Save
         /// <summary>
         /// Obtém um texto, presumindo que os próximos caracteres representam um texto.
         /// </summary>
-        private string GetString(out bool isChar)
+        private string GetString(out bool isChar, bool untilEnd = false)
         {
             bool started = false;
             isChar = false;
-            StringBuilder builder = new StringBuilder();
+            int tempIndex = index, startIndex = 0, endIndex = 0;
 
-            for (; index < content.Length; index++)
+            for (; tempIndex < content.Length; tempIndex++)
             {
                 if (!started)
                 {
-                    if (content[index] == '"' || content[index] == '\'')
+                    if (content[tempIndex] == '"' || content[tempIndex] == '\'')
                     {
                         started = true;
-                        isChar = content[index] == '\''; 
+                        startIndex = tempIndex;
+                        isChar = content[tempIndex] == '\''; 
                     }
                 }
-                else if (content[index] == '"' || content[index] == '\'')
+                else if (content[tempIndex] == '"' || content[tempIndex] == '\'')
                 {
-                    index++;
+                    endIndex = tempIndex;
 
-                    break;
+                    if (!untilEnd) break;
                 }
-                else builder.Append(content[index]);
+                else if (untilEnd && (content[tempIndex] == ',' || content[tempIndex] == '}' || content[tempIndex] == ']')) break;
             }
-            
-            if (!isChar) return builder.ToString();
-            else return builder[0].ToString();
+
+            index = endIndex + 1;
+
+            if (endIndex > startIndex)
+            {
+                string result = content.Substring(startIndex + 1, (endIndex - 1) - startIndex);
+
+                if (!isChar) return result.ToString();
+                else return result[0].ToString();
+            }
+            else return string.Empty;
         }
 
         /// <summary>
