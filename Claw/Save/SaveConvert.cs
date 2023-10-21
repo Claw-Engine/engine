@@ -11,6 +11,7 @@ namespace Claw.Save
     /// </summary>
     internal static class SaveConvert
     {
+        public const string Null = "NULL";
         public const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
         /// <summary>

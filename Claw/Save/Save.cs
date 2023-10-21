@@ -12,7 +12,7 @@ namespace Claw.Save
     public static class Save
     {
         private const int Amount = 10;
-        private static bool useCrypt = true;
+        private static bool useCrypt = true, changed = false;
         private static string path = string.Empty;
         private static Sections save;
         private static Dictionary<ISaveValue, object> references;
@@ -24,6 +24,7 @@ namespace Claw.Save
         {
             Save.path = path;
             Save.useCrypt = useCrypt;
+            changed = false;
             references = new Dictionary<ISaveValue, object>();
             string content = string.Empty;
 
@@ -41,7 +42,7 @@ namespace Claw.Save
         }
 
         /// <summary>
-        /// Escreve numa sessão do save.
+        /// Escreve numa seção do save.
         /// </summary>
         public static void Write(string section, string key, object value)
         {
@@ -51,12 +52,14 @@ namespace Claw.Save
 
                 if (!save[section].Keys.Contains(key)) save[section].Add(key, value);
                 else save[section][key] = value;
+
+                changed = true;
             }
             else throw new Exception("O save não está aberto!");
         }
 
         /// <summary>
-        /// Lê uma chave de uma sessão do save.
+        /// Lê uma chave de uma seção do save.
         /// </summary>
         public static T Read<T>(string section, string key, T defaultValue)
         {
@@ -80,19 +83,12 @@ namespace Claw.Save
         /// </summary>
         public static void Clear()
         {
-            if (path.Length > 0)
-            {
-                save.Clear();
-                File.WriteAllText(path, string.Empty);
-
-                save = null;
-                path = string.Empty;
-            }
+            if (path.Length > 0) save.Clear();
             else throw new Exception("O save não está aberto!");
         }
 
         /// <summary>
-        /// Remove uma sessão inteira do save.
+        /// Remove uma seção inteira do save.
         /// </summary>
         public static void RemoveSection(string section)
         {
@@ -101,7 +97,7 @@ namespace Claw.Save
         }
 
         /// <summary>
-        /// Remove uma chave de uma sessão do save.
+        /// Remove uma chave de uma seção do save.
         /// </summary>
         public static void RemoveKey(string section, string key)
         {
@@ -110,7 +106,7 @@ namespace Claw.Save
         }
 
         /// <summary>
-        /// Verifica se a sessão existe.
+        /// Verifica se a seção existe.
         /// </summary>
         public static bool SectionExists(string section) => save.Keys.Contains(section);
 
@@ -128,11 +124,14 @@ namespace Claw.Save
         /// </summary>
         public static void Close()
         {
-            string content = SaveConvert.Serialize(save);
+            if (changed)
+            {
+                string content = SaveConvert.Serialize(save);
 
-            if (useCrypt) content = StringCrypt.AllCrypt(content, true, Amount);
+                if (useCrypt) content = StringCrypt.AllCrypt(content, true, Amount);
 
-            if (path.Length > 0) File.WriteAllText(path, content);
+                if (path.Length > 0) File.WriteAllText(path, content);
+            }
 
             save = null;
             references = null;
