@@ -35,9 +35,13 @@ namespace Tests
             Save.Write("Other2", "Array", new int[] { 10, 15, 3 });
             Save.Write("Other2", "List", new List<int> { 13, 2, -2 });
             Save.Write("Other2", "Dict", dict);
-            Save.Write("Other2", "GenericArr", new List<int>[] { new List<int> { 10, 12 } });
+
+            List<int> list = new List<int> { 10, 12 };
+
+            Save.Write("Other2", "GenericArr", new List<int>[] { list, list });
             Save.Write("Other2", "Tuple", (10, 2));
             Save.Write("Ref", "Ref", dict);
+            Save.Write("Ref", "RefList", list);
 
             SaveObject obj = new SaveObject();
             obj["X"] = 5.5f;

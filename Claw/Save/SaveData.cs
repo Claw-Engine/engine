@@ -14,6 +14,7 @@ namespace Claw.Save
     /// </summary>
     public interface ISaveValue
     {
+        void Lock();
         object Cast(Type type, Dictionary<ISaveValue, object> references);
     }
 
@@ -44,7 +45,8 @@ namespace Claw.Save
         /// </summary>
         public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
-            if (references.ContainsKey(this)) return references[this];
+            if (type == GetType()) return this;
+            else if (references.ContainsKey(this)) return references[this];
 
             object instance = Activator.CreateInstance(type);
 
@@ -163,7 +165,8 @@ namespace Claw.Save
         /// </summary>
         public object Cast(Type type, Dictionary<ISaveValue, object> references)
         {
-            if (references.ContainsKey(this)) return references[this];
+            if (type == GetType()) return this;
+            else if (references.ContainsKey(this)) return references[this];
 
             if (type.GetInterface("ICollection") != null)
             {

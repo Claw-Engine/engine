@@ -11,10 +11,8 @@ namespace Claw.Save
     /// </summary>
     internal class SaveWriter
     {
-        private static readonly string SectionFormat = "[{0}]", ReferenceFormat = "#{0}", ReferenceValueFormat = " = #{0}",
-            NewKeyFormat = "{0}{1} = ", OldKeyFormat = "{0}{1},", ValueFormat = "{0},",
-            StringFormat = "\"{0}\"", CharFormat = "'{0}'", TypeFormat = "({0})",
-            PairFormat = "{0}:{1}, ";
+        private static readonly string SectionFormat = "[{0}]", ReferenceFormat = "#{0}", KeyFormat = "{0} = ", ValueFormat = "{0},",
+            StringFormat = "\"{0}\"", CharFormat = "'{0}'", TypeFormat = "({0})", PairFormat = "{0}:{1}, ";
         private static readonly string NewLine = Environment.NewLine;
 
         private Sections save;
@@ -43,15 +41,8 @@ namespace Claw.Save
                     {
                         if (key.Value != null)
                         {
-                            string refId = GetReference(key.Value, out bool isNew);
-
-                            if (isNew || refId.Length == 0)
-                            {
-                                builder.AppendFormat(NewKeyFormat, key.Key, refId);
-                                builder.AppendFormat(ValueFormat, Stringfy(key.Value));
-                            }
-                            else builder.AppendFormat(OldKeyFormat, key.Key, refId);
-
+                            builder.AppendFormat(KeyFormat, key.Key);
+                            builder.AppendFormat(ValueFormat, Stringfy(key.Value));
                             builder.Append(NewLine);
                         }
                     }
@@ -85,6 +76,10 @@ namespace Claw.Save
                 StringBuilder builder = new StringBuilder();
                 Type type = value.GetType();
 
+                string refId = GetReference(value, out bool isNew);
+
+                if (!isNew && refId.Length > 0) return refId;
+
                 if (type.IsEnum) builder.AppendFormat(StringFormat, value.ToString());
                 else
                 {
@@ -93,6 +88,7 @@ namespace Claw.Save
                         case "System.String": builder.AppendFormat(StringFormat, value); break;
                         case "System.Char": builder.AppendFormat(CharFormat, value); break;
                         default:
+
                             if (type.GetInterface("IEnumerable") != null)
                             {
                                 if (value is SaveObject obj)
@@ -108,7 +104,7 @@ namespace Claw.Save
                                 else
                                 {
                                     dynamic enumerable = value;
-
+                                    
                                     builder.Append('[');
 
                                     if (type.GetInterface("IDictionary") != null)
@@ -141,6 +137,8 @@ namespace Claw.Save
                             else builder.Append(value.ToString().Replace(',', '.'));
                             break;
                     }
+
+                    if (isNew && refId.Length > 0) builder.Append(refId);
                 }
 
                 return builder.ToString();
@@ -206,7 +204,7 @@ namespace Claw.Save
                     refId = string.Format(ReferenceFormat, references.Count - 1);
                     isNew = true;
                 }
-                else refId = string.Format(ReferenceValueFormat, found.Key);
+                else refId = string.Format(ReferenceFormat, found.Key);
             }
 
             return refId;
