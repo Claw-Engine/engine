@@ -251,6 +251,8 @@ namespace Claw.Tiled
                         if (type == typeof(Vector2)) return new Vector2(result.X, result.Y);
                         else if (type == typeof(Vector3)) return new Vector3(result.X, result.Y, result.Z);
                         else if (type == typeof(Quaternion)) return result;
+                        else if (type == typeof(Line)) return new Line(result.X, result.Y, result.Z, result.W);
+                        else if (type == typeof(Rectangle)) return new Rectangle(result.X, result.Y, result.Z, result.W); ;
                     }
 
                     return property.value;

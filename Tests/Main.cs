@@ -7,7 +7,6 @@ namespace Tests
 {
     public class Main : Game
     {
-        public string Name { get; set; }
         public static SpriteFont Font;
         private ComponentSortingFilteringCollection<IUpdateable> updateables;
         private ComponentSortingFilteringCollection<IDrawable> drawables;
