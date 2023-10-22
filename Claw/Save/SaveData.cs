@@ -28,7 +28,7 @@ namespace Claw.Save
             get => internalDictionary.Get(property, null);
             set
             {
-                if (!locked) internalDictionary.Set(property, value);
+                if (!locked) internalDictionary[property] = value;
             }
         }
 

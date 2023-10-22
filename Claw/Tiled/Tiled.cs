@@ -13,15 +13,12 @@ namespace Claw.Tiled
     /// </summary>
     public static class Tiled
     {
-        /// <summary>
-        /// Define se os objetos irão ser adicionados dentro no jogo apenas quando o parse estiver completo (falso por padrão).
-        /// </summary>
-        public static bool AddAllAtOnce = false;
         public static Config Config;
         private static Sprite notFoundPalette;
 
         private static List<IGameComponent> waiting;
         private static Dictionary<int, LinkObjectData> links;
+        private static Dictionary<Type, Dictionary<string, PropertyInfo>> reflectionCache;
 
         /// <summary>
         /// Carrega um mapa do Tiled.
@@ -50,13 +47,12 @@ namespace Claw.Tiled
 
             waiting = new List<IGameComponent>();
             links = new Dictionary<int, LinkObjectData>();
+            reflectionCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
             var hasTile = LayerForeach(map.layers, tiledMap);
             links = null;
+            reflectionCache = null;
 
-            if (AddAllAtOnce)
-            {
-                foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
-            }
+            foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
 
             waiting = null;
 
@@ -66,20 +62,16 @@ namespace Claw.Tiled
         }
 
         /// <summary>
+        /// Limpa o cache para reflection.
+        /// </summary>
+        public static void ClearCache() => reflectionCache.Clear();
+
+        /// <summary>
         /// Retorna o valor de uma propriedade caso ela exista e seja do tipo esperado.
         /// </summary>
         private static T GetPropertyValue<T>(Property property, string type, T defaultValue)
         {
-            if (property.type == type)
-            {
-                if (property.value is Int64 || property.value is int)
-                {
-                    object integger = Convert.ToInt32(property.value);
-
-                    return (T)integger;
-                }
-                else return (T)property.value;
-            }
+            if (property.type == type) return (T)Cast(property, typeof(T));
             else return defaultValue;
         }
         /// <summary>
@@ -150,17 +142,10 @@ namespace Claw.Tiled
         {
             if (GetPropertyValue(tObject.properties, "TiledIgnore", "bool", false)) return;
 
-            object obj = null;
+            object obj = Config.Instantiate(tObject.type);
+            Type type = obj.GetType();
 
-            if (GetPropertyValue(tObject.properties, "NotGameObject", "bool", false)) obj = Config.Instantiate<object>(tObject.type);
-            else
-            {
-                GameObject gO = Config.Instantiate<GameObject>(tObject.type);
-                gO.Position = new Vector2(tObject.x, tObject.y);
-                gO.Name = tObject.name;
-                gO.Rotation = tObject.rotation;
-                obj = gO;
-            }
+            if (!reflectionCache.TryGetValue(type, out Dictionary<string, PropertyInfo> properties)) properties = SetupCache(type);
 
             if (!links.ContainsKey(tObject.id)) links.Add(tObject.id, new LinkObjectData() { Me = obj, WaitingMe = new List<Tuple<int, string>>() });
             else
@@ -168,92 +153,146 @@ namespace Claw.Tiled
                 for (int i = links[tObject.id].WaitingMe.Count - 1; i >= 0; i--)
                 {
                     var tuple = links[tObject.id].WaitingMe[i];
+                    object waiting = links[tuple.Item1].Me;
 
-                    SetProp(links[tuple.Item1].Me, new Property() { name = tuple.Item2, type = "object", value = obj });
+                    SetProperty(waiting, tObject, new Property() { name = tuple.Item2, type = "instance", value = obj }, reflectionCache[waiting.GetType()]);
                     links[tObject.id].WaitingMe.RemoveAt(i);
                 }
             }
 
-            if (obj is GameObject gameObject) SetupGameObject(gameObject, tObject);
+            if (obj is GameObject gameObject)
+            {
+                gameObject.Position = new Vector2(tObject.x, tObject.y);
+                gameObject.Name = tObject.name;
+                gameObject.Rotation = tObject.rotation;
+
+                foreach (Property property in tObject.properties)
+                {
+                    if (property.name == "Tags")
+                    {
+                        string[] tags = GetPropertyValue(tObject.properties, "Tags", "string", string.Empty).Split(',');
+
+                        for (int i = 0; i < tags.Length; i++) gameObject.AddTag(tags[i]);
+                    }
+                    else if (property.name == "Color") gameObject.Color = new Color(property.value.ToString(), Color.HexFormat.ARGB);
+                    else SetProperty(gameObject, tObject, property, properties);
+                }
+            }
             else
             {
-                foreach (Property property in tObject.properties) SetProp(obj, property);
+                foreach (Property property in tObject.properties) SetProperty(obj, tObject, property, properties);
             }
 
-            if (obj is IGameComponent component)
-            {
-                if (!AddAllAtOnce) Game.Instance.Components.Add(component);
-                else waiting.Add(component);
-            }
-        }
-
-        /// <summary>
-        /// Prepara as propriedades de um gameobject.
-        /// </summary>
-        private static void SetupGameObject(GameObject gameObject, Object tObject)
-        {
-            foreach (Property property in tObject.properties)
-            {
-                if (property.name == "Tags")
-                {
-                    string[] tags = GetPropertyValue(tObject.properties, "Tags", "string", string.Empty).Split(',');
-
-                    for (int i = 0; i < tags.Length; i++) gameObject.AddTag(tags[i].ToLower());
-                }
-                else if (property.name == "Scale")
-                {
-                    if (property.type == "string")
-                    {
-                        if (property.value.ToString().Contains(','))
-                        {
-                            string[] value = property.value.ToString().Replace(" ", "").Split(',');
-                            gameObject.Scale = new Vector2(float.Parse(value[0]), float.Parse(value[1]));
-                        }
-                        else
-                        {
-                            string value = property.value.ToString().Replace(" ", "");
-                            gameObject.Scale = new Vector2(float.Parse(value));
-                        }
-                    }
-                    else if (property.type == "int" || property.type == "float") gameObject.Scale = new Vector2(Convert.ToSingle(property.value));
-                }
-                else if (property.name == "Color") gameObject.Color = new Color(property.value.ToString(), Color.HexFormat.ARGB);
-                else if (property.type == "object")
-                {
-                    int objID = Convert.ToInt32(property.value);
-
-                    if (links.ContainsKey(objID))
-                    {
-                        if (links[objID].Me == null) links[objID].WaitingMe.Add(new Tuple<int, string>(tObject.id, property.name));
-                        else
-                        {
-                            property.value = links[objID].Me;
-
-                            SetProp(gameObject, property);
-                        }
-                    }
-                    else links.Add(objID, new LinkObjectData() { Me = null, WaitingMe = new List<Tuple<int, string>>() { new Tuple<int, string>(tObject.id, property.name) } });
-                }
-                else SetProp(gameObject, property);
-            }
+            if (obj is IGameComponent component) waiting.Add(component);
         }
 
         /// <summary>
         /// Seta o valor da propriedade de um objeto.
         /// </summary>
-        private static void SetProp(object @object, Property property)
+        private static void SetProperty(object @object, Object tObject, Property property, Dictionary<string, PropertyInfo> properties)
         {
             if (@object != null)
             {
-                PropertyInfo propInfo = @object.GetType().GetProperty(property.name);
-
-                if (propInfo != null)
+                if (properties.TryGetValue(property.name, out PropertyInfo propertyInfo))
                 {
-                    if (property.type == "color") propInfo.SetValue(@object, new Color(property.value.ToString(), Color.HexFormat.ARGB));
-                    else if (property.type == "int") propInfo.SetValue(@object, Convert.ToInt32(property.value));
-                    else propInfo.SetValue(@object, property.value);
+                    if (property.type == "object")
+                    {
+                        int objId = Convert.ToInt32(property.value);
+
+                        if (links.TryGetValue(objId, out LinkObjectData reference))
+                        {
+                            if (reference.Me == null) reference.WaitingMe.Add(new Tuple<int, string>(tObject.id, property.name));
+                            else propertyInfo.SetValue(@object, reference.Me);
+                        }
+                        else links.Add(objId, new LinkObjectData() { Me = null, WaitingMe = new List<Tuple<int, string>>() { new Tuple<int, string>(tObject.id, property.name) } });
+                    }
+                    else if (property.type == "instance") propertyInfo.SetValue(@object, property.value);
+                    else propertyInfo.SetValue(@object, Cast(property, propertyInfo.PropertyType));
                 }
             }
+        }
+
+        /// <summary>
+        /// Prepara as propriedades de um tipo para o cache.
+        /// </summary>
+        private static Dictionary<string, PropertyInfo> SetupCache(Type type)
+        {
+            Dictionary<string, PropertyInfo> setters = new Dictionary<string, PropertyInfo>();
+            PropertyInfo[] properties = type.GetProperties();
+
+            reflectionCache.Add(type, setters);
+
+            for (int i = 0; i < properties.Length; i++) setters.Add(properties[i].Name, properties[i]);
+
+            return setters;
+        }
+
+        /// <summary>
+        /// Realiza a conversão dos valores de propriedade, se necessário.
+        /// </summary>
+        private static object Cast(Property property, Type type)
+        {
+            switch (property.type)
+            {
+                case "int":
+                    if (type == typeof(Color)) return new Color(Convert.ToUInt32(property.value));
+                    else if (type == typeof(Vector2)) return new Vector2(Convert.ToSingle(property.value));
+                    else if (type == typeof(Vector3)) return new Vector3(Convert.ToSingle(property.value));
+                    else if (type == typeof(Quaternion)) return new Quaternion(Convert.ToSingle(property.value));
+
+                    return Convert.ToInt32(property.value);
+                    break;
+                case "string":
+                    if (type == typeof(Sprite)) return TextureAtlas.Sprites[property.value.ToString()];
+                    else if (type != typeof(string))
+                    {
+                        Quaternion result = StringToQuaternion(property.value.ToString());
+
+                        if (type == typeof(Vector2)) return new Vector2(result.X, result.Y);
+                        else if (type == typeof(Vector3)) return new Vector3(result.X, result.Y, result.Z);
+                        else if (type == typeof(Quaternion)) return result;
+                    }
+
+                    return property.value;
+                    break;
+                case "color": return new Color(property.value.ToString(), Color.HexFormat.ARGB);
+                case "float":
+                    if (type == typeof(Vector2)) return new Vector2(Convert.ToSingle(property.value));
+                    else if (type == typeof(Vector3)) return new Vector3(Convert.ToSingle(property.value));
+                    else if (type == typeof(Quaternion)) return new Quaternion(Convert.ToSingle(property.value));
+
+                    return property.value;
+                    break;
+                default: return property.value;
+            }
+        }
+        /// <summary>
+        /// Transforma uma string em um <see cref="Quaternion"/>.
+        /// </summary>
+        private static Quaternion StringToQuaternion(string quaternion)
+        {
+            Quaternion result = new Quaternion();
+
+            if (quaternion.Contains(','))
+            {
+                string[] value = quaternion.Replace(" ", "").Split(',');
+
+                if (value.Length >= 1) result.X = float.Parse(value[0]);
+
+                if (value.Length >= 2) result.X = float.Parse(value[1]);
+
+                if (value.Length >= 3) result.X = float.Parse(value[2]);
+
+                if (value.Length >= 4) result.X = float.Parse(value[3]);
+            }
+            else
+            {
+                string value = quaternion.Replace(" ", "");
+
+                result = new Quaternion(float.Parse(value));
+            }
+
+            return result;
         }
     }
     /// <summary>
@@ -281,7 +320,7 @@ namespace Claw.Tiled
         /// <summary>
         /// Cria uma instância, com base no namespace.
         /// </summary>
-        internal T Instantiate<T>(string type) => (T)Activator.CreateInstance(assemblyName, string.Format("{0}.{1}", prefixNamespace, type)).Unwrap();
+        internal object Instantiate(string type) => Activator.CreateInstance(assemblyName, string.Format("{0}.{1}", prefixNamespace, type)).Unwrap();
 
         /// <summary>
         /// Checa se uma paleta existe no <see cref="palettes"/>.
@@ -305,7 +344,7 @@ namespace Claw.Tiled
     /// <summary>
     /// Dados para lista de espera para objetos linkados à outros.
     /// </summary>
-    internal struct LinkObjectData
+    internal class LinkObjectData
     {
         public object Me;
         public List<Tuple<int, string>> WaitingMe;

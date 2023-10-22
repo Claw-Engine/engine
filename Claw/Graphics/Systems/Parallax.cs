@@ -136,6 +136,8 @@ namespace Claw.Graphics.Systems
 
         internal void Render(Parallax parallax)
         {
+            if (Sprite == null) return;
+
             CameraState camera = Draw.GetCamera()?.State ?? CameraState.Neutral;
 
             if (Direction != Vector2.Zero && Speed != 0)

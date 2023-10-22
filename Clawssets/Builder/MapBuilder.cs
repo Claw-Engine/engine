@@ -189,10 +189,17 @@ namespace Clawssets.Builder
             writer.Write(property.name);
             writer.Write(property.type);
 
-            byte[] value = property.value.Serializate();
-
-            writer.Write(value.Length);
-            writer.Write(value);
+            switch (property.type)
+            {
+                case "bool": writer.Write((bool)property.value); break;
+                case "color": case "string":
+                    writer.Write((string)property.value);
+                    break;
+                case "float": writer.Write((float)property.value); break;
+                case "int": case "object":
+                    writer.Write((long)property.value);
+                    break;
+            }
         }
 
         /// <summary>

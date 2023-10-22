@@ -59,7 +59,7 @@ namespace Claw.Extensions
         /// <summary>
         /// Troca dois elementos de posição em uma lista.
         /// </summary>
-        public static void Swap<T>(this List<T> list, int index1, int index2)
+        public static void Swap<T>(this IList<T> list, int index1, int index2)
         {
             T temp = list[index1];
             list[index1] = list[index2];
@@ -68,9 +68,9 @@ namespace Claw.Extensions
         /// <summary>
         /// Troca dois elementos de posição em um dicionário.
         /// </summary>
-        public static void Swap<T1, T2>(this Dictionary<T1, T2> map, T1 index1, T1 index2)
+        public static void Swap<TKey, TValue>(this IDictionary<TKey, TValue> map, TKey index1, TKey index2)
         {
-            T2 temp = map[index1];
+            TValue temp = map[index1];
             map[index1] = map[index2];
             map[index2] = temp;
         }
@@ -78,19 +78,11 @@ namespace Claw.Extensions
         /// <summary>
         /// Pega um valor no index, se ele existir. Senão, retorna um valor padrão.
         /// </summary>
-        public static T2 Get<T1, T2>(this Dictionary<T1, T2> map, T1 index, T2 defaultValue)
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> map, TKey index, TValue defaultValue)
         {
-            if (map.ContainsKey(index)) return map[index];
+            if (map.TryGetValue(index, out TValue value)) return value;
 
             return defaultValue;
-        }
-        /// <summary>
-        /// Adiciona um index, se ele não existir. Em seguinda, seta o seu valor.
-        /// </summary>
-        public static void Set<T1, T2>(this Dictionary<T1, T2> map, T1 index, T2 value)
-        {
-            if (map.ContainsKey(index)) map[index] = value;
-            else map.Add(index, value);
         }
     }
 }

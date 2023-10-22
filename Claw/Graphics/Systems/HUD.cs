@@ -119,7 +119,10 @@ namespace Claw.Graphics.Systems
         }
 
         public override void Step(HUD hud) => animator?.Step();
-        public override void Render(HUD hud) => Draw.Sprite(Sprite, GetPosition(hud), SpriteArea, Color * Opacity, Rotation, Origin, GetScale(hud), Flip);
+        public override void Render(HUD hud)
+        {
+            if (Sprite != null) Draw.Sprite(Sprite, GetPosition(hud), SpriteArea, Color * Opacity, Rotation, Origin, GetScale(hud), Flip);
+        }
     }
     /// <summary>
     /// Representa um texto na HUD do jogo.

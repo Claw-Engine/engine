@@ -13,9 +13,9 @@ namespace Clawssets.Builder
     {
         public const string AssetExtension = ".ca", ConfigExtension = ".cb";
         public static string BuildDirectory { get; private set; }
+        public static string BuildFile { get; private set; }
         private const string BuildDirectoryName = ".bin", CacheFile = ".cache";
-
-        private static string buildFile;
+        
         private static BuilderCache cache, newCache;
         private static List<string> outputs;
         private static List<AssetGroup> groups;
@@ -40,7 +40,7 @@ namespace Clawssets.Builder
         {
             if (File.Exists(file))
             {
-                buildFile = file;
+                BuildFile = file;
                 BuildDirectory = Path.Combine(Path.GetDirectoryName(file), BuildDirectoryName);
                 newCache = new BuilderCache();
                 outputs = new List<string>();
@@ -104,7 +104,7 @@ namespace Clawssets.Builder
 
             if (!Directory.Exists(BuildDirectory)) Directory.CreateDirectory(BuildDirectory);
             
-            string originalPath = Path.GetDirectoryName(Path.GetFullPath(buildFile));
+            string originalPath = Path.GetDirectoryName(Path.GetFullPath(BuildFile));
 
             for (int i = groups.Count - 1; i >= 0; i--)
             {
@@ -183,7 +183,7 @@ namespace Clawssets.Builder
 
             for (int i = 0; i < outputs.Count; i++)
             {
-                string dir = Path.GetFullPath(Path.Combine(buildFile, outputs[i]));
+                string dir = Path.GetFullPath(Path.Combine(BuildFile, outputs[i]));
 
                 if (Directory.Exists(dir)) Directory.Delete(dir, true);
 

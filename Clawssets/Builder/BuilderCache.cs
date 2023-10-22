@@ -17,7 +17,7 @@ namespace Clawssets.Builder
         /// </summary>
         public void AddFile(string file, string group, AssetType type)
         {
-            FileData fileData = new FileData() { Path = file, Group = group, Type = type, LastModified = File.GetLastWriteTimeUtc(file) };
+            FileData fileData = new FileData() { Path = file, Group = group, Type = type, LastModified = File.GetLastWriteTimeUtc(GetPath(file)) };
 
             Files.Add(fileData);
         }
@@ -33,13 +33,18 @@ namespace Clawssets.Builder
             foreach (FileData data in filtered)
             {
                 if (!group.Files.Contains(data.Path)) return true;
-                else if (File.GetLastWriteTimeUtc(data.Path) != data.LastModified) return true;
+                else if (File.GetLastWriteTimeUtc(GetPath(data.Path)) != data.LastModified) return true;
 
                 count++;
             }
 
             return count != group.Files.Count;
         }
+
+        /// <summary>
+        /// Retorna o caminho completo.
+        /// </summary>
+        private static string GetPath(string path) => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(AssetBuilder.BuildFile), path));
 
         /// <summary>
         /// Representa informações dos arquivos compilados.
@@ -53,7 +58,7 @@ namespace Clawssets.Builder
             /// <summary>
             /// Atualiza a informação de data de modificação.
             /// </summary>
-            public void UpdateDate() => LastModified = File.GetLastWriteTimeUtc(Path);
+            public void UpdateDate() => LastModified = File.GetLastWriteTimeUtc(GetPath(Path));
         }
     }
 }

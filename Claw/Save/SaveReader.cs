@@ -48,7 +48,7 @@ namespace Claw.Save
                     index++;
 
                     JumpEmpty();
-                    save[section].Set(key, ReadValue());
+                    save[section][key] = ReadValue();
                 }
             }
 

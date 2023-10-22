@@ -267,7 +267,10 @@ namespace Claw
         public bool HasTag(string tag) => tags.Contains(tag.ToLower());
 
         public virtual void Step() => animator?.Step();
-        public virtual void Render() => Draw.Sprite(Sprite, Position, SpriteArea, Color * Opacity, Rotation, Origin, Scale, Flip);
+        public virtual void Render()
+        {
+            if (Sprite != null) Draw.Sprite(Sprite, Position, SpriteArea, Color * Opacity, Rotation, Origin, Scale, Flip);
+        }
         
         /// <summary>
         /// Destrói um objeto.

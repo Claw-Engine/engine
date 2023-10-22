@@ -21,8 +21,17 @@ namespace Claw.Tiled
             property.name = reader.ReadString();
             property.type = reader.ReadString();
 
-            int byteCount = reader.ReadInt32();
-            property.value = Deserializate(reader.ReadBytes(byteCount));
+            switch (property.type)
+            {
+                case "bool": property.value = reader.ReadBoolean(); break;
+                case "color": case "string":
+                    property.value = reader.ReadString();
+                    break;
+                case "float": property.value = reader.ReadSingle(); break;
+                case "int": case "object":
+                    property.value = reader.ReadInt64();
+                    break;
+            }
 
             return property;
         }
@@ -37,19 +46,6 @@ namespace Claw.Tiled
             for (int i = 0; i < propertyCount; i++) properties[i] = ReadProperty(reader);
 
             return properties;
-        }
-
-        /// <summary>
-        /// Converte um array de bytes para um <see cref="object"/>.
-        /// </summary>
-        private static object Deserializate(byte[] deserialize)
-        {
-            MemoryStream memory = new MemoryStream(deserialize);
-            BinaryFormatter formatter = new BinaryFormatter();
-
-            memory.Close();
-
-            return formatter.Deserialize(memory);
         }
     }
 }

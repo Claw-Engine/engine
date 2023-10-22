@@ -24,6 +24,6 @@ namespace Claw.Extensions
         /// <summary>
         /// Escholhe um item aleatório de uma lista.
         /// </summary>
-        public static T Choose<T>(this Random random, List<T> list) => list[random.Next(list.Count)];
+        public static T Choose<T>(this Random random, IList<T> list) => list[random.Next(list.Count)];
     }
 }

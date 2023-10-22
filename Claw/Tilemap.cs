@@ -557,8 +557,8 @@ namespace Claw
             Dictionary<Vector2, float> cheapest = new Dictionary<Vector2, float>();
             Dictionary<Vector2, float> bestGuess = new Dictionary<Vector2, float>();
 
-            cheapest.Set(origin, 0);
-            bestGuess.Set(origin, PathCost(origin, goal, diagonalMovement));
+            cheapest[origin] = 0;
+            bestGuess[origin] = PathCost(origin, goal, diagonalMovement);
 
             while (open.Count > 0)
             {
@@ -594,9 +594,9 @@ namespace Claw
 
                                 if (!cheapest.ContainsKey(neighbor) || tentativeCheapest < cheapest[neighbor])
                                 {
-                                    cameFrom.Set(neighbor, best);
-                                    cheapest.Set(neighbor, tentativeCheapest);
-                                    bestGuess.Set(neighbor, tentativeCheapest + PathCost(neighbor, goal, diagonalMovement));
+                                    cameFrom[neighbor] = best;
+                                    cheapest[neighbor] = tentativeCheapest;
+                                    bestGuess[neighbor] = tentativeCheapest + PathCost(neighbor, goal, diagonalMovement);
 
                                     if (!open.Contains(neighbor)) open.Add(neighbor);
                                 }

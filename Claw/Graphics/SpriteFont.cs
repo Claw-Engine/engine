@@ -36,7 +36,7 @@ namespace Claw.Graphics
         /// </summary>
         public SpriteFont AddKerning(char first, char second, float value)
         {
-            Glyphs[second].KerningPair.Set(first, value);
+            Glyphs[second].KerningPair[first] = value;
 
             return this;
         }

@@ -17,13 +17,8 @@ namespace Claw
             Z = z;
             W = w;
         }
-        public Quaternion(Vector3 vector, float w)
-        {
-            X = vector.X;
-            Y = vector.Y;
-            Z = vector.Z;
-            W = w;
-        }
+        public Quaternion(float value) : this(value, value, value, value) { }
+        public Quaternion(Vector3 vector, float w) : this(vector.X, vector.Y, vector.Z, w) { }
 
         /// <summary>
         /// Redimensiona a magnitude deste <see cref="Quaternion"/> para um comprimento em unidade.

@@ -50,9 +50,14 @@ namespace Claw.Save
             {
                 if (!SectionExists(section)) save.Add(section, new Keys());
 
-                if (!save[section].Keys.Contains(key)) save[section].Add(key, value);
-                else save[section][key] = value;
+                if (!save.TryGetValue(section, out Keys keys))
+                {
+                    keys = new Keys();
 
+                    save.Add(section, keys);
+                }
+
+                keys[key] = value;
                 changed = true;
             }
             else throw new Exception("O save não está aberto!");
@@ -65,15 +70,20 @@ namespace Claw.Save
         {
             if (save != null)
             {
-                if (!SectionExists(section)) return defaultValue;
-                else if (!save[section].Keys.Contains(key)) return defaultValue;
+                if (save.TryGetValue(section, out Keys keys))
+                {
+                    if (keys.TryGetValue(key, out object value))
+                    {
+                        Type type = typeof(T);
 
-                Type type = typeof(T);
+                        if (value is ISaveValue saveValue) return (T)saveValue.Cast(type, references);
+                        else if (type.IsEnum) return (T)Enum.Parse(type, value.ToString());
 
-                if (save[section][key] is ISaveValue) return (T)((ISaveValue)save[section][key]).Cast(type, references);
-                else if (type.IsEnum) return (T)Enum.Parse(type, save[section][key].ToString());
+                        return (T)value;
+                    }
+                }
 
-                return (T)save[section][key];
+                return defaultValue;
             }
             else throw new Exception("O save não está aberto!");
         }
