@@ -222,7 +222,7 @@ namespace Claw.Tiled
 
             for (int i = 0; i < properties.Length; i++)
             {
-                if (properties[i].GetMethod != null && properties[i].SetMethod != null) setters.Add(properties[i].Name, (properties[i].SetValue, properties[i].PropertyType));
+                if (properties[i].SetMethod != null) setters.Add(properties[i].Name, (properties[i].SetValue, properties[i].PropertyType));
             }
 
             for (int i = 0; i < fields.Length; i++) setters.Add(fields[i].Name, (fields[i].SetValue, fields[i].FieldType));
