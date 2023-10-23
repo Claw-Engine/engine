@@ -15,7 +15,7 @@ namespace Claw.Graphics
         public static bool IgnoreCamera = false;
         private static Camera camera;
         private static BlendMode? forcedBlendMode;
-        private static Texture pixelTexture => TextureAtlas.CurrentPage ?? Texture.Pixel;
+        private static Texture pixelTexture = Texture.Pixel;
         private static Rectangle pixelArea = new Rectangle(0, 0, 1, 1);
 
         #region Sprite
@@ -28,6 +28,7 @@ namespace Claw.Graphics
         {
             Rectangle src;
             TextureAtlas.CurrentPage = sprite.Texture;
+            pixelTexture = sprite.Texture;
 
             if (sourceRectangle.HasValue) src = new Rectangle(sourceRectangle.Value.Location + new Vector2(sprite.X, sprite.Y), sourceRectangle.Value.Size);
             else src = new Rectangle(sprite.X, sprite.Y, sprite.Width, sprite.Height);

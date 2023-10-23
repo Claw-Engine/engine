@@ -98,7 +98,7 @@ namespace Claw.Save
 
             for (int i = 0; i < properties.Length; i++)
             {
-                if (properties[i].Name.EndsWith(">k__BackingField") || properties[i].GetCustomAttribute<SaveIgnoreAttribute>() != null) continue;
+                if (properties[i].GetCustomAttribute<SaveIgnoreAttribute>() != null) continue;
 
                 SavePropertyAttribute attribute = properties[i].GetCustomAttribute<SavePropertyAttribute>();
 
@@ -109,8 +109,6 @@ namespace Claw.Save
                 setters.Add(name, (properties[i].SetValue, properties[i].PropertyType));
             }
         }
-
-        private delegate void PropertySetter(object instance, object value);
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => internalDictionary.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator()

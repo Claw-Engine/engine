@@ -14,11 +14,11 @@ namespace Claw.Tiled
     public static class Tiled
     {
         public static Config Config;
-        private static Sprite notFoundPalette;
+        private const BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
         private static List<IGameComponent> waiting;
         private static Dictionary<int, LinkObjectData> links;
-        private static Dictionary<Type, Dictionary<string, PropertyInfo>> reflectionCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+        private static Dictionary<Type, Dictionary<string, (PropertySetter, Type)>> reflectionCache = new Dictionary<Type, Dictionary<string, (PropertySetter, Type)>>();
 
         /// <summary>
         /// Carrega um mapa do Tiled.
@@ -26,7 +26,6 @@ namespace Claw.Tiled
         public static void Load(Map map, bool runDestroy = false, bool deleteAll = true)
         {
             if (Config == null) throw new Exception("\"Config\" não pode ser nulo!");
-            else if (notFoundPalette == null) notFoundPalette = new Sprite(Texture.Pixel, "_pixel_", new Rectangle(0, 0, 1, 1));
 
             SceneManager.ClearScene(runDestroy, deleteAll);
 
@@ -40,7 +39,7 @@ namespace Claw.Tiled
             {
                 var tilesets = map.tilesets.OrderBy(t => t.firstgid).ToArray();
 
-                foreach (Tileset tileset in map.tilesets) tiledMap.AddPalette(Config.GetPalette(tileset.name) ?? notFoundPalette, tileset.margin, tileset.spacing);
+                foreach (Tileset tileset in map.tilesets) tiledMap.AddPalette(Config.GetPalette(tileset.name), tileset.margin, tileset.spacing);
             }
 
             if (map.layers == null || map.layers.Length == 0) return;
@@ -143,17 +142,17 @@ namespace Claw.Tiled
             object obj = Config.Instantiate(tObject.type);
             Type type = obj.GetType();
 
-            if (!reflectionCache.TryGetValue(type, out Dictionary<string, PropertyInfo> properties)) properties = SetupCache(type);
+            if (!reflectionCache.TryGetValue(type, out Dictionary<string, (PropertySetter, Type)> properties)) properties = SetupCache(type);
 
-            if (!links.ContainsKey(tObject.id)) links.Add(tObject.id, new LinkObjectData() { Me = obj, WaitingMe = new List<Tuple<int, string>>() });
+            if (!links.ContainsKey(tObject.id)) links.Add(tObject.id, new LinkObjectData() { Me = obj, WaitingMe = new List<(int, string)>() });
             else
             {
                 for (int i = links[tObject.id].WaitingMe.Count - 1; i >= 0; i--)
                 {
                     var tuple = links[tObject.id].WaitingMe[i];
-                    object waiting = links[tuple.Item1].Me;
+                    object waiting = links[tuple.objId].Me;
 
-                    SetProperty(waiting, tObject, new Property() { name = tuple.Item2, type = "instance", value = obj }, reflectionCache[waiting.GetType()]);
+                    SetProperty(waiting, tObject, new Property() { name = tuple.propertyName, type = "instance", value = obj }, reflectionCache[waiting.GetType()]);
                     links[tObject.id].WaitingMe.RemoveAt(i);
                 }
             }
@@ -187,11 +186,11 @@ namespace Claw.Tiled
         /// <summary>
         /// Seta o valor da propriedade de um objeto.
         /// </summary>
-        private static void SetProperty(object @object, Object tObject, Property property, Dictionary<string, PropertyInfo> properties)
+        private static void SetProperty(object @object, Object tObject, Property property, Dictionary<string, (PropertySetter, Type)> properties)
         {
             if (@object != null)
             {
-                if (properties.TryGetValue(property.name, out PropertyInfo propertyInfo))
+                if (properties.TryGetValue(property.name, out (PropertySetter SetValue, Type Type) propertyInfo))
                 {
                     if (property.type == "object")
                     {
@@ -199,13 +198,13 @@ namespace Claw.Tiled
 
                         if (links.TryGetValue(objId, out LinkObjectData reference))
                         {
-                            if (reference.Me == null) reference.WaitingMe.Add(new Tuple<int, string>(tObject.id, property.name));
+                            if (reference.Me == null) reference.WaitingMe.Add((tObject.id, property.name));
                             else propertyInfo.SetValue(@object, reference.Me);
                         }
-                        else links.Add(objId, new LinkObjectData() { Me = null, WaitingMe = new List<Tuple<int, string>>() { new Tuple<int, string>(tObject.id, property.name) } });
+                        else links.Add(objId, new LinkObjectData() { Me = null, WaitingMe = new List<(int, string)>() { (tObject.id, property.name) } });
                     }
                     else if (property.type == "instance") propertyInfo.SetValue(@object, property.value);
-                    else propertyInfo.SetValue(@object, Cast(property, propertyInfo.PropertyType));
+                    else propertyInfo.SetValue(@object, Cast(property, propertyInfo.Type));
                 }
             }
         }
@@ -213,14 +212,20 @@ namespace Claw.Tiled
         /// <summary>
         /// Prepara as propriedades de um tipo para o cache.
         /// </summary>
-        private static Dictionary<string, PropertyInfo> SetupCache(Type type)
+        private static Dictionary<string, (PropertySetter, Type)> SetupCache(Type type)
         {
-            Dictionary<string, PropertyInfo> setters = new Dictionary<string, PropertyInfo>();
-            PropertyInfo[] properties = type.GetProperties();
+            Dictionary<string, (PropertySetter, Type)> setters = new Dictionary<string, (PropertySetter, Type)>();
+            PropertyInfo[] properties = type.GetProperties(Flags);
+            FieldInfo[] fields = type.GetFields(Flags);
 
             reflectionCache.Add(type, setters);
 
-            for (int i = 0; i < properties.Length; i++) setters.Add(properties[i].Name, properties[i]);
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (properties[i].GetMethod != null && properties[i].SetMethod != null) setters.Add(properties[i].Name, (properties[i].SetValue, properties[i].PropertyType));
+            }
+
+            for (int i = 0; i < fields.Length; i++) setters.Add(fields[i].Name, (fields[i].SetValue, fields[i].FieldType));
 
             return setters;
         }
@@ -310,59 +315,14 @@ namespace Claw.Tiled
 
             return result;
         }
-    }
-    /// <summary>
-    /// Configurações para o <see cref="Tiled"/>.
-    /// </summary>
-    public sealed class Config
-    {
-        private string assemblyName, prefixNamespace;
-        private Dictionary<string, Sprite> palettes = new Dictionary<string, Sprite>();
-
-        public Config(string prefixNamespace)
-        {
-            this.prefixNamespace = prefixNamespace;
-            assemblyName = Game.Instance.GetType().Assembly.FullName;
-        }
 
         /// <summary>
-        /// Adiciona as paletas do Tiled.
+        /// Dados para lista de espera para objetos linkados à outros.
         /// </summary>
-        public void AddPalettes(string[] palettes, Sprite[] palettesTexture)
+        private class LinkObjectData
         {
-            for (int i = 0; i < palettes.Length; i++) this.palettes.Add(palettes[i], palettesTexture[i]);
+            public object Me;
+            public List<(int objId, string propertyName)> WaitingMe;
         }
-
-        /// <summary>
-        /// Cria uma instância, com base no namespace.
-        /// </summary>
-        internal object Instantiate(string type) => Activator.CreateInstance(assemblyName, string.Format("{0}.{1}", prefixNamespace, type)).Unwrap();
-
-        /// <summary>
-        /// Checa se uma paleta existe no <see cref="palettes"/>.
-        /// </summary>
-        internal bool FindPalette(string tileset)
-        {
-            KeyValuePair<string, Sprite> keyValuePair = palettes.FirstOrDefault(a => a.Key == tileset);
-
-            return !keyValuePair.Equals(default(KeyValuePair<string, Sprite>));
-        }
-        /// <summary>
-        /// Retorna uma paleta com o nome dado caso ela exista. Caso contrário ele retornará a textura padrão.
-        /// </summary>
-        internal Sprite GetPalette(string tileset)
-        {
-            if (FindPalette(tileset)) return palettes[tileset];
-
-            return TextureAtlas.Sprites.Count > 0 ? TextureAtlas.Sprites.First().Value : null;
-        }
-    }
-    /// <summary>
-    /// Dados para lista de espera para objetos linkados à outros.
-    /// </summary>
-    internal class LinkObjectData
-    {
-        public object Me;
-        public List<Tuple<int, string>> WaitingMe;
     }
 }

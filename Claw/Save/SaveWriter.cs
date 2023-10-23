@@ -179,7 +179,7 @@ namespace Claw.Save
 
             for (int i = 0; i < properties.Length; i++)
             {
-                if (properties[i].Name.EndsWith(">k__BackingField") || properties[i].GetCustomAttribute<SaveIgnoreAttribute>() != null) continue;
+                if (properties[i].GetCustomAttribute<SaveIgnoreAttribute>() != null) continue;
 
                 SavePropertyAttribute attribute = properties[i].GetCustomAttribute<SavePropertyAttribute>();
 

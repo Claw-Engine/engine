@@ -110,6 +110,8 @@
     <Compile Include="Save\SaveWriter.cs" />
     <Compile Include="Save\Shortcuts.cs" />
     <Compile Include="SceneManager.cs" />
+    <Compile Include="Tiled\Config.cs" />
+    <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />
     <Compile Include="TagManager.cs" />
     <Compile Include="Tiled\Chunk.cs" />
