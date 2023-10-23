@@ -52,7 +52,7 @@ namespace Claw.Save
 
             references.Add(this, instance);
 
-            SetupSetters(type, out Dictionary<string, (PropertySetter, Type)> setters);
+            SetupSetters(type, out Dictionary<string, (PropertySetter SetValue, Type Type)> setters);
 
             foreach (KeyValuePair<string, object> pair in internalDictionary)
             {
@@ -62,14 +62,14 @@ namespace Claw.Save
 
                     if (found.Equals(default(KeyValuePair<ISaveValue, object>)))
                     {
-                        object value = ((ISaveValue)pair.Value).Cast(setters[pair.Key].Item2, references);
+                        object value = ((ISaveValue)pair.Value).Cast(setters[pair.Key].Type, references);
 
-                        setters[pair.Key].Item1(instance, value);
+                        setters[pair.Key].SetValue(instance, value);
                         references.Add(((ISaveValue)pair.Value), value);
                     }
-                    else setters[pair.Key].Item1(instance, found.Value);
+                    else setters[pair.Key].SetValue(instance, found.Value);
                 }
-                else setters[pair.Key].Item1(instance, Convert.ChangeType(pair.Value, setters[pair.Key].Item2));
+                else setters[pair.Key].SetValue(instance, Convert.ChangeType(pair.Value, setters[pair.Key].Type));
             }
 
             return instance;

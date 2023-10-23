@@ -97,6 +97,7 @@ namespace Claw.Save
                     {
                         case "System.String": builder.AppendFormat(StringFormat, value); break;
                         case "System.Char": builder.AppendFormat(CharFormat, value); break;
+                        case "System.Boolean": builder.Append((bool)value ? '1' : '0'); break;
                         default:
 
                             if (isNew && refId.Length > 0) builder.AppendFormat(IdFormat, refId);

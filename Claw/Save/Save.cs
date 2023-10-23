@@ -78,6 +78,7 @@ namespace Claw.Save
 
                         if (value is ISaveValue saveValue) return (T)saveValue.Cast(type, references);
                         else if (type.IsEnum) return (T)Enum.Parse(type, value.ToString());
+                        else if (type == typeof(bool)) return (T)Convert.ChangeType(value, typeof(bool));
 
                         return (T)value;
                     }
