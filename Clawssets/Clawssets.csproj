@@ -70,15 +70,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Guides\TiledExport.png" />
     <Content Include="Icon.ico" />
-    <None Include="Guides\ATLASGUIDE.md" />
-    <None Include="Guides\CONFIGGUIDE.md" />
-    <None Include="Guides\AUDIOGUIDE.md" />
-    <None Include="Guides\FONTGUIDE.md" />
-    <None Include="Guides\MAPGUIDE.md" />
     <None Include="packages.config" />
-    <None Include="README.md" />
     <None Include="run.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

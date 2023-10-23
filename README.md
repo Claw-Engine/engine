@@ -2,9 +2,21 @@
 Claw é uma engine low-end para o desenvolvimento de jogos 2D pixel art.
 
 # Código aberto, contribuição fechada
-A Claw é um projeto pessoal que eu faço para me divertir criando sistemas e jogos. Sendo assim, o projeto não aceita contribuições externas, porque isso tiraria a parte mais legal, que é fazer as coisas na unha. <br />
-Porém o source está aí para caso se interessem em usar e queiram saber como as coisas funcionam internamente ou até fazer um fork.
+A Claw é um projeto pessoal que eu faço por diversão. Mas sinta-se livre para olhar o source ou até mesmo fazer um fork.
 
-# Versão 0
-A versão 0 é uma versão que não promete nenhuma estabilidade forte. Estou testando direções de design e features para ver o que funciona e o que não funciona. <br />
-Pelos sistemas já terem sido testados em infinitos jogos, dificilmente as coisas vão mudar. Porém, o que precisar mudar, vai mudar.
+# Como usar
+Além dos comentários de documentação em XML, você pode encontrar instruções mais específicas em [ClawDocs](https://github.com/tomateuso/ClawDocs).
+
+# Dependências
+## Claw
+A única dependência da Claw é o **SDL2**, para o back-end.
+
+## Clawssets
+* Claw:
+    * Para acessar as estruturas do Claw.Tiled;
+    * Para acessar o Claw.Graphics.SpriteFont.Glyph;
+	* Para acessar o Claw.Audio.AudioManager.SampleRate.
+* Newtonsoft.Json:
+    * Para carregar os mapas **.json** e **.tmj** do Tiled;
+    * Para carregar as descrições de fonte **.csf**;
+	* Para escrever e carregar os arquivos de cachê **.cache**.
