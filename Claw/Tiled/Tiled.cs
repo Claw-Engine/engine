@@ -18,7 +18,7 @@ namespace Claw.Tiled
 
         private static List<IGameComponent> waiting;
         private static Dictionary<int, LinkObjectData> links;
-        private static Dictionary<Type, Dictionary<string, PropertyInfo>> reflectionCache;
+        private static Dictionary<Type, Dictionary<string, PropertyInfo>> reflectionCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
 
         /// <summary>
         /// Carrega um mapa do Tiled.
@@ -47,10 +47,8 @@ namespace Claw.Tiled
 
             waiting = new List<IGameComponent>();
             links = new Dictionary<int, LinkObjectData>();
-            reflectionCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
             var hasTile = LayerForeach(map.layers, tiledMap);
             links = null;
-            reflectionCache = null;
 
             foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
 
@@ -170,7 +168,7 @@ namespace Claw.Tiled
                 {
                     if (property.name == "Tags")
                     {
-                        string[] tags = GetPropertyValue(tObject.properties, "Tags", "string", string.Empty).Split(',');
+                        string[] tags = GetPropertyValue(property, "string", string.Empty).Split(',');
 
                         for (int i = 0; i < tags.Length; i++) gameObject.AddTag(tags[i]);
                     }
@@ -235,7 +233,8 @@ namespace Claw.Tiled
             switch (property.type)
             {
                 case "int":
-                    if (type == typeof(Color)) return new Color(Convert.ToUInt32(property.value));
+                    if (type.IsEnum) return Enum.ToObject(type, Convert.ToInt32(property.value));
+                    else if (type == typeof(Color)) return new Color(Convert.ToUInt32(property.value));
                     else if (type == typeof(Vector2)) return new Vector2(Convert.ToSingle(property.value));
                     else if (type == typeof(Vector3)) return new Vector3(Convert.ToSingle(property.value));
                     else if (type == typeof(Quaternion)) return new Quaternion(Convert.ToSingle(property.value));
@@ -243,25 +242,40 @@ namespace Claw.Tiled
                     return Convert.ToInt32(property.value);
                     break;
                 case "string":
-                    if (type == typeof(Sprite)) return TextureAtlas.Sprites[property.value.ToString()];
+                    string text = property.value.ToString();
+
+                    if (type.IsEnum) return Enum.Parse(type, text);
+                    else if (type == typeof(Sprite)) return TextureAtlas.Sprites[text];
                     else if (type != typeof(string))
                     {
-                        Quaternion result = StringToQuaternion(property.value.ToString());
+                        Quaternion result = StringToQuaternion(text);
 
                         if (type == typeof(Vector2)) return new Vector2(result.X, result.Y);
                         else if (type == typeof(Vector3)) return new Vector3(result.X, result.Y, result.Z);
                         else if (type == typeof(Quaternion)) return result;
                         else if (type == typeof(Line)) return new Line(result.X, result.Y, result.Z, result.W);
-                        else if (type == typeof(Rectangle)) return new Rectangle(result.X, result.Y, result.Z, result.W); ;
+                        else if (type == typeof(Rectangle)) return new Rectangle(result.X, result.Y, result.Z, result.W);
+                        else if (type == typeof(Color))
+                        {
+                            if (text.Contains('.')) return new Color(result.X, result.Y, result.Z, result.W);
+
+                            return new Color((int)result.X, (int)result.Y, (int)result.Z, (int)result.W);
+                        }
                     }
 
-                    return property.value;
+                    return text;
                     break;
                 case "color": return new Color(property.value.ToString(), Color.HexFormat.ARGB);
                 case "float":
                     if (type == typeof(Vector2)) return new Vector2(Convert.ToSingle(property.value));
                     else if (type == typeof(Vector3)) return new Vector3(Convert.ToSingle(property.value));
                     else if (type == typeof(Quaternion)) return new Quaternion(Convert.ToSingle(property.value));
+                    else if (type == typeof(Color))
+                    {
+                        float value = Convert.ToSingle(property.value);
+
+                        return new Color(value, value, value, value);
+                    }
 
                     return property.value;
                     break;
