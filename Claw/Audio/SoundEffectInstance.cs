@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Claw.Audio
 {
     /// <summary>
-    /// Representa uma instância de <see cref="Audio"/>.
+    /// Representa uma instância de <see cref="SoundEffect"/>.
     /// </summary>
     public sealed class SoundEffectInstance
     {
