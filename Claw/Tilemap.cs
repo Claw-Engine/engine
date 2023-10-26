@@ -417,7 +417,7 @@ namespace Claw
         public int[] GetData() => data.ToArray();
 
         /// <summary>
-        /// Muda vários tiles de uma layer. Esse método não chama o <see cref="OnTileChange"/>!
+        /// Muda vários tiles de uma layer. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
         /// </summary>
         /// <param name="map">Sequência de tiles (["0,1,2,0,0,1", "0,1,1,3,0,1"]). Sem espaço.</param>
         public void SetMultipleTiles(string[] map)
@@ -430,7 +430,7 @@ namespace Claw
             }
         }
         /// <summary>
-        /// Muda vários tiles de uma layer. Esse método não chama o <see cref="OnTileChange"/>!
+        /// Muda vários tiles de uma layer. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
         /// </summary>
         public void SetMultipleTiles(int[] mapData)
         {
@@ -442,7 +442,7 @@ namespace Claw
             }
         }
         /// <summary>
-        /// Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="OnTileChange"/>!
+        /// Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
         /// </summary>
         /// <param name="chunkTiles">Sequência de tiles (["0,1,2,0,0,1", "0,1,1,3,0,1"]). Sem espaço.</param>
         public void SetChunkTiles(Vector2 chunk, string[] chunkTiles)
@@ -458,7 +458,7 @@ namespace Claw
             }
         }
         /// <summary>
-        /// Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="OnTileChange"/>!
+        /// Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
         /// </summary>
         public void SetChunkTiles(Rectangle chunk, int[] chunkData)
         {

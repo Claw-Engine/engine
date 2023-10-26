@@ -142,7 +142,7 @@ namespace Claw
         public override string ToString() => '{' + string.Format("Location:{0} Size:{1}", Location, Size) + '}';
 
         /// <summary>
-        /// Cria um novo <see cref="RectangleF"/> que contem completamente outros dois retângulos.
+        /// Cria um novo <see cref="Rectangle"/> que contem completamente outros dois retângulos.
         /// </summary>
         /// <returns>A união de dois retângulos.</returns>
         public static Rectangle Union(Rectangle value1, Rectangle value2)

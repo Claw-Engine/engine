@@ -46,7 +46,7 @@ namespace Claw.Particles
         /// <summary>
         /// Emite partículas em uma direção.
         /// </summary>
-        /// <param name="direction">Null para deixar o <see cref="ParticleFloat"/> como padrão. A direção deve ser em graus.</param>
+        /// <param name="direction">Null para deixar o <see cref="ParticleValue{T}"/> como padrão. A direção deve ser em graus.</param>
         public void Emit(Vector2 basePosition, float? direction = null)
         {
             int min = (int)Math.Min(Config.Number.X, Config.Number.Y), max = (int)Math.Max(Config.Number.X, Config.Number.Y);

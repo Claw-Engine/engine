@@ -15,7 +15,7 @@ namespace Claw.Particles
         /// <para>T1: Valor atual.</para>
         /// <para>T2: Valor destino.</para>
         /// <para>T3: Valor para o lerp.</para>
-        /// <para>T4: Valor que diz se o <see cref="ParticleEmitter.UseScaledTime"/> é verdadeiro.</para>
+        /// <para>T4: Valor que diz se o <see cref="ParticleEmitterConfig.UseScaledTime"/> é verdadeiro.</para>
         /// <para>TResult: Resultado do cálculo.</para>
         /// </summary>
         public static Func<T, T, float, bool, T> GradientFunction;
