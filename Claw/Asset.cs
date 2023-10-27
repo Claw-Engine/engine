@@ -38,10 +38,12 @@ namespace Claw
         /// <summary>
         /// Define uma função que carregará determinado tipo de asset.
         /// </summary>
-        /// <param name="type">O tipo de asset.</param>
+        /// <typeparam name="T">O tipo de asset.</typeparam>
         /// <param name="reader">A função, que recebe um arquivo e retorna um asset ou nulo.</param>
-        public static void AddReader(Type type, Func<string, object> reader)
+        public static void AddReader<T>(Func<string, T> reader) where T : class
         {
+            Type type = typeof(T);
+
             if (readers.ContainsKey(type)) throw new ArgumentException("Esse tipo já tem um leitor definido!");
 
             readers.Add(type, reader);
@@ -50,9 +52,9 @@ namespace Claw
         /// <summary>
         /// Carrega um asset através de um arquivo.
         /// </summary>
-        /// <typeparam name="T">Tipo de asset.</typeparam>
+        /// <typeparam name="T">O tipo de asset.</typeparam>
         /// <param name="assetPath">Caminho relativo do arquivo, sem a extensão.</param>
-        public static T Load<T>(string assetPath)
+        public static T Load<T>(string assetPath) where T : class
         {
             string realPath = Path.Combine(fullPath, assetPath + AssetExtension);
 
