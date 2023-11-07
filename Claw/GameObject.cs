@@ -281,6 +281,8 @@ namespace Claw
         /// </summary>
         public void SelfDestroy(bool runDestroy = true)
         {
+            Parent = null;
+
             if (children.Count > 0)
             {
                 foreach (GameObject gameObject in children) gameObject.SelfDestroy(runDestroy);

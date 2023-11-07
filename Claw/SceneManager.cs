@@ -6,7 +6,7 @@ using System.Linq;
 namespace Claw
 {
     /// <summary>
-    /// Administra a cena.
+    /// Realiza o manuseio dos <see cref="GameObject"/>s da cena.
     /// </summary>
     public static class SceneManager
     {
@@ -88,7 +88,7 @@ namespace Claw
         }
 
         /// <summary>
-        /// Destrói todos os objetos na cena.
+        /// Destrói os objetos da cena.
         /// </summary>
         public static void ClearScene(bool runDestroy = false, bool deleteAll = true)
         {
