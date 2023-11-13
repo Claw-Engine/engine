@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Claw.Graphics
 {
@@ -8,7 +9,24 @@ namespace Claw.Graphics
     public sealed class RenderTarget : Texture
     {
         public RenderTarget(int width, int height) : base(width, height, Game.Instance.Renderer.CreateTexture(width, height, SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET)) { }
-        
+
+        /// <summary>
+        /// <para>Obtém os pixels desta textura.</para>
+        /// <para>Aviso: Função lenta e não recomendada de se usar dentro do Draw do seu jogo.</para>
+        /// </summary>
+        public uint[] GetData()
+        {
+            uint[] pixels = new uint[Width * Height];
+            GCHandle handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+            RenderTarget target = Game.Instance.Renderer.GetRenderTarget();
+
+            Game.Instance.Renderer.SetRenderTarget(this);
+            Game.Instance.Renderer.ReadPixels(handle.AddrOfPinnedObject());
+            Game.Instance.Renderer.SetRenderTarget(target);
+            handle.Free();
+
+            return pixels;
+        }
         /// <summary>
         /// <para>Altera os pixels desta textura.</para>
         /// <para>Aviso: Uso não recomendado (cada pixel será atualizado manualmente, num laço de repetição).</para>

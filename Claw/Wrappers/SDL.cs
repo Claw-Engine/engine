@@ -3407,7 +3407,7 @@ namespace Claw
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SDL_RenderReadPixels(
             IntPtr renderer,
-            ref SDL_Rect rect,
+            IntPtr rect,
             uint format,
             IntPtr pixels,
             int pitch

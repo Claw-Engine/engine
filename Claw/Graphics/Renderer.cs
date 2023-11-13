@@ -20,6 +20,7 @@ namespace Claw.Graphics
         }
         private IntPtr sdlRenderer;
         private RenderTarget currentTarget;
+        private static readonly uint PixelFormat = SDL.SDL_PIXELFORMAT_ABGR8888;
 
         internal Renderer(IntPtr renderer) => sdlRenderer = renderer;
         ~Renderer() => Dispose();
@@ -41,6 +42,8 @@ namespace Claw.Graphics
         /// <param name="renderTarget">Nulo para desenhar na <see cref="Window"/>.</param>
         public void SetRenderTarget(RenderTarget renderTarget)
         {
+            if (currentTarget == renderTarget) return;
+
             currentTarget = renderTarget;
 
             SDL.SDL_SetRenderTarget(sdlRenderer, renderTarget != null ? renderTarget.sdlTexture : IntPtr.Zero);
@@ -75,20 +78,28 @@ namespace Claw.Graphics
         /// <summary>
         /// Cria uma textura com as dimensões especificadas.
         /// </summary>
-        internal IntPtr CreateTexture(int width, int height, SDL.SDL_TextureAccess access) => SDL.SDL_CreateTexture(sdlRenderer, SDL.SDL_PIXELFORMAT_ABGR8888, (int)access, width, height);
+        internal IntPtr CreateTexture(int width, int height, SDL.SDL_TextureAccess access) => SDL.SDL_CreateTexture(sdlRenderer, PixelFormat, (int)access, width, height);
         /// <summary>
         /// Cria uma textura com as dimensões e pixels especificados.
         /// </summary>
         internal IntPtr CreateTexture(int width, int height, uint[] data)
         {
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            IntPtr surface = SDL.SDL_CreateRGBSurfaceWithFormatFrom(handle.AddrOfPinnedObject(), width, height, 32, width * 4, SDL.SDL_PIXELFORMAT_ABGR8888);
+            IntPtr surface = SDL.SDL_CreateRGBSurfaceWithFormatFrom(handle.AddrOfPinnedObject(), width, height, 32, width * 4, PixelFormat);
             IntPtr texture = SDL.SDL_CreateTextureFromSurface(sdlRenderer, surface);
 
             handle.Free();
             SDL.SDL_FreeSurface(surface);
 
             return texture;
+        }
+
+        /// <summary>
+        /// Preenche um array de pixels com os pixels do <see cref="currentTarget"/>.
+        /// </summary>
+        internal void ReadPixels(IntPtr pixels)
+        {
+            if (currentTarget != null) SDL.SDL_RenderReadPixels(sdlRenderer, IntPtr.Zero, PixelFormat, pixels, currentTarget.Width * 4);
         }
 
         /// <summary>

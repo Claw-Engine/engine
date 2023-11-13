@@ -31,12 +31,7 @@ namespace Claw.Graphics
             sdlTexture = texture;
         }
         public Texture(int width, int height) : this(width, height, Game.Instance.Renderer.CreateTexture(width, height, SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING)) { }
-        public Texture(int width, int height, params uint[] pixels)
-        {
-            Width = width;
-            Height = height;
-            sdlTexture = Game.Instance.Renderer.CreateTexture(width, height, pixels);
-        }
+        public Texture(int width, int height, params uint[] pixels) : this(width, height, Game.Instance.Renderer.CreateTexture(width, height, pixels)) { }
         
         /// <summary>
         /// Altera os pixels desta textura.

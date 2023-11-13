@@ -1,5 +1,5 @@
 # Claw Engine
-Claw é uma engine low-end para o desenvolvimento de jogos 2D pixel art.
+Claw é uma engine low-end para o desenvolvimento de jogos 2D.
 
 # Código aberto, contribuição fechada
 A Claw é um projeto pessoal que eu faço por diversão. Mas sinta-se livre para olhar o source ou até mesmo fazer um fork.
