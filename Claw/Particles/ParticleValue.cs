@@ -87,5 +87,7 @@ namespace Claw.Particles
             if (!ValueList.IsEmpty()) currentValue = ValueList[0];
             else currentValue = FixedValue;
         }
+
+        public static implicit operator ParticleValue<T>(T fixedValue) => new ParticleValue<T>(fixedValue);
     }
 }
