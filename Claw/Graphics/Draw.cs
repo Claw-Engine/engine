@@ -254,13 +254,7 @@ namespace Claw.Graphics
         /// <summary>
         /// Desenha um círculo cheio.
         /// </summary>
-        public static void FilledCircle(float lineWidth, float radius, Vector2 center, Color outline, Color fill, int segments = 16)
-        {
-            float fillWidth = radius, fillRadius = radius - lineWidth;
-
-            Circle(fillWidth, fillRadius, center, fill, segments);
-            Circle(lineWidth, radius, center, outline, segments);
-        }
+        public static void FilledCircle(float lineWidth, float radius, Vector2 center, Color outline, Color fill, int segments = 16) => FilledOval(lineWidth, new Vector2(radius), center, outline, fill, segments);
         /// <summary>
         /// Desenha um formato oval.
         /// </summary>
@@ -273,16 +267,18 @@ namespace Claw.Graphics
             {
                 points[i] = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 theta += increment;
+
+                if (i > 0) Line(lineWidth, points[i - 1], points[i], color);
             }
 
-            Polygon(lineWidth, color, points);
+            Line(lineWidth, points[points.Length - 1], points[0], color);
         }
         /// <summary>
         /// Desenha um formato oval cheio.
         /// </summary>
         public static void FilledOval(float lineWidth, Vector2 radius, Vector2 center, Color outline, Color fill, int segments = 16)
         {
-            Vector2 fillRadius = radius - new Vector2(lineWidth);
+            Vector2 fillRadius = radius - new Vector2(lineWidth - 1);
             float fillWidth = (float)Math.Sqrt(radius.X * radius.Y);
 
             Oval(fillWidth, fillRadius, center, fill, segments);
@@ -298,40 +294,34 @@ namespace Claw.Graphics
         /// <summary>
         /// Desenha uma barra de vida circular cheia.
         /// </summary>
-        public static void FilledCircleHealthBar(float lineWidth, float radius, Vector2 center, Color outline, Color fill, float life, float maxLife, int segments = 16)
-        {
-            int fillWidth = (int)radius, fillRadius = (int)(radius - lineWidth);
-
-            CircleHealthBar(fillWidth, fillRadius, center, fill, life, maxLife, segments);
-            CircleHealthBar(lineWidth, radius, center, outline, life, maxLife, segments);
-        }
+        public static void FilledCircleHealthBar(float lineWidth, float radius, Vector2 center, Color outline, Color fill, float life, float maxLife, int segments = 16) => FilledOvalHealthBar(lineWidth, new Vector2(radius), center, outline, fill, life, maxLife, segments);
         /// <summary>
         /// Desenha uma barra de vida oval.
         /// </summary>
         public static void OvalHealthBar(float lineWidth, Vector2 radius, Vector2 center, Color color, float life, float maxLife, int segments = 16)
         {
-            Vector2[] points = new Vector2[(int)(life / maxLife * segments)];
+            Vector2[] points = new Vector2[segments];
+            float maxSegments = (int)(life / maxLife * segments);
             double increment = Math.PI * 2 / segments, theta = 0;
-
+            
             for (int i = 0; i < points.Length; i++)
             {
+                if (i > maxSegments) break;
+
                 points[i] = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 theta += increment;
+
+                if (i > 0) Line(lineWidth, points[i - 1], points[i], color);
             }
 
-            if (points.Length > 0)
-            {
-                for (int i = 0; i < points.Length - 1; i++) Line(lineWidth, points[i], points[i + 1], color);
-
-                if (life == maxLife) Line(lineWidth, points[points.Length - 1], points[0], color);
-            }
+            if (life == maxLife) Line(lineWidth, points[points.Length - 1], points[0], color);
         }
         /// <summary>
         /// Desenha uma barra de vida oval cheia.
         /// </summary>
         public static void FilledOvalHealthBar(float lineWidth, Vector2 radius, Vector2 center, Color outline, Color fill, float life, float maxLife, int segments = 16)
         {
-            Vector2 fillRadius = radius - new Vector2(lineWidth);
+            Vector2 fillRadius = radius - new Vector2(lineWidth - 1);
             float fillWidth = (float)Math.Sqrt(radius.X * radius.Y);
 
             OvalHealthBar(fillWidth, fillRadius, center, fill, life, maxLife, segments);
