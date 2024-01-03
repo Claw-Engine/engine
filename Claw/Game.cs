@@ -149,6 +149,7 @@ namespace Claw
                         }
                         break;
                     case SDL.SDL_EventType.SDL_MOUSEWHEEL: Input.Input.UpdateScroll(sdlEvent.wheel); break;
+                    case SDL.SDL_EventType.SDL_MOUSEMOTION: Input.Input.UpdateMouseMotion(sdlEvent.motion); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEADDED: Input.Input.AddController(sdlEvent.cdevice.which); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEREMOVED: Input.Input.RemoveController(sdlEvent.cdevice.which); break;
                 }

@@ -28,6 +28,14 @@ namespace Claw
             get => (SDL.SDL_GetWindowFlags(sdlWindow) & (uint)SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE) == (uint)SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
             set => SDL.SDL_SetWindowResizable(sdlWindow, value ? SDL.SDL_bool.SDL_TRUE : SDL.SDL_bool.SDL_FALSE);
         }
+        /// <summary>
+        /// Se verdadeiro, o cursor ficará escondido e limitado as bordas da janela.
+        /// </summary>
+        public bool RelativeMouseMode
+        {
+            get => SDL.SDL_GetRelativeMouseMode() == SDL.SDL_bool.SDL_TRUE;
+            set => SDL.SDL_SetRelativeMouseMode(value ? SDL.SDL_bool.SDL_TRUE : SDL.SDL_bool.SDL_FALSE);
+        }
 
         /// <summary>
         /// Diz se a janela está em foco (selecionada).

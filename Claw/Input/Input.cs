@@ -15,7 +15,8 @@ namespace Claw.Input
         /// <summary>
         /// Guarda o scroll do mouse (0, 1 ou -1).
         /// </summary>
-        public static int MouseScroll { get; internal set; } = 0;
+        public static int MouseScroll { get; private set; } = 0;
+        public static Vector2 MouseMotion { get; private set; } = Vector2.Zero;
         /// <summary>
         /// Define se o input de botões será considerado somente se <see cref="Window.IsActive"/> (true por padrão).
         /// </summary>
@@ -50,17 +51,18 @@ namespace Claw.Input
 
             for (int i = 0; i < controllers.Count; i++) controllers[i].Update();
         }
-        internal static void UpdateScroll(SDL.SDL_MouseWheelEvent whellEvent)
+        internal static void UpdateScroll(SDL.SDL_MouseWheelEvent wheelEvent)
         {
-            int wheel = whellEvent.y;
+            int wheel = wheelEvent.y;
 
-            if (whellEvent.direction == (uint)SDL.SDL_MouseWheelDirection.SDL_MOUSEWHEEL_FLIPPED) wheel *= -1;
+            if (wheelEvent.direction == (uint)SDL.SDL_MouseWheelDirection.SDL_MOUSEWHEEL_FLIPPED) wheel *= -1;
 
             if (canMouse && previousMouseScroll != wheel) MouseScroll = Math.Sign(wheel);
             else MouseScroll = 0;
 
             previousMouseScroll = wheel;
         }
+        internal static void UpdateMouseMotion(SDL.SDL_MouseMotionEvent motionEvent) => MouseMotion = new Vector2(motionEvent.xrel, motionEvent.yrel);
 
         /// <summary>
         /// Checa se uma tecla foi pressionada.

@@ -15,6 +15,7 @@ namespace Tests
         {
             Window.Title = "Teste";
             Window.CanUserResize = true;
+            Window.RelativeMouseMode = true;
 
             updateables = Components.CreateForUpdate();
             drawables = Components.CreateForDraw();
