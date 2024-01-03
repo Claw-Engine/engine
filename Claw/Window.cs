@@ -104,5 +104,9 @@ namespace Claw
         /// Altera a posição do mouse, relativo a janela.
         /// </summary>
         public void SetMousePosition(Vector2 position) => SDL.SDL_WarpMouseInWindow(sdlWindow, (int)position.X, (int)position.Y);
+        /// <summary>
+        /// Altera o cursor atual.
+        /// </summary>
+        public void SetCursor(SystemCursor cursor) => SDL.SDL_SetCursor(Cursor.GetSystemCursor(cursor));
     }
 }
