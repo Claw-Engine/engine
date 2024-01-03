@@ -52,7 +52,6 @@
     <Compile Include="Audio\SoundEffectInstance.cs" />
     <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Color.cs" />
-    <Compile Include="Cursor.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Game.cs" />
@@ -111,7 +110,7 @@
     <Compile Include="Save\SaveWriter.cs" />
     <Compile Include="Save\Shortcuts.cs" />
     <Compile Include="SceneManager.cs" />
-    <Compile Include="SystemCursor.cs" />
+    <Compile Include="Cursor.cs" />
     <Compile Include="Tiled\Config.cs" />
     <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Claw.Graphics;
 
 namespace Claw
@@ -36,6 +37,7 @@ namespace Claw
             get => SDL.SDL_GetRelativeMouseMode() == SDL.SDL_bool.SDL_TRUE;
             set => SDL.SDL_SetRelativeMouseMode(value ? SDL.SDL_bool.SDL_TRUE : SDL.SDL_bool.SDL_FALSE);
         }
+        private static Dictionary<Cursor, IntPtr> systemCursors;
 
         /// <summary>
         /// Diz se a janela está em foco (selecionada).
@@ -107,6 +109,13 @@ namespace Claw
         /// <summary>
         /// Altera o cursor atual.
         /// </summary>
-        public void SetCursor(SystemCursor cursor) => SDL.SDL_SetCursor(Cursor.GetSystemCursor(cursor));
+        public void SetCursor(Cursor cursor)
+        {
+            if (systemCursors == null) systemCursors = new Dictionary<Cursor, IntPtr>();
+
+            if (!systemCursors.TryGetValue(cursor, out IntPtr sdlCursor)) sdlCursor = systemCursors[cursor] = SDL.SDL_CreateSystemCursor((SDL.SDL_SystemCursor)cursor);
+
+            SDL.SDL_SetCursor(sdlCursor);
+        }
     }
 }

@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Claw
+﻿namespace Claw
 {
     /// <summary>
-    /// Representa os cursores possíveis.
+    /// Define os tipos de cursores padrão.
     /// </summary>
-    internal class Cursor
+    public enum Cursor
     {
-        private static Dictionary<SystemCursor, IntPtr> systemCursors;
-
-        /// <summary>
-        /// Obtém um cursor do sistema.
-        /// </summary>
-        internal static IntPtr GetSystemCursor(SystemCursor cursor)
-        {
-            if (systemCursors == null) systemCursors = new Dictionary<SystemCursor, IntPtr>();
-
-            if (!systemCursors.TryGetValue(cursor, out IntPtr sdlCursor)) sdlCursor = systemCursors[cursor] = SDL.SDL_CreateSystemCursor((SDL.SDL_SystemCursor)cursor);
-
-            return sdlCursor;
-        }
+        Arrow, Text, Wait, Crosshair, WaitArrow, 
+        SizeDiagonalDown, SizeDiagonalUp, SizeHorizontal, SizeVertical, SizeAll,
+        No, Hand
     }
 }
