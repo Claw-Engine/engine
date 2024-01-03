@@ -1,0 +1,3322 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Claw</name>
+    </assembly>
+    <members>
+        <member name="T:Claw.Animator">
+            <summary>
+            Cuida do manuseio das animações de um <see cref="T:Claw.IAnimatable"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.Play(System.Int32,System.Boolean,System.Int32)">
+            <summary>
+            Inicia uma animação pelo index.
+            </summary>
+            <param name="frame">Frame que a animação vai começar.</param>
+        </member>
+        <member name="M:Claw.Animator.Play(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Inicia uma animação pelo nome.
+            </summary>
+            <param name="frame">Frame que a animação vai começar.</param>
+        </member>
+        <member name="M:Claw.Animator.UpdateFrame">
+            <summary>
+            Atualiza o frame do <see cref="T:Claw.GameObject"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.GetAnimationIndex(System.String)">
+            <summary>
+            Retorna o index de uma animação pelo nome.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.GetAnimationName(System.Int32)">
+            <summary>
+            Retorna o nome de uma animação pelo index.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.Frames(System.String)">
+            <summary>
+            Retorna o número de frames de uma animação pelo nome.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.Frames(System.Int32)">
+            <summary>
+            Retorna o número de frames de uma animação pelo index.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.AddAnimation(Claw.Animation)">
+            <summary>
+            Adiciona uma animação nova.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.RemoveAnimation(System.String)">
+            <summary>
+            Remove uma animação pelo nome.
+            </summary>
+        </member>
+        <member name="M:Claw.Animator.RemoveAnimation(System.Int32)">
+            <summary>
+            Remove uma animação pelo index.
+            </summary>
+        </member>
+        <member name="T:Claw.Animation">
+            <summary>
+            Dados de uma animação para o <see cref="T:Claw.Animator"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Animation.GenerateHorizontal(Claw.Graphics.Sprite,System.Int32,System.Int32[],System.Int32[],System.String[],Claw.Vector2[],Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Gera animação com um spritesheet horizontal.
+            </summary>
+        </member>
+        <member name="M:Claw.Animation.GenerateHorizontal(Claw.Graphics.Sprite,System.Int32,System.Int32,System.Int32,Claw.Vector2,Claw.Vector2,Claw.Vector2,System.String[])">
+            <summary>
+            Gera animação com um spritesheet horizontal.
+            </summary>
+        </member>
+        <member name="M:Claw.Animation.GenerateVertical(Claw.Graphics.Sprite,System.Int32,System.Int32[],System.Int32[],System.String[],Claw.Vector2[],Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Gera animação com um spritesheet vertical.
+            </summary>
+        </member>
+        <member name="M:Claw.Animation.GenerateVertical(Claw.Graphics.Sprite,System.Int32,System.Int32,System.Int32,Claw.Vector2,Claw.Vector2,Claw.Vector2,System.String[])">
+            <summary>
+            Gera animação com um spritesheet vertical.
+            </summary>
+        </member>
+        <member name="T:Claw.Frame">
+            <summary>
+            Dados de um frame para o <see cref="T:Claw.Animator"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Asset">
+            <summary>
+            Classe responsável pelo carregamento de assets.
+            </summary>
+        </member>
+        <member name="F:Claw.Asset.RootDirectory">
+            <summary>
+            Diretório base dos assets ("Assets", por padrão).
+            </summary>
+        </member>
+        <member name="M:Claw.Asset.AddReader``1(System.Func{System.String,``0})">
+            <summary>
+            Define uma função que carregará determinado tipo de asset.
+            </summary>
+            <typeparam name="T">O tipo de asset.</typeparam>
+            <param name="reader">A função, que recebe um arquivo e retorna um asset ou nulo.</param>
+        </member>
+        <member name="M:Claw.Asset.Load``1(System.String)">
+            <summary>
+            Carrega um asset através de um arquivo.
+            </summary>
+            <typeparam name="T">O tipo de asset.</typeparam>
+            <param name="assetPath">Caminho relativo do arquivo, sem a extensão.</param>
+        </member>
+        <member name="T:Claw.Audio.SoundEffect">
+            <summary>
+            Representa um efeito sonoro no jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.SoundEffect.#ctor(Claw.Audio.Channels,System.Single[])">
+            <param name="samples">Valores entre -1 e 1.</param>
+        </member>
+        <member name="M:Claw.Audio.SoundEffect.CreateInstance(Claw.Audio.SoundEffectGroup)">
+            <summary>
+            Cria um <see cref="T:Claw.Audio.SoundEffectInstance"/> deste áudio.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.SoundEffect.LoadSFX(System.String)">
+            <summary>
+            Carrega um efeito sonoro.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.SoundEffect.GetSample(System.Int64)">
+            <summary>
+            Retorna um sample específico.
+            </summary>
+        </member>
+        <member name="T:Claw.Audio.Channels">
+            <summary>
+            Define os tipos de distribuição de canais.
+            </summary>
+        </member>
+        <member name="T:Claw.Audio.Music">
+            <summary>
+            Representa uma música no jogo.
+            </summary>
+        </member>
+        <member name="P:Claw.Audio.Music.Volume">
+            <summary>
+            Volume da música (entre 0 e 1).
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.Music.LoadMusic(System.String)">
+            <summary>
+            Carrega uma música.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.Music.ResetPosition">
+            <summary>
+            Reseta a posição da stream.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.Music.GetSample">
+            <summary>
+            Retorna o próximo sample.
+            </summary>
+        </member>
+        <member name="T:Claw.Audio.SoundEffectGroup">
+            <summary>
+            Define os grupos de efeito sonoro.
+            </summary>
+        </member>
+        <member name="T:Claw.Audio.SoundEffectInstance">
+            <summary>
+            Representa uma instância de <see cref="T:Claw.Audio.SoundEffect"/>.
+            </summary>
+        </member>
+        <member name="P:Claw.Audio.SoundEffectInstance.Volume">
+            <summary>
+            Volume do áudio (entre 0 e 1).
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.SoundEffectInstance.GetSample(System.Boolean@)">
+            <summary>
+            Retorna um sample e finaliza o efeito sonoro, se preciso.
+            </summary>
+            <param name="index">Index do efeito sonoro.</param>
+            <param name="list">Lista em que o efeito sonoro está.</param>
+        </member>
+        <member name="T:Claw.Audio.AudioManager">
+            <summary>
+            Representa o controle de áudios do jogo.
+            </summary>
+        </member>
+        <member name="F:Claw.Audio.AudioManager.MaxConcurrent">
+            <summary>
+            Máximo de efeitos sonoros simultâneos.
+            </summary>
+        </member>
+        <member name="F:Claw.Audio.AudioManager.FadeSpeed">
+            <summary>
+            Velocidade de transição entre músicas.
+            </summary>
+        </member>
+        <member name="P:Claw.Audio.AudioManager.MasterVolume">
+            <summary>
+            Volume geral (entre 0 e 1).
+            </summary>
+        </member>
+        <member name="P:Claw.Audio.AudioManager.MusicVolume">
+            <summary>
+            Volume geral das músicas (entre 0 e 1).
+            </summary>
+        </member>
+        <member name="E:Claw.Audio.AudioManager.OnSoundEffectEnd">
+            <summary>
+            Evento executado quando um efeito sonoro termina, sem loop.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.GetVolume(Claw.Audio.SoundEffectGroup)">
+            <summary>
+            Retorna o volume geral de um grupo.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.SetVolume(System.Single,Claw.Audio.SoundEffectGroup)">
+            <summary>
+            Altera o volume geral de um grupo.
+            </summary>
+            <param name="value">Entre 0 e 1.</param>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.Play(Claw.Audio.SoundEffectInstance)">
+            <summary>
+            Inicia/reinicia um sonoro.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.Stop(Claw.Audio.SoundEffectInstance)">
+            <summary>
+            Pausa um efeito sonoro.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.SetMusic(Claw.Audio.Music)">
+            <summary>
+            Inicia a troca de música.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.AudioCallback(System.Void*,System.Byte*,System.Int32)">
+            <summary>
+            Callback de manuseio do buffer de áudio.
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.SetSample(System.Single*,System.Int32,System.Single,System.Single,Claw.Audio.Channels)">
+            <summary>
+            <para>Faz a mixagem de um sample no buffer.</para>
+            <para>Se o sample for mono, então divide o som dele entre os dois lados.</para>
+            </summary>
+        </member>
+        <member name="M:Claw.Audio.AudioManager.RemoveAt``1(System.Collections.Generic.List{``0},System.Int32)">
+            <summary>
+            Remove um item da lista, sem se preocupar com a ordem.
+            </summary>
+        </member>
+        <member name="T:Claw.Color">
+            <summary>
+            Descreve uma cor.
+            </summary>
+        </member>
+        <member name="T:Claw.Color.HexFormat">
+            <summary>
+            Tipos de formato Hex.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Transparent">
+            <summary>
+            R: 0; G: 0; B: 0; A: 0.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Red">
+            <summary>
+            R: 255; G: 0; B: 0; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Green">
+            <summary>
+            R: 0; G: 255; B: 0; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Blue">
+            <summary>
+            R: 0; G: 0; B: 255; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Yellow">
+            <summary>
+            R: 255; G: 255; B: 0; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Orange">
+            <summary>
+            R: 255; G: 127; B: 0; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Cyan">
+            <summary>
+            R: 0; G: 255; B: 255; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Purple">
+            <summary>
+            R: 127; G: 0; B: 255; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Magenta">
+            <summary>
+            R: 216; G: 0; B: 72; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Black">
+            <summary>
+            R: 0; G: 0; B: 0; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.White">
+            <summary>
+            R: 255; G: 255; B: 255; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.Gray">
+            <summary>
+            R: 127; G: 127; B: 127; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.CornflowerBlue">
+            <summary>
+            R: 100; G: 149; B: 237; A: 255.
+            </summary>
+        </member>
+        <member name="P:Claw.Color.PackedValue">
+            <summary>
+            ABGR - 32 bits.
+            </summary>
+        </member>
+        <member name="F:Claw.Color.packedValue">
+            <summary>
+            ABGR - 32 bits.
+            </summary>
+        </member>
+        <member name="M:Claw.Color.#ctor(System.UInt32)">
+            <param name="packedValue">ABGR - 32 bits.</param>
+        </member>
+        <member name="M:Claw.Color.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <param name="r">De 0 a 255.</param>
+            <param name="g">De 0 a 255.</param>
+            <param name="b">De 0 a 255.</param>
+            <param name="alpha">De 0 a 255.</param>
+        </member>
+        <member name="M:Claw.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <param name="r">De 0 a 1.</param>
+            <param name="g">De 0 a 1.</param>
+            <param name="b">De 0 a 1.</param>
+            <param name="alpha">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Color.ToString">
+            <summary>
+            Retorna uma string representando esta cor no formato:
+            {R:[<see cref="P:Claw.Color.R"/>] G:[<see cref="P:Claw.Color.G"/>] B:[<see cref="P:Claw.Color.B"/>] A:[<see cref="P:Claw.Color.A"/>]}
+            </summary>
+        </member>
+        <member name="M:Claw.Color.FromHSV(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Cria uma <see cref="T:Claw.Color"/> com HSV.
+            </summary>
+            <param name="hue">0 - 359.</param>
+            <param name="saturation">0 - 1.</param>
+            <param name="value">0 - 1.</param>
+            <param name="alpha">0 - 1.</param>
+        </member>
+        <member name="M:Claw.Color.ToHSV(System.Single@,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            Desconstrói esse <see cref="T:Claw.Color"/> como HSV.
+            </summary>
+        </member>
+        <member name="M:Claw.Color.ToHex(Claw.Color.HexFormat)">
+            <summary>
+            Transforma essa <see cref="T:Claw.Color"/> para Hex.
+            </summary>
+        </member>
+        <member name="M:Claw.Color.Lerp(Claw.Color,Claw.Color,System.Single)">
+            <summary>
+            Realiza a interpolação linear entre duas cores.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Color.DeltaLerp(Claw.Color,Claw.Color,System.Single,System.Boolean)">
+            <summary>
+            Realiza a interpolação linear entre duas cores, usando delta time.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação.</param>
+            <param name="scaled">Se o delta time será <see cref="P:Claw.Time.DeltaTime"/> (true) ou <see cref="P:Claw.Time.UnscaledDeltaTime"/> (false).</param>
+        </member>
+        <member name="T:Claw.Extensions.CollectionExtensions">
+            <summary>
+            Extensões para coleções.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.ToText(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Retorna um texto com todas as linhas da coleção.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.HasMin``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Checa se a coleção tem pelo menos X itens.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.Has``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Checa se a coleção tem exatamente X itens.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.HasMinMax``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Checa se a coleção tem entre X e Y itens.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.HasMax``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Checa se a coleção tem no máximo X itens.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.IsEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Checa se a coleção é nula ou está vazia.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.Swap``1(``0[],System.Int32,System.Int32)">
+            <summary>
+            Troca dois elementos de posição em um array.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.Swap``1(System.Collections.Generic.IList{``0},System.Int32,System.Int32)">
+            <summary>
+            Troca dois elementos de posição em uma lista.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.Swap``2(System.Collections.Generic.IDictionary{``0,``1},``0,``0)">
+            <summary>
+            Troca dois elementos de posição em um dicionário.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.CollectionExtensions.Get``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+            Pega um valor no index, se ele existir. Senão, retorna um valor padrão.
+            </summary>
+        </member>
+        <member name="T:Claw.Extensions.RandomExtensions">
+            <summary>
+            Extensões para a classe <see cref="T:System.Random"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.RandomExtensions.Next(System.Random,System.Single)">
+            <summary>
+            Gera um número quebrado aleatório.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.RandomExtensions.Next(System.Random,System.Single,System.Single)">
+            <summary>
+            Gera um número quebrado aleatório em determinado intervalo.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.RandomExtensions.Choose``1(System.Random,``0[])">
+            <summary>
+            Escholhe um item aleatório de um array.
+            </summary>
+        </member>
+        <member name="M:Claw.Extensions.RandomExtensions.Choose``1(System.Random,System.Collections.Generic.IList{``0})">
+            <summary>
+            Escholhe um item aleatório de uma lista.
+            </summary>
+        </member>
+        <member name="T:Claw.Game">
+            <summary>
+            Classe central do jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Game.Run">
+            <summary>
+            Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="M:Claw.Game.Initialize"/> e o game loop.
+            </summary>
+        </member>
+        <member name="M:Claw.Game.Close">
+            <summary>
+            Fecha o jogo.
+            </summary>
+        </member>
+        <member name="T:Claw.GameComponent">
+            <summary>
+            Classe pronta de um <see cref="T:Claw.IGameComponent"/> do tipo <see cref="T:Claw.IUpdateable"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.DrawableGameComponent">
+            <summary>
+            Classe pronta de um <see cref="T:Claw.IGameComponent"/> do tipo <see cref="T:Claw.IUpdateable"/> e <see cref="T:Claw.IDrawable"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.GameComponentCollection">
+            <summary>
+            Uma coleção de instâncias de <see cref="T:Claw.IGameComponent"/>.
+            </summary>
+        </member>
+        <member name="F:Claw.GameComponentCollection.GameObjects">
+            <summary>
+            Filtragem dos game objects dessa coleção (fora de ordem).
+            </summary>
+        </member>
+        <member name="M:Claw.GameComponentCollection.CreateForUpdate">
+            <summary>
+            Cria um <see cref="T:Claw.Utils.ComponentSortingFilteringCollection`1"/> configurado.
+            </summary>
+        </member>
+        <member name="M:Claw.GameComponentCollection.CreateForDraw">
+            <summary>
+            Cria um <see cref="T:Claw.Utils.ComponentSortingFilteringCollection`1"/> configurado.
+            </summary>
+        </member>
+        <member name="M:Claw.GameComponentCollection.InsertItem(System.Int32,Claw.IGameComponent)">
+            <summary>
+            Adiciona um <see cref="T:Claw.IGameComponent"/> na coleção e chama o evento <see cref="E:Claw.GameComponentCollection.ComponentAdded"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.GameComponentCollection.RemoveItem(System.Int32)">
+            <summary>
+            Remove um <see cref="T:Claw.IGameComponent"/> da coleção e chama o evento <see cref="E:Claw.GameComponentCollection.ComponentRemoved"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.GameComponentCollection.ClearItems">
+            <summary>
+            Remove todos os os <see cref="T:Claw.IGameComponent"/> da coleção e chama o evento <see cref="E:Claw.GameComponentCollection.ComponentRemoved"/> para cada um.
+            </summary>
+        </member>
+        <member name="T:Claw.GameObject">
+            <summary>
+            A classe base dos objetos.
+            </summary>
+        </member>
+        <member name="F:Claw.GameObject.InstantlyAdd">
+            <summary>
+            Com essa opção desativada, será necessário adicionar o objeto aos componentes do jogo manualmente.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.Initialize">
+            <summary>
+            É executado quando o componente é adicionado ao jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.AddTag(System.String)">
+            <summary>
+            Adiciona uma tag no objeto.
+            </summary>
+            <param name="tag">Case insensitive.</param>
+        </member>
+        <member name="M:Claw.GameObject.RemoveTag(System.String)">
+            <summary>
+            Remove uma tag do objeto.
+            </summary>
+            <param name="tag">Case insensitive.</param>
+        </member>
+        <member name="M:Claw.GameObject.HasTag(System.String)">
+            <summary>
+            Diz se este <see cref="T:Claw.GameObject"/> possui uma tag específica.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.Destroy(Claw.GameObject,System.Boolean)">
+            <summary>
+            Destrói um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.SelfDestroy(System.Boolean)">
+            <summary>
+            Destrói o objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.OnDestroy">
+            <summary>
+            Chamado quando o objeto é destruído.
+            </summary>
+        </member>
+        <member name="M:Claw.GameObject.OnEnabledChanged(System.Object,System.EventArgs)">
+            <summary>
+            Chamado quando o <see cref="P:Claw.GameObject.Enabled"/> muda. Usado pelo evento <see cref="E:Claw.GameObject.EnabledChanged"/>.
+            </summary>
+            <param name="sender">Este componente.</param>
+            <param name="args">Argumentos para o evento.</param>
+        </member>
+        <member name="M:Claw.GameObject.OnUpdateOrderChanged(System.Object,System.EventArgs)">
+            <summary>
+            Chamado quando o <see cref="P:Claw.GameObject.UpdateOrder"/> muda. Usado pelo evento <see cref="E:Claw.GameObject.UpdateOrderChanged"/>.
+            </summary>
+            <param name="sender">Este componente.</param>
+            <param name="args">Argumentos para o evento.</param>
+        </member>
+        <member name="M:Claw.GameObject.OnVisibleChanged(System.Object,System.EventArgs)">
+            <summary>
+            Chamado quando o <see cref="P:Claw.GameObject.Visible"/> muda.
+            </summary>
+            <param name="sender">Este componente.</param>
+            <param name="args">Argumentos para o evento.</param>
+        </member>
+        <member name="M:Claw.GameObject.OnDrawOrderChanged(System.Object,System.EventArgs)">
+            <summary>
+            Chamado quando o <see cref="P:Claw.GameObject.DrawOrder"/> muda.
+            </summary>
+            <param name="sender">Este componente.</param>
+            <param name="args">Argumentos para o evento.</param>
+        </member>
+        <member name="T:Claw.Graphics.Blend">
+            <summary>
+            Define os tipos de blend factor.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.Zero">
+            <summary>
+            0; 0; 0; 0.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.One">
+            <summary>
+            1; 1; 1; 1.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.SourceColor">
+            <summary>
+            srcR; srcG; srcB; srcA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.OneMinusSourceColor">
+            <summary>
+            1 - srcR; 1 - srcG; 1 - srcB; 1 - srcA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.SourceAlpha">
+            <summary>
+            srcA; srcA; srcA; srcA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.OneMinusSourceAlpha">
+            <summary>
+            1 - srcA;  1 - srcA; 1 - srcA; 1 - srcA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.DestinationColor">
+            <summary>
+            dstR; dstG; dstB; dstA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.OneMinusDestinationColor">
+            <summary>
+             1 - dstR; 1 - dstG; 1 - dstB; 1 - dstA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.DestinationAlpha">
+            <summary>
+            dstA; dstA; dstA; dstA.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Blend.OneMinusDestinationAlpha">
+            <summary>
+            1 - dstA; 1 - dstA; 1 - dstA; 1 - dstA.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.BlendFactory">
+            <summary>
+            Classe responsável por <see cref="T:Claw.Graphics.BlendMode"/>s customizados.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.BlendFactory.Build(Claw.Graphics.Blend,Claw.Graphics.Blend,Claw.Graphics.BlendFunction,Claw.Graphics.Blend,Claw.Graphics.Blend,Claw.Graphics.BlendFunction)">
+            <summary>
+            Cria um blend mode customizado.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.BlendMode">
+            <summary>
+            Define os tipos de blend mode usados para renderização.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendMode.None">
+            <summary>
+            Nenhum.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendMode.Blend">
+            <summary>
+            Mistura no alpha.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendMode.Add">
+            <summary>
+            Mistura aditiva.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendMode.Mod">
+            <summary>
+            Modulação de cores.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendMode.Mul">
+            <summary>
+            Multiplicação de cores.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.BlendFunction">
+            <summary>
+            Define os tipos de blend operation.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendFunction.Add">
+            <summary>
+            <para>Operação aditiva.</para>
+            <para>dst + src.</para>
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendFunction.Subtract">
+            <summary>
+            <para>Operação subtrativa.</para>
+            <para>dst - src.</para>
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendFunction.ReverseSubtract">
+            <summary>
+            <para>Operação subtrativa reversa.</para>
+            <para>src - dst.</para>
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendFunction.Min">
+            <summary>
+            <para>Operação mínima.</para>
+            <para>min(dst, src).</para>
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.BlendFunction.Max">
+            <summary>
+            <para>Operação máxima.</para>
+            <para>max(dst, src).</para>
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Camera">
+            <summary>
+            Representa uma câmera 2D para operações no <see cref="T:Claw.Graphics.Draw"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Camera.#ctor(Claw.Rectangle)">
+            <param name="viewport">Viewport da câmera. Se estiver vazio, ocupará a tela inteira.</param>
+        </member>
+        <member name="M:Claw.Graphics.Camera.#ctor(Claw.Rectangle,System.Single,System.Single,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <param name="viewport">Viewport da câmera. Se estiver vazio, ocupará a tela inteira.</param>
+        </member>
+        <member name="M:Claw.Graphics.Camera.#ctor(Claw.Rectangle,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <param name="viewport">Viewport da câmera. Se estiver vazio, ocupará a tela inteira.</param>
+        </member>
+        <member name="M:Claw.Graphics.Camera.Follow(Claw.Vector2)">
+            <summary>
+            Segue uma posição específica, sem passar dos limites estipulados.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Camera.ScreenToWorld(Claw.Vector2)">
+            <summary>
+            Converte um ponto da tela em um ponto do mundo, com base no <see cref="F:Claw.Graphics.Camera.State"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Camera.WorldToScreen(Claw.Vector2)">
+            <summary>
+            Converte um ponto do mundo em um ponto da tela, com base no <see cref="F:Claw.Graphics.Camera.State"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.CameraState">
+            <summary>
+            Estado da câmera para operações que envolvem zoom, rotação, posição e origem da câmera.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.CameraState.Update">
+            <summary>
+            Atualiza o estado da câmera.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Draw">
+            <summary>
+            Desenha formas, textos e sprites de forma simplificada.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Draw.IgnoreCamera">
+            <summary>
+            Diz se o <see cref="T:Claw.Graphics.Draw"/> deverá ignorar a câmera (falso por padrão).
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Sprite,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color,System.Single,Claw.Vector2,Claw.Vector2,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Sprite,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color,System.Single,Claw.Vector2,System.Single,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Sprite,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Sprite,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Texture,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color,System.Single,Claw.Vector2,Claw.Vector2,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Texture,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color,System.Single,Claw.Vector2,System.Single,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Texture,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Sprite(Claw.Graphics.Texture,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.DrawSprite(Claw.Graphics.Texture,Claw.Vector2,System.Nullable{Claw.Rectangle},Claw.Color,System.Single,Claw.Vector2,Claw.Vector2,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma sprite.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Text(Claw.Graphics.SpriteFont,System.String,Claw.Vector2,Claw.Color,System.Single,Claw.Vector2,Claw.Vector2,Claw.Graphics.Flip)">
+            <summary>
+            Desenha um texto.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Text(Claw.Graphics.SpriteFont,System.String,Claw.Vector2,Claw.Color,System.Single,Claw.Vector2,System.Single,Claw.Graphics.Flip)">
+            <summary>
+            Desenha um texto.
+            </summary>
+            <param name="rotation">Graus.</param>
+            <param name="origin">De 0 a 1.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Text(Claw.Graphics.SpriteFont,System.String,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha um texto.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Pixel(System.Int32,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha um pixel.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Pixel(Claw.Vector2,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha um pixel.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Line(System.Single,Claw.Vector2,Claw.Vector2,Claw.Color)">
+            <summary>
+            Desenha uma linha.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Line(System.Single,Claw.Line,Claw.Color)">
+            <summary>
+            Desenha uma linha.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Polygon(System.Single,Claw.Color,Claw.Vector2[])">
+            <summary>
+            Desenha um polígono.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Polygon(System.Single,Claw.Color,Claw.Line[])">
+            <summary>
+            Desenha um polígono.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Rectangle(System.Single,Claw.Rectangle,Claw.Color)">
+            <summary>
+            Desenha um retângulo.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.FilledRectangle(System.Single,Claw.Rectangle,Claw.Color,Claw.Color)">
+            <summary>
+            Desenha um retângulo cheio.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Circle(System.Single,System.Single,Claw.Vector2,Claw.Color,System.Int32)">
+            <summary>
+            Desenha um círculo.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.FilledCircle(System.Single,System.Single,Claw.Vector2,Claw.Color,Claw.Color,System.Int32)">
+            <summary>
+            Desenha um círculo cheio.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.Oval(System.Single,Claw.Vector2,Claw.Vector2,Claw.Color,System.Int32)">
+            <summary>
+            Desenha um formato oval.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.FilledOval(System.Single,Claw.Vector2,Claw.Vector2,Claw.Color,Claw.Color,System.Int32)">
+            <summary>
+            Desenha um formato oval cheio.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.CircleHealthBar(System.Single,System.Single,Claw.Vector2,Claw.Color,System.Single,System.Single,System.Int32)">
+            <summary>
+            Desenha uma barra de vida circular.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.FilledCircleHealthBar(System.Single,System.Single,Claw.Vector2,Claw.Color,Claw.Color,System.Single,System.Single,System.Int32)">
+            <summary>
+            Desenha uma barra de vida circular cheia.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.OvalHealthBar(System.Single,Claw.Vector2,Claw.Vector2,Claw.Color,System.Single,System.Single,System.Int32)">
+            <summary>
+            Desenha uma barra de vida oval.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.FilledOvalHealthBar(System.Single,Claw.Vector2,Claw.Vector2,Claw.Color,Claw.Color,System.Single,System.Single,System.Int32)">
+            <summary>
+            Desenha uma barra de vida oval cheia.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.BezierCurve(System.Single,System.Int32,Claw.Color,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Desenha uma curva de Bézier.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.BezierCurve(System.Single,System.Int32,Claw.Color,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Desenha uma curva de Bézier.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.BezierCurve(System.Single,System.Int32,Claw.Color,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Desenha uma curva de Bézier.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.DebugCollider(System.Single,Claw.Polygon,Claw.Color)">
+            <summary>
+            Desenha um colisor e um quadrado com a área que ele ocupa.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.ForceBlendMode(System.Nullable{Claw.Graphics.BlendMode})">
+            <summary>
+            Se for diferente de nulo, o <see cref="T:Claw.Graphics.Draw"/> forçará todas as texturas a terem esse <see cref="T:Claw.Graphics.BlendMode"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.GetCamera">
+            <summary>
+            Retorna a câmera atual.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Draw.SetCamera(Claw.Graphics.Camera)">
+            <summary>
+            Aplica a câmera e o viewport.
+            </summary>
+            <param name="camera">Se nulo, reseta o viewport e remove a câmera.</param>
+        </member>
+        <member name="M:Claw.Graphics.Draw.UpdateCamera">
+            <summary>
+            Atualiza a câmera.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Flip">
+            <summary>
+            Define os tipos de flip.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.HUD">
+            <summary>
+            Representa a HUD do jogo.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.HUDContainer">
+            <summary>
+            Representa uma lista de <see cref="T:Claw.Graphics.Systems.HUDElement"/>s.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.HUDElement">
+            <summary>
+            Base de um elemento da HUD do jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.HUDElement.GetPosition(Claw.Graphics.Systems.HUD)">
+            <summary>
+            Retorna a posição ajustada no hud.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.HUDElement.GetScale(Claw.Graphics.Systems.HUD)">
+            <summary>
+            Retorna a escala ajustada no hud.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.HUDImage">
+            <summary>
+            Representa uma imagem na HUD do jogo.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.HUDText">
+            <summary>
+            Representa um texto na HUD do jogo.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.Parallax">
+            <summary>
+            Representa uma sequência de backgrounds para efeito de parallax.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.Parallax.Axis">
+            <summary>
+            Define os eixos em que o background poderá se repetir durante o parallax.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.Parallax.ChangeAllSpeed(System.Single)">
+            <summary>
+            Muda a velocidade de todos os backgrounds.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.Parallax.ChangeAllZoom(System.Single)">
+            <summary>
+            Muda o zoom de todos os backgrounds.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.Parallax.ChangeAllDirection(Claw.Vector2)">
+            <summary>
+            Muda a direção de todos os backgrounds.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.Background">
+            <summary>
+            Representa um background do <see cref="T:Claw.Graphics.Systems.Parallax"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.Background.DrawBackground(Claw.Graphics.Systems.Parallax,Claw.Graphics.CameraState)">
+            <summary>
+            Desenha o background.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.Background.DrawScroll(Claw.Graphics.Sprite,Claw.Vector2,Claw.Rectangle,Claw.Color,System.Single)">
+            <summary>
+            Desenha o parallax, repetindo a textura na horizontal ou vertical.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.TextConfig">
+            <summary>
+            Define as configurações para a renderização do <see cref="T:Claw.Graphics.Systems.TextRenderer"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextConfig.Copy(Claw.Graphics.Systems.TextConfig)">
+            <summary>
+            Copia os valores de um outro <see cref="T:Claw.Graphics.Systems.TextConfig"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.TextOrigin">
+            <summary>
+            Define os tipo de origem possíveis para o <see cref="T:Claw.Graphics.Systems.TextRenderer"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.TextEffect">
+            <summary>
+            Define os tipos de efeito do <see cref="T:Claw.Graphics.Systems.TextRenderer"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.TextWrap">
+            <summary>
+            Define os tipos de quebra de linha do <see cref="T:Claw.Graphics.Systems.TextRenderer"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Systems.TextRenderer">
+            <summary>
+            Realiza a renderização de textos com diferentes efeitos para cada bloco.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Systems.TextRenderer.TextConfigs">
+            <summary>
+            Dicionário para armazenar configurações prontas.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Systems.TextRenderer.DefaultConfig">
+            <summary>
+            Configurações usadas no caso das do bloco serem nulas.
+            </summary>
+        </member>
+        <member name="F:Claw.Graphics.Systems.TextRenderer.MaxChar">
+            <summary>
+            Até que caractere ele vai desenhar (negativo para desenhar tudo).
+            </summary>
+        </member>
+        <member name="P:Claw.Graphics.Systems.TextRenderer.MaxLength">
+            <summary>
+            Máximo de caracteres das linhas para o <see cref="P:Claw.Graphics.Systems.TextRenderer.TextWrap"/>.
+            </summary>
+        </member>
+        <member name="P:Claw.Graphics.Systems.TextRenderer.FilteredText">
+            <summary>
+            Armazena o seu texto, sem as tags.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextRenderer.BuildText">
+            <summary>
+            Gera os blocos de texto para renderização.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextRenderer.BuildConfig(System.String,Claw.Graphics.Systems.TextConfig@)">
+            <summary>
+            Altera os valores de um <see cref="T:Claw.Graphics.Systems.TextConfig"/> com base nos argumentos de uma tag.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextRenderer.WrapAnywhere">
+            <summary>
+            Realiza a quebra de um texto dentro de um limite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextRenderer.WrapByWord">
+            <summary>
+            Realiza a quebra de um texto por palavra dentro de um limite.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Systems.TextRenderer.IsBreakNeeded(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Conta a largura da próxima palavra e diz se precisa quebrar de linha.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.NineSlice">
+            <summary>
+            Desenha retângulos texturizados.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.AddTexture(System.String,Claw.Graphics.Sprite)">
+            <summary>
+            Divide uma sprite em 9 partes e adiciona ao <see cref="T:Claw.Graphics.NineSlice"/>.
+            </summary>
+            <param name="sprite">Top Left; Top; Top Right; Left; Center; Right; Bottom Left; Bottom; Bottom Right.</param>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.AddTexture(System.String,Claw.Graphics.Sprite,Claw.Rectangle)">
+            <summary>
+            Divide uma área de uma sprite em 9 partes e adiciona ao <see cref="T:Claw.Graphics.NineSlice"/>.
+            </summary>
+            <param name="textureArea">Top Left; Top; Top Right; Left; Center; Right; Bottom Left; Bottom; Bottom Right.</param>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.AddTexture(System.String,Claw.Graphics.Sprite,Claw.Rectangle[])">
+            <summary>
+            Adiciona uma textura ao <see cref="T:Claw.Graphics.NineSlice"/>.
+            </summary>
+            <param name="parts">Top Left; Top; Top Right; Left; Center; Right; Bottom Left; Bottom; Bottom Right.</param>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.Draw(System.String,Claw.Rectangle,Claw.Color,Claw.Color,System.Boolean)">
+            <summary>
+            Desenha o retângulo texturizado e retorna a área do seu interior.
+            </summary>
+            <param name="scaleCenter">Define se o centro do <see cref="T:Claw.Graphics.NineSlice"/> será escalado ou repetido.</param>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.GetDestination(Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna um retângulo com o tamanho da distância horizontal e vertical entre dois pontos.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.TiledSprite(Claw.Graphics.NineSlice.Piece,Claw.Rectangle,Claw.Color)">
+            <summary>
+            Desenha uma sprite, preenchendo um área específica.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.NineSlice.DrawTexturized(Claw.Graphics.NineSlice.Piece[],Claw.Rectangle,Claw.Color,Claw.Color,System.Boolean)">
+            <summary>
+            Desenha uma área texturizada e retorna o <see cref="T:Claw.Rectangle"/> de seu interior.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Renderer">
+            <summary>
+            Representa o renderizador da <see cref="T:Claw.Window"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.GetRenderTarget">
+            <summary>
+            Retorna o alvo da renderização atual.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.SetRenderTarget(Claw.Graphics.RenderTarget)">
+            <summary>
+            Altera o alvo da renderização.
+            </summary>
+            <param name="renderTarget">Nulo para desenhar na <see cref="T:Claw.Window"/>.</param>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.DrawTexture(Claw.Graphics.Texture,Claw.Rectangle,Claw.Rectangle,Claw.Color,Claw.Vector2,System.Single,Claw.Graphics.Flip)">
+            <summary>
+            Desenha uma imagem.
+            </summary>
+            <param name="angle">Graus.</param>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.DrawTexture(System.IntPtr,Claw.SDL.SDL_Rect@,Claw.SDL.SDL_FRect@,Claw.SDL.SDL_FPoint@,System.Double,Claw.SDL.SDL_RendererFlip)">
+            <summary>
+            Desenha uma imagem.
+            </summary>
+            <param name="angle">Graus.</param>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.DrawPixel(System.Int32,System.Int32)">
+            <summary>
+            Desenha um pixel.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.CreateTexture(System.Int32,System.Int32,Claw.SDL.SDL_TextureAccess)">
+            <summary>
+            Cria uma textura com as dimensões especificadas.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.CreateTexture(System.Int32,System.Int32,System.UInt32[])">
+            <summary>
+            Cria uma textura com as dimensões e pixels especificados.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.ReadPixels(System.IntPtr)">
+            <summary>
+            Preenche um array de pixels com os pixels do <see cref="F:Claw.Graphics.Renderer.currentTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.SetViewport(Claw.Graphics.Camera)">
+            <summary>
+            Aplica o viewport da câmera.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.ResetViewport">
+            <summary>
+            Remove o viewport.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.Clear">
+            <summary>
+            Limpa a tela com o <see cref="P:Claw.Graphics.Renderer.ClearColor"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Renderer.Present">
+            <summary>
+            Desenha o que foi renderizado.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.RenderTarget">
+            <summary>
+            Representa um alvo de renderização para o <see cref="T:Claw.Graphics.Renderer"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.RenderTarget.GetData">
+            <summary>
+            <para>Obtém os pixels desta textura.</para>
+            <para>Aviso: Função lenta e não recomendada de se usar dentro do Draw do seu jogo.</para>
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.RenderTarget.SetData(System.UInt32[])">
+            <summary>
+            <para>Altera os pixels desta textura.</para>
+            <para>Aviso: Uso não recomendado (cada pixel será atualizado manualmente, num laço de repetição).</para>
+            <para>Recomendado: Use o método <see cref="M:Claw.Graphics.Renderer.SetRenderTarget(Claw.Graphics.RenderTarget)"/> no lugar disso.</para>
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Sprite">
+            <summary>
+            Representa uma sprite, dentro de um <see cref="T:Claw.Graphics.TextureAtlas"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.SpriteFont">
+            <summary>
+            Representa uma fonte, com base numa <see cref="T:Claw.Graphics.Sprite"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.AddKerning(System.Char,System.Char,System.Single)">
+            <summary>
+            Adiciona um par de kerning para este <see cref="T:Claw.Graphics.SpriteFont"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.MeasureString(System.String)">
+            <summary>
+            Retorna as dimensões que a <see cref="T:System.String"/> teria com este <see cref="T:Claw.Graphics.SpriteFont"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.MeasureChar(System.Char)">
+            <summary>
+            Retorna as dimensões que o tamanho da área de um <see cref="T:Claw.Graphics.SpriteFont.Glyph"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.ReadFont(System.String)">
+            <summary>
+            Carrega um <see cref="T:Claw.Graphics.SpriteFont"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.ReadGlyphs(System.IO.BinaryReader,System.Int32)">
+            <summary>
+            Carrega um dicionário de caracteres.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.SpriteFont.ReadPairs(System.IO.BinaryReader,System.Int32)">
+            <summary>
+            Carrega um dicionário de pares kerning.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.SpriteFont.Glyph">
+            <summary>
+            Representa os dados de um único caractere de um <see cref="T:Claw.Graphics.SpriteFont"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.Texture">
+            <summary>
+            Representa uma textura no jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.Texture.SetData(System.UInt32[])">
+            <summary>
+            Altera os pixels desta textura.
+            </summary>
+        </member>
+        <member name="T:Claw.Graphics.TextureAtlas">
+            <summary>
+            Representa um texture atlas.
+            </summary>
+        </member>
+        <member name="P:Claw.Graphics.TextureAtlas.CurrentPage">
+            <summary>
+            Qual a última <see cref="F:Claw.Graphics.Sprite.Texture"/> usada pelo <see cref="T:Claw.Graphics.Draw"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.TextureAtlas.AddSprite(Claw.Graphics.Sprite)">
+            <summary>
+            <para>Adiciona uma sprite ao <see cref="F:Claw.Graphics.TextureAtlas.Sprites"/>.</para>
+            <para>Aviso: O primeiro pixel da sua textura deve ser um pixel branco.</para>
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.TextureAtlas.AddSprites(Claw.Graphics.Sprite[])">
+            <summary>
+            <para>Adiciona sprites ao <see cref="F:Claw.Graphics.TextureAtlas.Sprites"/>.</para>
+            <para>Aviso: O primeiro pixel da sua textura deve ser um pixel branco.</para>
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.TextureAtlas.ReadAtlas(System.String)">
+            <summary>
+            Carrega um texture atlas e retorna o seu array de sprites.
+            </summary>
+        </member>
+        <member name="M:Claw.Graphics.TextureAtlas.ReadTexture(System.IO.BinaryReader)">
+            <summary>
+            Carrega uma textura, com base num arquivo binário.
+            </summary>
+        </member>
+        <member name="T:Claw.IGameComponent">
+            <summary>
+            Interface para componentes.
+            </summary>
+        </member>
+        <member name="T:Claw.IUpdateable">
+            <summary>
+            Interface para componentes que fazem parte do Update.
+            </summary>
+        </member>
+        <member name="T:Claw.IDrawable">
+            <summary>
+            Interface para componentes que fazem parte do Draw.
+            </summary>
+        </member>
+        <member name="T:Claw.IAnimatable">
+            <summary>
+            Interface para elementos com animação.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Buttons">
+            <summary>
+            Define os botões do controle.
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Buttons.LeftTrigger">
+            <summary>
+            Atalho para o axis.
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Buttons.RightTrigger">
+            <summary>
+            Atalho para o axis.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.ControllerTypes">
+            <summary>
+            Define os tipos de controle.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.GameController">
+            <summary>
+            Representa um controle.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.GameController.Compare(System.Int32)">
+            <summary>
+            Verifica se o id recebido é o mesmo deste controle.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.GameController.IsCurrentButtonDown(Claw.Input.Buttons)">
+            <summary>
+            Diz se o botão está sendo pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.GameController.IsOldButtonDown(Claw.Input.Buttons)">
+            <summary>
+            Diz se o botão estava sendo pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.GameController.SetVibration(System.UInt32,System.UInt16,System.UInt16)">
+            <summary>
+            Muda a vibração do controle.
+            </summary>
+            <param name="duration">Duração da vibração, em milissegundos.</param>
+            <param name="leftMotor">Intensidade da vibração do motor esquerdo (de 0 a 0xffff).</param>
+            <param name="rightMotor">Intensidade da vibração do motor direito (de 0 a 0xffff).</param>
+        </member>
+        <member name="T:Claw.Input.GameController.ControllerState">
+            <summary>
+            Representa o estado do controle.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Input">
+            <summary>
+            Funções de input.
+            </summary>
+        </member>
+        <member name="P:Claw.Input.Input.ControllersCount">
+            <summary>
+            Indica o número de controles conectados.
+            </summary>
+        </member>
+        <member name="P:Claw.Input.Input.MouseScroll">
+            <summary>
+            Guarda o scroll do mouse (0, 1 ou -1).
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Input.ButtonNeedFocus">
+            <summary>
+            Define se o input de botões será considerado somente se <see cref="P:Claw.Window.IsActive"/> (true por padrão).
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Input.MouseNeedFocus">
+            <summary>
+            Define se o input do mouse será considerado somente se <see cref="P:Claw.Window.IsMouseFocused"/> (true por padrão).
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.KeyPressed(Claw.Input.Keys)">
+            <summary>
+            Checa se uma tecla foi pressionada.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.KeyReleased(Claw.Input.Keys)">
+            <summary>
+            Checa se uma tecla foi solta.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.KeyDown(Claw.Input.Keys)">
+            <summary>
+            Checa se uma tecla está sendo pressionada.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.KeyUp(Claw.Input.Keys)">
+            <summary>
+            Checa se uma tecla está solta.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.MouseButtonPressed(Claw.Input.MouseButtons)">
+            <summary>
+            Checa se um botão do mouse foi pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.MouseButtonReleased(Claw.Input.MouseButtons)">
+            <summary>
+            Checa se um botão do mouse foi solto.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.MouseButtonDown(Claw.Input.MouseButtons)">
+            <summary>
+            Checa se um botão do mouse está sendo pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.MouseButtonUp(Claw.Input.MouseButtons)">
+            <summary>
+            Checa se um botão do mouse está solto.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.DownMouseButtons">
+            <summary>
+            Retorna o número de botões do mouse pressionados.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.GetControllerType(System.Int32)">
+            <summary>
+            Retorna o tipo do controle especificado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.GamePadButtonPressed(System.Int32,Claw.Input.Buttons)">
+            <summary>
+            Checa se um botão do controle foi pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.GamePadButtonReleased(System.Int32,Claw.Input.Buttons)">
+            <summary>
+            Checa se um botão do controle foi solto.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.GamePadButtonDown(System.Int32,Claw.Input.Buttons)">
+            <summary>
+            Checa se um botão do controle está sendo pressionado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.GamePadButtonUp(System.Int32,Claw.Input.Buttons)">
+            <summary>
+            Checa se um botão do controle está solto.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.DownGamePadButtons(System.Int32)">
+            <summary>
+            Retorna a quantidade de botões do controle que estão sendo pressionados.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.LeftThumbStick(System.Int32)">
+            <summary>
+            Retorna a posição (de -1 a 1) do analógico esquerdo do controle.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.RightThumbStick(System.Int32)">
+            <summary>
+            Retorna a posição (de -1 a 1) do analógico direito do controle.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.LeftTrigger(System.Int32)">
+            <summary>
+            Retorna o eixo do gatilho esquerdo.
+            </summary>
+            <returns>De 0 a 1.</returns>
+        </member>
+        <member name="M:Claw.Input.Input.RightTrigger(System.Int32)">
+            <summary>
+            Retorna o eixo do gatilho direito.
+            </summary>
+            <returns>De 0 a 1.</returns>
+        </member>
+        <member name="M:Claw.Input.Input.SetVibration(System.Int32,System.UInt32,System.Single,System.Single)">
+            <summary>
+            Muda a vibração do controle.
+            </summary>
+            <param name="duration">Duração da vibração, em milissegundos.</param>
+            <param name="leftMotor">Intensidade da vibração do motor esquerdo (de 0 a 1).</param>
+            <param name="rightMotor">Intensidade da vibração do motor direito (de 0 a 1).</param>
+        </member>
+        <member name="M:Claw.Input.Input.SetControllers">
+            <summary>
+            Carrega os controles que já estão conectados, se ainda não foram carregados.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.AddController(System.Int32)">
+            <summary>
+            Adiciona um novo controle na lista.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Input.RemoveController(System.Int32)">
+            <summary>
+            Adiciona um controle na lista.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.KeyboardState">
+            <summary>
+            Representa o estado do teclado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.KeyboardState.IsKeyDown(Claw.Input.Keys)">
+            <summary>
+            Diz se uma tecla está pressionada.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.KeyboardState.IsKeyUp(Claw.Input.Keys)">
+            <summary>
+            Diz se uma tecla está solta.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.KeyboardState.GetDownKeys">
+            <summary>
+            Retorna uma lista com todas as teclas que estão pressionadas.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Claw.Input.Keys">
+            <summary>
+            Define as teclas do teclado.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.MouseButtons">
+            <summary>
+            Define os botões do mouse.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.MouseState">
+            <summary>
+            Representa o estado do mouse.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Systems.CheatCode">
+            <summary>
+            Cria uma sequência de <see cref="T:Claw.Input.Systems.InputTag"/>s para fazer um código de trapaça.
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Systems.CheatCode.TimeTolerance">
+            <summary>
+            Tempo de tolerância entre um clique e outro.
+            </summary>
+        </member>
+        <member name="P:Claw.Input.Systems.CheatCode.Got">
+            <summary>
+            Diz se a sequência foi completada.
+            </summary>
+        </member>
+        <member name="F:Claw.Input.Systems.CheatCode.Completed">
+            <summary>
+            É executado assim que o código é completado.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.CheatCode.Reset">
+            <summary>
+            Reseta o cheatcode para poder ser usado novamente.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.CheatCode.Update">
+            <summary>
+            Atualiza o <see cref="P:Claw.Input.Systems.CheatCode.Got"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Systems.IBaseTag">
+            <summary>
+            Interface base para as tags de input do <see cref="T:Claw.Input.Systems.TaggedInput"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Systems.InputTag">
+            <summary>
+            Representa um input dentro do <see cref="T:Claw.Input.Systems.TaggedInput"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.InputTag.#ctor(Claw.Input.Keys,Claw.Input.Keys,System.Nullable{Claw.Input.Buttons},System.Nullable{Claw.Input.Buttons},System.Nullable{Claw.Input.MouseButtons},System.Single)">
+            <summary>
+            Cria uma instância de input de botões.
+            </summary>
+            <param name="mouse">-1 para não usar o mouse.</param>
+        </member>
+        <member name="M:Claw.Input.Systems.InputTag.#ctor(Claw.Input.Keys,System.Nullable{Claw.Input.Buttons},System.Nullable{Claw.Input.MouseButtons},System.Single)">
+            <summary>
+            Cria uma instância de input de botões.
+            </summary>
+            <param name="mouse">-1 para não usar o mouse.</param>
+        </member>
+        <member name="M:Claw.Input.Systems.InputTag.#ctor(Claw.Input.MouseButtons,System.Single)">
+            <summary>
+            Cria uma instância de input de botões.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Systems.MovementTag">
+            <summary>
+            Representa um input de movimento dentro do <see cref="T:Claw.Input.Systems.TaggedInput"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.MovementTag.#ctor(System.Boolean,System.Boolean,System.ValueTuple{Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys},System.ValueTuple{Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys},System.Nullable{System.ValueTuple{Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons}})">
+            <summary>
+            Cria uma instância de uma tag de movimento.
+            </summary>
+            <param name="keys">Up, Down, Right, Left.</param>
+            <param name="altKeys">Up, Down, Right, Left.</param>
+            <param name="buttons">Up, Down, Right, Left.</param>
+        </member>
+        <member name="M:Claw.Input.Systems.MovementTag.#ctor(System.Boolean,System.Boolean,System.ValueTuple{Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys},System.Nullable{System.ValueTuple{Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons}})">
+            <summary>
+            Cria uma instância de uma tag de movimento.
+            </summary>
+            <param name="keys">Up, Down, Right, Left.</param>
+            <param name="buttons">Up, Down, Right, Left.</param>
+        </member>
+        <member name="T:Claw.Input.Systems.TaggedInput">
+            <summary>
+            Gerencia inputs no jogo através do método chave > valor.
+            </summary>
+        </member>
+        <member name="P:Claw.Input.Systems.TaggedInput.Item(System.String)">
+            <summary>
+            Retorna um player do input.
+            </summary>
+        </member>
+        <member name="P:Claw.Input.Systems.TaggedInput.Item(System.String,System.String)">
+            <summary>
+            Retorna uma tag do input.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedInput.AddPlayer(System.String,Claw.Input.Systems.TaggedPlayer)">
+            <summary>
+            Adiciona um player.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedInput.RemovePlayer(System.String)">
+            <summary>
+            Remove um player.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedInput.Update">
+            <summary>
+            Realiza o update dos players.
+            </summary>
+        </member>
+        <member name="T:Claw.Input.Systems.TaggedPlayer">
+            <summary>
+            Representa a instância de um player dentro do <see cref="T:Claw.Input.Systems.TaggedInput"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedPlayer.#ctor(System.Int32)">
+            <summary>
+            Cria uma instância de player.
+            </summary>
+            <param name="gamePad">-1 para não usar o gamepad.</param>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedPlayer.AddTag(System.String,Claw.Input.Systems.IBaseTag)">
+            <summary>
+            Adiciona uma tag com botões configurados.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedPlayer.GetTag``1(System.String)">
+            <summary>
+            Retorna uma tag.
+            </summary>
+        </member>
+        <member name="M:Claw.Input.Systems.TaggedPlayer.Update">
+            <summary>
+            Realiza o Update das tags.
+            </summary>
+        </member>
+        <member name="T:Claw.Line">
+            <summary>
+            Descreve uma linha 2D.
+            </summary>
+        </member>
+        <member name="M:Claw.Line.Normalize">
+            <summary>
+            Transforma os vetores desta linha em vetores unitários com as mesmas direções. 
+            </summary>
+        </member>
+        <member name="M:Claw.Line.Lerp(Claw.Line,Claw.Line,System.Single)">
+            <summary>
+            Cria uma nova linha de uma interpolação linear com as linhas especificadas.
+            </summary>
+            <param name="value1">Valor atual.</param>
+            <param name="value2">Valor de destino.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Line.Clamp(Claw.Line,Claw.Line,Claw.Line)">
+            <summary>
+            Limita o valor especificado.
+            </summary>
+            <param name="value">O valor para limitar.</param>
+            <param name="min">O valor mínimo.</param>
+            <param name="max">O valor máximo.</param>
+        </member>
+        <member name="M:Claw.Line.Rotate(Claw.Line,Claw.Vector2,System.Single)">
+            <summary>
+            Retorna uma <see cref="T:Claw.Line"/> rotacionada.
+            </summary>
+            <param name="rotation">Graus.</param>
+        </member>
+        <member name="M:Claw.Line.BoxGenerator(Claw.Rectangle)">
+            <summary>
+            Gera um quadrado.
+            </summary>
+        </member>
+        <member name="M:Claw.Line.CircleGenerator(System.Single,Claw.Vector2,System.Int32)">
+            <summary>
+            Gera um círculo.
+            </summary>
+        </member>
+        <member name="M:Claw.Line.ToString">
+            <summary>
+            Retorna uma string representando esta linha no formato:
+            {Start:[<see cref="F:Claw.Line.Start"/>] End:[<see cref="F:Claw.Line.End"/>]}
+            </summary>
+        </member>
+        <member name="T:Claw.Mathf">
+            <summary>
+            Conjunto de funções matemáticas.
+            </summary>
+        </member>
+        <member name="F:Claw.Mathf.PI">
+            <summary>
+            Constante com o valor de PI (3.14159265358979).
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.IsEval(System.Int32)">
+            <summary>
+            Checa se um número é par.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Approximately(System.Single,System.Single,System.Single)">
+            <summary>
+            Checa se um número é aproximadamente igual a outro.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.ToRadians(System.Single)">
+            <summary>
+            Transforma graus em radianos.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.ToDegrees(System.Single)">
+            <summary>
+            Transforma radianos em graus.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Clamp(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Retorna um número que respeite os limites mínimo e máximo.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Clamp(System.Single,System.Single,System.Single)">
+            <summary>
+            Retorna um número que respeite os limites mínimo e máximo.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.LoopValue(System.Single,System.Single,System.Single)">
+            <summary>
+            Limita um valor, em forma de loop.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Lerp(System.Single,System.Single,System.Single)">
+            <summary>
+            Realiza a interpolação linear entre dois valores.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Mathf.DeltaLerp(System.Single,System.Single,System.Single,System.Boolean)">
+            <summary>
+            Realiza a interpolação linear entre dois valores, usando delta time.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação.</param>
+            <param name="scaled">Se o delta time será <see cref="P:Claw.Time.DeltaTime"/> (true) ou <see cref="P:Claw.Time.UnscaledDeltaTime"/> (false).</param>
+        </member>
+        <member name="M:Claw.Mathf.Approach(System.Single,System.Single,System.Single)">
+            <summary>
+            Incrementa um valor por um determinado deslocamento, mas nunca além do valor final.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.ToGrid(System.Single,System.Int32)">
+            <summary>
+            Transforma um valor em um valor em grid.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.GetGridPosition(Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Transforma uma posição em uma posição em grid.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.GetGridPosition(Claw.Vector2,System.Int32)">
+            <summary>
+            Transforma uma posição em uma posição em grid.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Get1DIndex(Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Transforma um index 2D em um index 1D.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.Get2DIndex(System.Int32,System.Int32)">
+            <summary>
+            Transforma um index 1D em um index 2D.
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Claw.Mathf.GetBezierPath(System.Int32,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna uma lista de pontos de uma curva de Bézier.
+            </summary>
+        </member>
+        <member name="M:Claw.Mathf.CalculateBezierPoint(System.Single,Claw.Vector2,Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna um ponto numa curva de Bézier.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SavePropertyAttribute">
+            <summary>
+            Indica que a propriedade será registrada no save, mesmo que privada.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveIgnoreAttribute">
+            <summary>
+            Indica que a propriedade será ignorada do save.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.Save">
+            <summary>
+            Funções prontas para lidar com um save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.Open(System.String,System.Boolean)">
+            <summary>
+            Abre o save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.Write(System.String,System.String,System.Object)">
+            <summary>
+            Escreve numa seção do save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.Read``1(System.String,System.String,``0)">
+            <summary>
+            Lê uma chave de uma seção do save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.Clear">
+            <summary>
+            Limpa o save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.RemoveSection(System.String)">
+            <summary>
+            Remove uma seção inteira do save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.RemoveKey(System.String,System.String)">
+            <summary>
+            Remove uma chave de uma seção do save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.SectionExists(System.String)">
+            <summary>
+            Verifica se a seção existe.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.KeyExists(System.String,System.String)">
+            <summary>
+            Verifica se a chave existe.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.Save.Close">
+            <summary>
+            Fecha o save.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveConvert">
+            <summary>
+            Ponte para serialização e desserialização de saves.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveConvert.Serialize(Claw.Save.Sections)">
+            <summary>
+            Serializa o save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveConvert.Deserialize(System.String)">
+            <summary>
+            Desserializa o save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveConvert.IsEmpty(System.Char)">
+            <summary>
+            Diz se o caractere é vazio.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveConvert.PassByReference(System.Type)">
+            <summary>
+            Diz se o tipo passa por referência.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveConvert.IsObject(System.Type)">
+            <summary>
+            Diz se o tipo é um objeto.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.ISaveValue">
+            <summary>
+            Interface para valores do save.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveObject">
+            <summary>
+            Representação de um objeto no save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveObject.Lock">
+            <summary>
+            Tranca o objeto para não receber mais mudanças.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveObject.Cast(System.Type,System.Collections.Generic.Dictionary{Claw.Save.ISaveValue,System.Object})">
+            <summary>
+            Converte um <see cref="T:Claw.Save.SaveObject"/> em um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveObject.SetupSetters(System.Type,System.Collections.Generic.Dictionary{System.String,System.ValueTuple{Claw.PropertySetter,System.Type}}@)">
+            <summary>
+            Obtém os setters para cada propriedade.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveArray">
+            <summary>
+            Representação de um array no save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.Lock">
+            <summary>
+            Tranca o objeto para não receber mais mudanças.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.InsertItem(System.Int32,System.Object)">
+            <summary>
+            Insere um elemento no array.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.RemoveItem(System.Int32)">
+            <summary>
+            Remove um elemento do array.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.ClearItems">
+            <summary>
+            Limpa o array.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.SetItem(System.Int32,System.Object)">
+            <summary>
+            Altera um elemento do array.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.Cast(System.Type,System.Collections.Generic.Dictionary{Claw.Save.ISaveValue,System.Object})">
+            <summary>
+            Converte o <see cref="T:Claw.Save.SaveArray"/> em um <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.FillList(System.Type,System.Action{System.Object},System.Collections.Generic.Dictionary{Claw.Save.ISaveValue,System.Object})">
+            <summary>
+            Preenche os elementos de uma lista com os deste <see cref="T:Claw.Save.SaveArray"/>
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.FillDictionary(System.Object,System.Type,System.Type,System.Collections.Generic.Dictionary{Claw.Save.ISaveValue,System.Object})">
+            <summary>
+            Preenche um dicionário com os elementos deste <see cref="T:Claw.Save.SaveArray"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveArray.GetValue(Claw.Save.ISaveValue,System.Type,System.Collections.Generic.Dictionary{Claw.Save.ISaveValue,System.Object})">
+            <summary>
+            Se o valor não estiver nas referências, faz o casting e adiciona. Se estiver, retorna ele.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveReader">
+            <summary>
+            Responsável pela desserialização de saves.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.Read(System.String,Claw.Save.Sections)">
+            <summary>
+            Lê o conteúdo de uma string para o save.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.ReadKeys">
+            <summary>
+            Lê as chaves.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.ReadValue">
+            <summary>
+            Lê o valor da chave, presumindo que os próximos caracteres são um valor.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.ReadObject(System.Nullable{System.Int32})">
+            <summary>
+            Lê um objeto, presumindo que os próximos caracteres representam um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.ReadArray(System.Nullable{System.Int32})">
+            <summary>
+            Lê um array, presumindo que os próximos caracteres representam um array.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.JumpEmpty">
+            <summary>
+            Pula os caracteres vazios.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.SetSection">
+            <summary>
+            Altera a seção atual, presumindo que os próximos caracteres são uma seção.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.GetString(System.Boolean@,System.Boolean)">
+            <summary>
+            Obtém um texto, presumindo que os próximos caracteres representam um texto.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.GetReference(System.Char)">
+            <summary>
+            Obtém o index da referência, presumindo que os próximos caracteres repesentam a referência.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.IsNull">
+            <summary>
+            Checa se os próximos caracteres representam nulo. Caso positivo, pula eles.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.GetNumber">
+            <summary>
+            Obtém o número a seguir, presumindo que os próximos caracteres representam um número.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.CharEquals(System.Char)">
+            <summary>
+            Compara o caractere atual com o <paramref name="char"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveReader.IsNumber(System.Char)">
+            <summary>
+            Checa se o caractere é válido como um número.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.SaveWriter">
+            <summary>
+            Responsável pela serialização de saves.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveWriter.Write(Claw.Save.Sections)">
+            <summary>
+            Escreve o save numa string.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveWriter.Close">
+            <summary>
+            Retorna o que resultado da serialização.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveWriter.Stringfy(System.Object)">
+            <summary>
+            Transforma um valor em string.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveWriter.ObjectToString(System.Object)">
+            <summary>
+            Transforma um objeto em string.
+            </summary>
+        </member>
+        <member name="M:Claw.Save.SaveWriter.GetReference(System.Object,System.Boolean@)">
+            <summary>
+            Se o valor passa por referência, adiciona na lista de referências e retorna a string formatada da referência.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.Sections">
+            <summary>
+            Atalho para <see cref="T:System.Collections.Generic.Dictionary`2"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Save.Keys">
+            <summary>
+            Atalho para <see cref="T:System.Collections.Generic.Dictionary`2"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Particles.Particle">
+            <summary>
+            Representa uma partícula no <see cref="T:Claw.Particles.ParticleEmitter"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Particles.ParticleEmitter">
+            <summary>
+            Classe de emissão e manuseio de partículas.
+            </summary>
+        </member>
+        <member name="F:Claw.Particles.ParticleEmitter.Config">
+            <summary>
+            Configuração da emissão de partículas.
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleEmitter.PoolCount">
+            <summary>
+            Retorna a quantidade de partículas que estão esperando na pool.
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleEmitter.ClearPool">
+            <summary>
+            Limpa a lista de partículas que estão esperando na pool.
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleEmitter.Count">
+            <summary>
+            Retorna a quantidade de partículas deste <see cref="T:Claw.Particles.ParticleEmitter"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleEmitter.Clear">
+            <summary>
+            Elimina todas as partículas.
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleEmitter.Emit(Claw.Vector2,System.Nullable{System.Single})">
+            <summary>
+            Emite partículas em uma direção.
+            </summary>
+            <param name="direction">Null para deixar o <see cref="T:Claw.Particles.ParticleValue`1"/> como padrão. A direção deve ser em graus.</param>
+        </member>
+        <member name="T:Claw.Particles.ParticleEmitterConfig">
+            <summary>
+            Representa as configurações do <see cref="T:Claw.Particles.ParticleEmitter"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Particles.ParticleValue`1">
+            <summary>
+            Lida com gradientes e valores fixos ou aleatórios usados por partículas.
+            </summary>
+        </member>
+        <member name="F:Claw.Particles.ParticleValue`1.GradientFunction">
+            <summary>
+            Define uma função que para executar o gradiente.
+            <para>T1: Valor atual.</para>
+            <para>T2: Valor destino.</para>
+            <para>T3: Valor para o lerp.</para>
+            <para>T4: Valor que diz se o <see cref="F:Claw.Particles.ParticleEmitterConfig.UseScaledTime"/> é verdadeiro.</para>
+            <para>TResult: Resultado do cálculo.</para>
+            </summary>
+        </member>
+        <member name="M:Claw.Particles.ParticleValue`1.GetValue(Claw.Particles.ParticleEmitter,System.Boolean)">
+            <summary>
+            <para>Retorna um valor fixo, se !<see cref="F:Claw.Particles.ParticleValue`1.IsGradient"/> e a <see cref="F:Claw.Particles.ParticleValue`1.ValueList"/> não ter elementos.</para>
+            <para>Retorna um valor aleatório, se !<see cref="F:Claw.Particles.ParticleValue`1.IsGradient"/> e a <see cref="F:Claw.Particles.ParticleValue`1.ValueList"/> ter elementos.</para>
+            <para>Retorna o estágio do gradiente, se <see cref="F:Claw.Particles.ParticleValue`1.IsGradient"/> e a <see cref="F:Claw.Particles.ParticleValue`1.ValueList"/> ter elementos.</para>
+            </summary>
+            <param name="updateGradient">Define se o gradiente será calculado ou não.</param>
+        </member>
+        <member name="M:Claw.Particles.ParticleValue`1.ResetValue">
+            <summary>
+            Reseta o valor atual do gradiente.
+            </summary>
+        </member>
+        <member name="T:Claw.Physics.PlatBody">
+            <summary>
+            Uma classe com física básica de plataforma.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.GetSpeed">
+            <summary>
+            Retorna a velocidade do <see cref="T:Claw.Physics.PlatBody"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.Impulse(Claw.Vector2,System.Boolean,System.Boolean)">
+            <summary>
+            Acrescenta um valor na velocidade do <see cref="T:Claw.Physics.PlatBody"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.Stop">
+            <summary>
+            Zera a velocidade do <see cref="T:Claw.Physics.PlatBody"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.Stop(System.Boolean,System.Boolean)">
+            <summary>
+            Zera a velocidade do <see cref="T:Claw.Physics.PlatBody"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.Jump(System.Single)">
+            <summary>
+            Faz com que o <see cref="T:Claw.Physics.PlatBody"/> pule.
+            </summary>
+            <param name="boost">Multiplica a força do pulo</param>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.Walk(System.Single)">
+            <summary>
+            Faz com que o <see cref="T:Claw.Physics.PlatBody"/> ande.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.GetInput">
+            <summary>
+            É chamado antes de fazer as checagens de colisão.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.OnHorizontalCollision(System.Int32,Claw.Vector2)">
+            <summary>
+            É chamado sempre que ocorre uma colisão na horizontal.
+            </summary>
+            <returns>True para zerar a velocidade e corrigir a posição.</returns>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.OnVerticalCollision(System.Int32,Claw.Vector2)">
+            <summary>
+            É chamado sempre que ocorre uma colisão na vertical.
+            </summary>
+            <returns>True para zerar a velocidade, corrigir a posição e fazer a checagem de Grounded.</returns>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.CustomHorizontalHandler">
+            <summary>
+            É chamado após a checagem de colisão com tiles e antes da movimentação.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.CustomVerticalHandler">
+            <summary>
+            É chamado após a checagem de colisão com tiles e antes da movimentação.
+            </summary>
+        </member>
+        <member name="T:Claw.Physics.PlatBody.PlatTypes">
+            <summary>
+            Tipos de plataforma (representam o index 1D do tile).
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.PlatBody.PlatTypes.Setup(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Altera os tiles que representam cada tipo de plataforma.
+            </summary>
+        </member>
+        <member name="T:Claw.Physics.RayCaster">
+            <summary>
+            Calculador de raycast.
+            </summary>
+        </member>
+        <member name="M:Claw.Physics.RayCaster.Cast(Claw.Line,System.Func{Claw.Vector2,System.Boolean},System.Nullable{Claw.Vector2}@,Claw.Vector2)">
+            <summary>
+            Realiza a movimentação do raio de um ponto ao outro.
+            </summary>
+            <param name="onMove">É executado sempre que o raio se move.
+            <para>Parâmetro Vector2: A posição atual do raio.</para>
+            <para>Retorno bool: O resultado do seu cálculo de colisão (true para parar o raio, false para prosseguir).</para>
+            </param>
+        </member>
+        <member name="M:Claw.Physics.RayCaster.Cast(Claw.Line,System.Single,System.Func{Claw.Vector2,System.Boolean},System.Nullable{Claw.Vector2}@,Claw.Vector2)">
+            <summary>
+            Realiza a movimentação do raio de um ponto ao outro.
+            </summary>
+            <param name="maxDistance">Distância em células.</param>
+            <param name="onMove">É executado sempre que o raio se move.
+            <para>Parâmetro Vector2: A posição atual do raio.</para>
+            <para>Retorno bool: O resultado do seu cálculo de colisão (true para parar o raio, false para prosseguir).</para>
+            </param>
+        </member>
+        <member name="T:Claw.Polygon">
+            <summary>
+            Representa um colisor poligonal.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Box(Claw.GameObject,Claw.Rectangle)">
+            <summary>
+            Cria um colisor quadrado.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Circle(Claw.GameObject,System.Single,Claw.Vector2,System.Int32)">
+            <summary>
+            Cria um colisor circular.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.OverlapPolygon(Claw.Polygon,System.Collections.Generic.IEnumerable{Claw.Line})">
+            <summary>
+            Checa se um polígono está colidindo com outro (formado apenas por linhas).
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect(Claw.Vector2,Claw.Polygon)">
+            <summary>
+            Checa se um ponto está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect(Claw.Vector2,System.String,System.Single,System.Boolean)">
+            <summary>
+            Checa se um ponto está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect``1(Claw.Vector2,System.Single,System.Boolean)">
+            <summary>
+            Checa se um ponto está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect(Claw.Polygon,Claw.Polygon)">
+            <summary>
+            Checa se dois polígonos estão colidindo.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect(Claw.Polygon,System.String,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            Checa se dois polígonos estão colidindo.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.Intersect``1(Claw.Polygon,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            Checa se dois polígonos estão colidindo.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectRay(Claw.Line,Claw.Polygon,System.Single)">
+            <summary>
+            Checa se uma linha está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectRay(Claw.Line,System.String,System.Single,System.Boolean,System.Single)">
+            <summary>
+            Checa se uma linha está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectRay``1(Claw.Line,System.Single,System.Boolean,System.Single)">
+            <summary>
+            Checa se uma linha está colidindo com um <see cref="T:Claw.Polygon"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectList(Claw.Vector2,System.Func{Claw.GameObject,System.Boolean})">
+            <summary>
+            Retorna uma lista de colisões com o ponto especificado.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectList(Claw.Polygon,System.Func{Claw.GameObject,System.Boolean})">
+            <summary>
+            Retorna uma lista de colisões com o polígono especificado.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectWith(Claw.Vector2,System.Collections.Generic.IEnumerable{Claw.GameObject},System.Single,System.Boolean)">
+            <summary>
+            Checa se um ponto está colidindo com um dos <see cref="T:Claw.Polygon"/>s de uma lista.
+            </summary>
+        </member>
+        <member name="M:Claw.Polygon.IntersectWith(Claw.Polygon,System.Collections.Generic.IEnumerable{Claw.GameObject},System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            Checa se um <see cref="T:Claw.Polygon"/> está colidindo com um dos <see cref="T:Claw.Polygon"/>s de uma lista.
+            </summary>
+        </member>
+        <member name="T:Claw.CollisionResult">
+            <summary>
+            Dados do resultado de uma colisão.
+            </summary>
+        </member>
+        <member name="T:Claw.Quaternion">
+            <summary>
+            Descreve a representação de rotações 3D.
+            </summary>
+        </member>
+        <member name="M:Claw.Quaternion.Normalize">
+            <summary>
+            Redimensiona a magnitude deste <see cref="T:Claw.Quaternion"/> para um comprimento em unidade.
+            </summary>
+        </member>
+        <member name="M:Claw.Quaternion.CreateFromAxisAngle(Claw.Vector3,System.Single)">
+            <summary>
+            Cria um <see cref="T:Claw.Quaternion"/> que contém a versão conjugada do <see cref="T:Claw.Quaternion"/> especificado.
+            </summary>
+            <param name="angle">Radianos.</param>
+        </member>
+        <member name="M:Claw.Quaternion.Normalize(Claw.Quaternion)">
+            <summary>
+            Redimensiona a magnitude de um <see cref="T:Claw.Quaternion"/> para um comprimento em unidade.
+            </summary>
+        </member>
+        <member name="M:Claw.Quaternion.ToString">
+            <summary>
+            Retorna uma string representando este quaternion no formato:
+            {X:[<see cref="F:Claw.Quaternion.X"/>] Y:[<see cref="F:Claw.Quaternion.Y"/>] Z:[<see cref="F:Claw.Quaternion.Z"/>] W:[<see cref="F:Claw.Quaternion.W"/>]}
+            </summary>
+        </member>
+        <member name="T:Claw.Rectangle">
+            <summary>
+            Descreve um retângulo.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Lerp(Claw.Rectangle,Claw.Rectangle,System.Single)">
+            <summary>
+            Cria um novo retângulo de uma interpolação linear com os retângulos especificados.
+            </summary>
+            <param name="value1">Valor atual.</param>
+            <param name="value2">Valor de destino.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Rectangle.DeltaLerp(Claw.Rectangle,Claw.Rectangle,System.Single,System.Boolean)">
+            <summary>
+            Cria um novo retângulo de uma interpolação linear com os retângulos especificados, usando delta time.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação.</param>
+            <param name="scaled">Se o delta time será <see cref="P:Claw.Time.DeltaTime"/> (true) ou <see cref="P:Claw.Time.UnscaledDeltaTime"/> (false).</param>
+        </member>
+        <member name="M:Claw.Rectangle.Clamp(Claw.Rectangle,Claw.Rectangle,Claw.Rectangle)">
+            <summary>
+            Limita o valor especificado.
+            </summary>
+            <param name="value">O valor para limitar.</param>
+            <param name="min">O valor mínimo.</param>
+            <param name="max">O valor máximo.</param>
+        </member>
+        <member name="M:Claw.Rectangle.Positive(Claw.Rectangle)">
+            <summary>
+            Garante que um <see cref="T:Claw.Rectangle"/> não tenha dimensões negativas, de forma que continue ocupando o mesmo espaço.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Contains(Claw.Vector2)">
+            <summary>
+            Checa se um ponto está dentro do retângulo.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Contains(System.Single,System.Single)">
+            <summary>
+            Checa se um ponto está dentro do retângulo.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Inflate(System.Single,System.Single)">
+            <summary>
+            Ajusta as bordas deste retângulo pelos valores horizontais e verticais especificados.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Intersects(Claw.Rectangle)">
+            <summary>
+            Checa se tem um retângulo colidindo com este.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Offset(Claw.Vector2)">
+            <summary>
+            Muda a posição deste retângulo.
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.ToString">
+            <summary>
+            Retorna uma string representando este retângulo no formato:
+            {Location:[<see cref="P:Claw.Rectangle.Location"/>] Size:[<see cref="P:Claw.Rectangle.Size"/>]}
+            </summary>
+        </member>
+        <member name="M:Claw.Rectangle.Union(Claw.Rectangle,Claw.Rectangle)">
+            <summary>
+            Cria um novo <see cref="T:Claw.Rectangle"/> que contem completamente outros dois retângulos.
+            </summary>
+            <returns>A união de dois retângulos.</returns>
+        </member>
+        <member name="T:Claw.SceneManager">
+            <summary>
+            Realiza o manuseio dos <see cref="T:Claw.GameObject"/>s da cena.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.InstanceNearest(System.String,Claw.Vector2,System.Boolean)">
+            <summary>
+            Encontra a instância mais próxima na cena com uma tag específica.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.InstanceNearest``1(Claw.Vector2,System.Boolean)">
+            <summary>
+            Encontra a instância mais próxima na cena com um componente de um tipo específico.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectByTag(System.String,System.Boolean)">
+            <summary>
+            Encontra um objeto com uma tag específica.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectsByTag(System.String,System.Boolean)">
+            <summary>
+            Encontra objetos com uma tag específica.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.TagCount(System.String)">
+            <summary>
+            Retorna o número de objetos com uma tag específica.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectByName(System.String,System.Boolean)">
+            <summary>
+            Encontra um objeto com um nome específico.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectsByName(System.String,System.Boolean)">
+            <summary>
+            Encontra objetos com um nome específico.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectOfType``1(System.Boolean)">
+            <summary>
+            Encontra um objeto de um tipo.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.FindObjectsOfType``1(System.Boolean)">
+            <summary>
+            Encontra objetos de um tipo.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.ClearScene(System.Boolean,System.Boolean)">
+            <summary>
+            Destrói os objetos da cena.
+            </summary>
+        </member>
+        <member name="M:Claw.SceneManager.Destroy(Claw.GameObject,System.Boolean)">
+            <summary>
+            Destrói um objeto.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Config">
+            <summary>
+            Configurações para o <see cref="T:Claw.Tiled.Tiled"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Config.AddPalettes(System.String[],Claw.Graphics.Sprite[])">
+            <summary>
+            Adiciona as paletas do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Config.AddPalettes(System.ValueTuple{System.String,Claw.Graphics.Sprite}[])">
+            <summary>
+            Adiciona as paletas do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Config.Instantiate(System.String)">
+            <summary>
+            Cria uma instância, com base no namespace.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Config.GetPalette(System.String)">
+            <summary>
+            Retorna uma paleta com o nome dado caso ela exista. Caso contrário ele retornará a textura padrão.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Chunk">
+            <summary>
+            Representa um chunk do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Chunk.ReadChunk(System.IO.BinaryReader)">
+            <summary>
+            Carrega um chunk do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Chunk.ReadChunks(System.IO.BinaryReader)">
+            <summary>
+            Carrega um array de chunks do Tiled.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Layer">
+            <summary>
+            Representa uma layer do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Layer.ReadLayer(System.IO.BinaryReader)">
+            <summary>
+            Carrega uma camada do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Layer.ReadLayers(System.IO.BinaryReader)">
+            <summary>
+            Carrega um array de camadas do Tiled.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Map">
+            <summary>
+            Representa um mapa do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Map.ReadMap(System.String)">
+            <summary>
+            Carrega um mapa do Tiled.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Object">
+            <summary>
+            Representa um objeto do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Object.ReadObject(System.IO.BinaryReader)">
+            <summary>
+            Carrega um objeto do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Object.ReadObjects(System.IO.BinaryReader)">
+            <summary>
+            Carrega um array de objetos do Tiled.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Property">
+            <summary>
+            Representa uma propriedade do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Property.ReadProperty(System.IO.BinaryReader)">
+            <summary>
+            Carrega uma propriedade do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Property.ReadProperties(System.IO.BinaryReader)">
+            <summary>
+            Carrega um array de propriedades do Tiled.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Tiled">
+            <summary>
+            Uma classe para carregar mapas do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.Load(Claw.Tiled.Map,System.Boolean,System.Boolean)">
+            <summary>
+            Carrega um mapa do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.ClearCache">
+            <summary>
+            Limpa o cache para reflection.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.GetPropertyValue``1(Claw.Tiled.Property,System.String,``0)">
+            <summary>
+            Retorna o valor de uma propriedade caso ela exista e seja do tipo esperado.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.GetPropertyValue``1(Claw.Tiled.Property[],System.String,System.String,``0)">
+            <summary>
+            Retorna o valor da primeira propriedade com o nome dado caso ela exista e seja do tipo esperado.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.LayerForeach(Claw.Tiled.Layer[],Claw.Tilemap)">
+            <summary>
+            Transforma as layers de tiles em <see cref="T:Claw.Tiled.Layer"/> e os objetos em <see cref="T:Claw.GameObject"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.HandleObject(Claw.Tiled.Object)">
+            <summary>
+            Lida com a conversão de um objeto do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.SetProperty(System.Object,Claw.Tiled.Object,Claw.Tiled.Property,System.Collections.Generic.Dictionary{System.String,System.ValueTuple{Claw.PropertySetter,System.Type}})">
+            <summary>
+            Seta o valor da propriedade de um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.SetupCache(System.Type)">
+            <summary>
+            Prepara as propriedades de um tipo para o cache.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.Cast(Claw.Tiled.Property,System.Type)">
+            <summary>
+            Realiza a conversão dos valores de propriedade, se necessário.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tiled.StringToQuaternion(System.String)">
+            <summary>
+            Transforma uma string em um <see cref="T:Claw.Quaternion"/>.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Tiled.LinkObjectData">
+            <summary>
+            Dados para lista de espera para objetos linkados à outros.
+            </summary>
+        </member>
+        <member name="T:Claw.Tiled.Tileset">
+            <summary>
+            Representa um tileset do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tileset.ReadTileset(System.IO.BinaryReader)">
+            <summary>
+            Carrega um tileset do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.Tiled.Tileset.ReadTilesets(System.IO.BinaryReader)">
+            <summary>
+            Carrega um array de tilesets do Tiled.
+            </summary>
+        </member>
+        <member name="M:Claw.SDL.SDL_GetNumTouchDevices">
+            \brief Get the number of registered touch devices.
+        </member>
+        <member name="M:Claw.SDL.SDL_GetTouchDevice(System.Int32)">
+            \brief Get the touch ID with the given index, or 0 if the index is invalid.
+        </member>
+        <member name="M:Claw.SDL.SDL_GetNumTouchFingers(System.Int64)">
+            \brief Get the number of active fingers for a given touch device.
+        </member>
+        <member name="M:Claw.SDL.SDL_GetTouchFinger(System.Int64,System.Int32)">
+            \brief Get the finger object of the given touch, with the given index.
+            Returns pointer to SDL_Finger.
+        </member>
+        <member name="T:Claw.TagManager">
+            <summary>
+            Controla o sistema de tags (case insensitive).
+            </summary>
+        </member>
+        <member name="M:Claw.TagManager.Count(System.String)">
+            <summary>
+            Retorna o número de objetos dentro de uma tag.
+            </summary>
+        </member>
+        <member name="M:Claw.TagManager.AddObject(System.String,Claw.GameObject)">
+            <summary>
+            Adiciona uma tag em um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.TagManager.RemoveObject(System.String,Claw.GameObject)">
+            <summary>
+            Remove uma tag de um objeto.
+            </summary>
+        </member>
+        <member name="M:Claw.TagManager.GetObject(System.String,System.Boolean)">
+            <summary>
+            Retorna o primeiro objeto com a determinada tag.
+            </summary>
+        </member>
+        <member name="M:Claw.TagManager.GetObjects(System.String,System.Boolean)">
+            <summary>
+            Retorna os objetos com a determinada tag.
+            </summary>
+        </member>
+        <member name="T:Claw.Tilemap">
+            <summary>
+            Realiza a rendrização e a organização de um tilemap ortogonal.
+            </summary>
+        </member>
+        <member name="F:Claw.Tilemap.OutOfView">
+            <summary>
+            Define quantos tiles fora da view serão desenhados (1 por padrão).
+            </summary>
+        </member>
+        <member name="F:Claw.Tilemap.OnTileChange">
+            <summary>
+            É executado quando um tile é mudado ([novo tile], [nome da layer], [posição do tile]).
+            </summary>
+        </member>
+        <member name="P:Claw.Tilemap.Item(System.Int32)">
+            <summary>
+            Retorna uma layer.
+            </summary>
+        </member>
+        <member name="P:Claw.Tilemap.Item(System.String)">
+            <summary>
+            Retorna uma layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.List1DTo2D``1(System.Collections.Generic.List{``0},Claw.Vector2)">
+            <summary>
+            Transforma uma lista 1D em uma lista 2D.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.List2DTo1D``1(System.Collections.Generic.List{System.Collections.Generic.List{``0}})">
+            <summary>
+            Transforma uma lista 2D em uma lista 1D.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.GetTileIndex(System.Int32,Claw.Vector2)">
+            <summary>
+            Transforma um index 2D em um index 1D.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.AddPalette(Claw.Graphics.Sprite,System.Int32,System.Int32)">
+            <summary>
+            Adiciona uma paleta ao <see cref="T:Claw.Tilemap"/>.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.AddLayer(System.Int32,System.String,System.Single,System.Single,Claw.Color)">
+            <summary>
+            Adiciona uma layer nova.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.AddLayer(System.Int32,System.String,System.Boolean,System.Single,System.Single,Claw.Color,System.Int32[])">
+            <summary>
+            Adiciona uma layer nova e já insere os tiles dela.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.Addlayer(Claw.Layer)">
+            <summary>
+            Adiciona uma layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.RemoveLayer(System.Int32)">
+            <summary>
+            Remove uma layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.RemoveLayer(System.String)">
+            <summary>
+            Remove uma layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.LayerExists(System.Int32)">
+            <summary>
+            Verifica se a layer existe.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.LayerExists(System.String)">
+            <summary>
+            Verifica se a layer existe.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.AddAll">
+            <summary>
+            Adiciona todas as layers nos componentes do jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.RemoveAll">
+            <summary>
+            Remove todas as layers dos componentes do jogo.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.GetTileset(System.Int32)">
+            <summary>
+            Retorna um tileset.
+            </summary>
+        </member>
+        <member name="M:Claw.Tilemap.GetRealTile(System.Int32,Claw.TileSet)">
+            <summary>
+            Retorna o index real de um tile.
+            </summary>
+        </member>
+        <member name="T:Claw.TileSet">
+            <summary>
+            Contém os dados de um tileset.
+            </summary>
+        </member>
+        <member name="M:Claw.TileSet.Get2DIndex(System.Int32)">
+            <summary>
+            Transforma um index 1D em um index 2D, considerando o tileset.
+            </summary>
+        </member>
+        <member name="T:Claw.Layer">
+            <summary>
+            Representa uma camada dentro do <see cref="T:Claw.Tilemap"/>.
+            </summary>
+        </member>
+        <member name="P:Claw.Layer.Item(Claw.Vector2)">
+            <summary>
+            Retorna/muda um tile da layer.
+            </summary>
+        </member>
+        <member name="P:Claw.Layer.Item(System.Int32,System.Int32)">
+            <summary>
+            Retorna/muda um tile da layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.GetData">
+            <summary>
+            Retorna todos os tiles da layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.SetMultipleTiles(System.String[])">
+            <summary>
+            Muda vários tiles de uma layer. Esse método não chama o <see cref="F:Claw.Tilemap.OnTileChange"/>!
+            </summary>
+            <param name="map">Sequência de tiles (["0,1,2,0,0,1", "0,1,1,3,0,1"]). Sem espaço.</param>
+        </member>
+        <member name="M:Claw.Layer.SetMultipleTiles(System.Int32[])">
+            <summary>
+            Muda vários tiles de uma layer. Esse método não chama o <see cref="F:Claw.Tilemap.OnTileChange"/>!
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.SetChunkTiles(Claw.Vector2,System.String[])">
+            <summary>
+            Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="F:Claw.Tilemap.OnTileChange"/>!
+            </summary>
+            <param name="chunkTiles">Sequência de tiles (["0,1,2,0,0,1", "0,1,1,3,0,1"]). Sem espaço.</param>
+        </member>
+        <member name="M:Claw.Layer.SetChunkTiles(Claw.Rectangle,System.Int32[])">
+            <summary>
+            Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="F:Claw.Tilemap.OnTileChange"/>!
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.Clear">
+            <summary>
+            Limpa a layer.
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.CheckCollision(Claw.Vector2,System.Int32@)">
+            <summary>
+            Checa se um ponto está colidindo com um tile.
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.CheckCollision(Claw.Vector2,System.Int32[],System.Int32@)">
+            <summary>
+            Checa se um ponto está colidindo com um tile.
+            </summary>
+        </member>
+        <member name="M:Claw.Layer.Raycast(Claw.Line,System.Single,System.Int32@,System.Nullable{Claw.Vector2}@,Claw.Vector2@)">
+            <summary>
+            Lança um raio e retorna o tile com que esse raio colidiu e o ponto da colisão.
+            </summary>
+            <param name="maxDistance">Distância em tiles.</param>
+        </member>
+        <member name="M:Claw.Layer.Pathfind(Claw.Vector2,Claw.Vector2,System.Boolean)">
+            <summary>
+            Implementa o algoritmo A* para encontrar um caminho entre duas posições.
+            </summary>
+            <param name="diagonalMovement">Define se o pathfind terá movimentos na diagonal.</param>
+            <returns>Lista de indexes do mapa.</returns>
+        </member>
+        <member name="T:Claw.Time">
+            <summary>
+            Guarda as informações de tempo do jogo.
+            </summary>
+        </member>
+        <member name="F:Claw.Time.TargetFPS">
+            <summary>
+            FPS desejável (60 por padrão).
+            </summary>
+        </member>
+        <member name="T:Claw.Utils.ComponentSortingFilteringCollection`1">
+            <summary>
+            Representa um <see cref="T:Claw.GameComponentCollection"/> filtrado e ordenado.
+            </summary>
+            <typeparam name="T">Tipo que será filtrado.</typeparam>
+        </member>
+        <member name="M:Claw.Utils.ComponentSortingFilteringCollection`1.#ctor(Claw.GameComponentCollection,System.Predicate{`0},System.Comparison{`0},System.Action{`0,System.EventHandler{System.EventArgs}},System.Action{`0,System.EventHandler{System.EventArgs}},System.Action{`0,System.EventHandler{System.EventArgs}},System.Action{`0,System.EventHandler{System.EventArgs}})">
+            <summary>
+            Cria uma lista de componenetes que será sempre o produto filtrado e ordenado de uma <see cref="T:Claw.GameComponentCollection"/>.
+            </summary>
+            <param name="componentCollection">A coleção original.</param>
+            <param name="filter">A condição para a filtragem.</param>
+            <param name="sort">O que servirá de parâmetro para a ordenação.</param>
+            <param name="filterChangedSubscriber">Adiciona o evento que deverá ser chamado quando o filtro mudar de valor.</param>
+            <param name="filterChangedUnsubscriber">Remove o evento que deverá ser chamado quando o filtro mudar de valor.</param>
+            <param name="sortChangedSubscriber">Adiciona o evento que deverá ser chamado quando a ordem mudar de valor.</param>
+            <param name="sortChangedUnsubscriber">Remove o evento que deverá ser chamado quando a ordem mudar de valor.</param>
+        </member>
+        <member name="M:Claw.Utils.ComponentSortingFilteringCollection`1.ForEach(System.Action{`0})">
+            <summary>
+            Executa uma ação para cada elemento da coleção.
+            </summary>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.Crypt(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Criptografa/Descriptografa um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="amount">Senha para a criptografia/descriptografia.</param>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.Crypt(System.String,System.Boolean,System.Int32[])">
+            <summary>
+            Criptografa/Descriptografa um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="amount">Sequência para a criptografia/descriptografia.</param>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.Crypt(System.String,System.Boolean,System.String)">
+            <summary>
+            Criptografa/Descriptografa um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="password">Senha da criptografia.</param>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.StringToBinary(System.String)">
+            <summary>
+            Converte texto para binário.
+            </summary>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.BinaryToString(System.String)">
+            <summary>
+            Converte binário para texto.
+            </summary>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.StringToHex(System.String)">
+            <summary>
+            Converte um texto para hex.
+            </summary>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.HexToString(System.String)">
+            <summary>
+            Converte hex para texto.
+            </summary>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.AllCrypt(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="amount">Senha para a criptografia/descriptografia.</param>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.AllCrypt(System.String,System.Boolean,System.Int32[])">
+            <summary>
+            Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="amount">Sequência para a criptografia/descriptografia.</param>
+        </member>
+        <member name="M:Claw.Utils.StringCrypt.AllCrypt(System.String,System.Boolean,System.String)">
+            <summary>
+            Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
+            </summary>
+            <param name="encrypt">True para criptografia e false para descriptografia.</param>
+            <param name="password">Senha da criptografia.</param>
+        </member>
+        <member name="T:Claw.Vector3">
+            <summary>
+            Descreve um vetor 3D.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector3.Zero">
+            <summary>
+            X: 0; Y: 0; Z: 0.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector3.One">
+            <summary>
+            X: 1; Y: 1; Z: 1.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Normalize">
+            <summary>
+            Transforma este <see cref="T:Claw.Vector3"/> em um vetor de unidade com a mesma direção.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Clamp(Claw.Vector3,Claw.Vector3,Claw.Vector3)">
+            <summary>
+            Retorna um vetor que respeite os limites mínimo e máximo.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Distance(Claw.Vector3,Claw.Vector3)">
+            <summary>
+            Retorna a distância entre dois vetores.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Normalize(Claw.Vector2)">
+            <summary>
+            Transforma um <see cref="T:Claw.Vector3"/> em um vetor de unidade com a mesma direção.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Lerp(Claw.Vector3,Claw.Vector3,System.Single)">
+            <summary>
+            Realiza a interpolação linear entre dois vetores.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Vector3.DeltaLerp(Claw.Vector3,Claw.Vector3,System.Single,System.Boolean)">
+            <summary>
+            Realiza a interpolação linear entre dois vetores, usando delta time.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação.</param>
+            <param name="scaled">Se o delta time será <see cref="P:Claw.Time.DeltaTime"/> (true) ou <see cref="P:Claw.Time.UnscaledDeltaTime"/> (false).</param>
+        </member>
+        <member name="M:Claw.Vector3.Approach(Claw.Vector3,Claw.Vector3,System.Single)">
+            <summary>
+            Incrementa um valor por um determinado deslocamento, mas nunca além do valor final.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.Approach(Claw.Vector3,Claw.Vector3,Claw.Vector3)">
+            <summary>
+            Incrementa um valor por um determinado deslocamento, mas nunca além do valor final.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector3.ToString">
+            <summary>
+            Retorna uma string representando este vetor 3D no formato:
+            {X:[<see cref="F:Claw.Vector3.X"/>] Y:[<see cref="F:Claw.Vector3.Y"/>] Z:[<see cref="F:Claw.Vector3.Z"/>]}
+            </summary>
+        </member>
+        <member name="T:Claw.Vector2">
+            <summary>
+            Descreve um vetor 2D.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector2.Zero">
+            <summary>
+            X: 0; Y: 0.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector2.One">
+            <summary>
+            X: 1; Y: 1.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector2.UnitX">
+            <summary>
+            X: 1; Y: 0.
+            </summary>
+        </member>
+        <member name="P:Claw.Vector2.UnitY">
+            <summary>
+            X: 0; Y: 1.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Invert">
+            <summary>
+            Troca o X pelo Y e vice-versa.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Normalize">
+            <summary>
+            Transforma este <see cref="T:Claw.Vector2"/> em um vetor de unidade com a mesma direção.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Abs(Claw.Vector2)">
+            <summary>
+            Retorna um vetor com o X e Y absolutos.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Clamp(Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna um vetor que respeite os limites mínimo e máximo.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.GetAngle(Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna o ângulo entre duas posições.
+            </summary>
+            <returns>Graus.</returns>
+        </member>
+        <member name="M:Claw.Vector2.Distance(Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Retorna a distância entre dois vetores.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Normalize(Claw.Vector2)">
+            <summary>
+            Transforma um <see cref="T:Claw.Vector2"/> em um vetor de unidade com a mesma direção.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Rotate(Claw.Vector2,Claw.Vector2,System.Single)">
+            <summary>
+            Retorna um <see cref="T:Claw.Vector2"/> rotacionado.
+            </summary>
+            <param name="rotation">Graus.</param>
+        </member>
+        <member name="M:Claw.Vector2.Lerp(Claw.Vector2,Claw.Vector2,System.Single)">
+            <summary>
+            Realiza a interpolação linear entre dois vetores.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação (entre 0 e 1).</param>
+        </member>
+        <member name="M:Claw.Vector2.DeltaLerp(Claw.Vector2,Claw.Vector2,System.Single,System.Boolean)">
+            <summary>
+            Realiza a interpolação linear entre dois vetores, usando delta time.
+            </summary>
+            <param name="a">Valor atual.</param>
+            <param name="b">Valor alvo.</param>
+            <param name="amount">Valor de ponderação.</param>
+            <param name="scaled">Se o delta time será <see cref="P:Claw.Time.DeltaTime"/> (true) ou <see cref="P:Claw.Time.UnscaledDeltaTime"/> (false).</param>
+        </member>
+        <member name="M:Claw.Vector2.Approach(Claw.Vector2,Claw.Vector2,System.Single)">
+            <summary>
+            Incrementa um valor por um determinado deslocamento, mas nunca além do valor final.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.Approach(Claw.Vector2,Claw.Vector2,Claw.Vector2)">
+            <summary>
+            Incrementa um valor por um determinado deslocamento, mas nunca além do valor final.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.LengthDir(Claw.Vector2,System.Single)">
+            <summary>
+            Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+            </summary>
+            <param name="angle">Graus.</param>
+        </member>
+        <member name="M:Claw.Vector2.LengthDir(System.Single,System.Single)">
+            <summary>
+            Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+            </summary>
+            <param name="angle">Graus.</param>
+        </member>
+        <member name="M:Claw.Vector2.Transform(Claw.Vector2,Claw.Quaternion)">
+            <summary>
+            Cria um novo <see cref="T:Claw.Vector2"/> que contém a transformação do vetor 2d pelo <see cref="T:Claw.Quaternion"/> especificado, representando a rotação.
+            </summary>
+        </member>
+        <member name="M:Claw.Vector2.FindFacing(System.Single)">
+            <summary>
+            Transforma um ângulo em um <see cref="T:Claw.Vector2"/>.
+            </summary>
+            <param name="angle">Graus.</param>
+        </member>
+        <member name="M:Claw.Vector2.ToString">
+            <summary>
+            Retorna uma string representando este vetor 2D no formato:
+            {X:[<see cref="F:Claw.Vector2.X"/>] Y:[<see cref="F:Claw.Vector2.Y"/>]}
+            </summary>
+        </member>
+        <member name="T:Claw.Window">
+            <summary>
+            Representa a janela do jogo.
+            </summary>
+        </member>
+        <member name="P:Claw.Window.IsActive">
+            <summary>
+            Diz se a janela está em foco (selecionada).
+            </summary>
+        </member>
+        <member name="P:Claw.Window.IsMouseFocused">
+            <summary>
+            Diz se o mouse está dentro da janela.
+            </summary>
+        </member>
+        <member name="P:Claw.Window.IsFocused">
+            <summary>
+            Diz se o mouse está dentro da janela e ela está em foco (selecionada).
+            </summary>
+        </member>
+        <member name="F:Claw.Window.ClientResized">
+            <summary>
+            É executado sempre que o tamanho da janela é alterado, independentemente de quem causou essa mudança.
+            </summary>
+        </member>
+        <member name="M:Claw.Window.Centralize">
+            <summary>
+            Centraliza a janela.
+            </summary>
+        </member>
+        <member name="M:Claw.Window.SetMousePosition(Claw.Vector2)">
+            <summary>
+            Altera a posição do mouse, relativo a janela.
+            </summary>
+        </member>
+    </members>
+</doc>
