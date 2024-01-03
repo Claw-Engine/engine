@@ -95,6 +95,10 @@ namespace Claw
         /// Centraliza a janela.
         /// </summary>
         public void Centralize() => SDL.SDL_SetWindowPosition(sdlWindow, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+        /// <summary>
+        /// Maximiza a janela.
+        /// </summary>
+        public void Maximize() => SDL.SDL_MaximizeWindow(sdlWindow);
 
         /// <summary>
         /// Altera a posição do mouse, relativo a janela.
