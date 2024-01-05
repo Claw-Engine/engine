@@ -47,7 +47,7 @@ namespace Claw.Input.Systems
 
         public void Update(TaggedPlayer player)
         {
-            bool gamepad = Button != null && AltButton != null && player.GamePad != -1;
+            bool gamepad = player.GamePad != -1 && Button != null && AltButton != null && Input.GamePadExists(player.GamePad);
 
             IsDown = (MouseButton.HasValue && Input.MouseButtonDown(MouseButton.Value)) ||
                 (Input.KeyDown(Key) || Input.KeyDown(AltKey)) ||
@@ -100,7 +100,7 @@ namespace Claw.Input.Systems
 
         public void Update(TaggedPlayer player)
         {
-            bool gamepad = Buttons != null && player.GamePad != -1;
+            bool gamepad = player.GamePad != -1 && Input.GamePadExists(player.GamePad) && Buttons != null;
             int up = (Input.KeyDown(Keys.Up) || Input.KeyDown(AltKeys.Up) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Up))) ? 1 : 0,
                 down = (Input.KeyDown(Keys.Down) || Input.KeyDown(AltKeys.Down) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Down))) ? 1 : 0,
                 right = (Input.KeyDown(Keys.Right) || Input.KeyDown(AltKeys.Right) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Right))) ? 1 : 0,

@@ -172,6 +172,11 @@ namespace Claw.Input
         }
 
         /// <summary>
+        /// Checa se existe um gamepad com determinado index.
+        /// </summary>
+        public static bool GamePadExists(int index) => index >= 0 && index < controllers.Count;
+
+        /// <summary>
         /// Retorna o tipo do controle especificado.
         /// </summary>
         public static ControllerTypes GetControllerType(int index) => controllers[index].Type;
@@ -200,10 +205,11 @@ namespace Claw.Input
         public static int DownGamePadButtons(int index)
         {
             int count = 0;
+            GameController controller = controllers[index];
 
             foreach (int value in Enum.GetValues(typeof(Buttons)))
             {
-                if (controllers[index].IsCurrentButtonDown((Buttons)value)) count++;
+                if (controller.IsCurrentButtonDown((Buttons)value)) count++;
             }
 
             return count;
