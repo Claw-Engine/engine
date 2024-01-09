@@ -65,7 +65,6 @@ namespace Claw.Save
                         object value = ((ISaveValue)pair.Value).Cast(setters[pair.Key].Type, references);
 
                         setters[pair.Key].SetValue(instance, value);
-                        references.Add(((ISaveValue)pair.Value), value);
                     }
                     else setters[pair.Key].SetValue(instance, found.Value);
                 }

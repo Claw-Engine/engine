@@ -145,7 +145,7 @@ namespace Claw
                     case SDL.SDL_EventType.SDL_WINDOWEVENT:
                         switch (sdlEvent.window.windowEvent)
                         {
-                            case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED: Window.ClientResized?.Invoke(this, EventArgs.Empty); break;
+                            case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED: Window.ClientResized?.Invoke(); break;
                         }
                         break;
                     case SDL.SDL_EventType.SDL_MOUSEWHEEL: Input.Input.UpdateScroll(sdlEvent.wheel); break;

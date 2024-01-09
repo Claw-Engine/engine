@@ -2,6 +2,7 @@
 using Claw;
 using Claw.Graphics;
 using Claw.Input;
+using Claw.Save;
 using Claw.Utils;
 
 namespace Tests
@@ -11,7 +12,6 @@ namespace Tests
         public static SpriteFont Font;
         private ComponentSortingFilteringCollection<IUpdateable> updateables;
         private ComponentSortingFilteringCollection<IDrawable> drawables;
-        private Cursor cursor = 0;
 
         protected override void Initialize()
         {
@@ -30,17 +30,7 @@ namespace Tests
             Font = Asset.Load<SpriteFont>("Fonts/font");
         }
         
-        protected override void Step()
-        {
-            if (Input.MouseButtonPressed(MouseButtons.Left))
-            {
-                cursor = (Cursor)Mathf.Clamp((int)cursor + 1, 0, (int)Cursor.Hand);
-
-                Window.SetCursor(cursor);
-            }
-
-            updateables.ForEach((u) => u.Step());
-        }
+        protected override void Step() => updateables.ForEach((u) => u.Step());
 
         protected override void Render()
         {

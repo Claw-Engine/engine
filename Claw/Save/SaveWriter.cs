@@ -191,7 +191,7 @@ namespace Claw.Save
                 builder.AppendFormat(PairFormat, name, Stringfy(properties[i].GetValue(instance)));
             }
 
-            builder.Remove(builder.Length - 2, 2);
+            if (builder.Length >= 2) builder.Remove(builder.Length - 2, 2);
 
             return builder.ToString();
         }

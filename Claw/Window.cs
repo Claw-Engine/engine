@@ -80,7 +80,7 @@ namespace Claw
         /// <summary>
         /// É executado sempre que o tamanho da janela é alterado, independentemente de quem causou essa mudança.
         /// </summary>
-        public EventHandler ClientResized;
+        public Action ClientResized;
         private IntPtr sdlWindow;
 
         internal Window(IntPtr window) => sdlWindow = window;
@@ -97,6 +97,10 @@ namespace Claw
         /// Centraliza a janela.
         /// </summary>
         public void Centralize() => SDL.SDL_SetWindowPosition(sdlWindow, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+        /// <summary>
+        /// Restaura o estado da janela.
+        /// </summary>
+        public void Restore() => SDL.SDL_RestoreWindow(sdlWindow);
         /// <summary>
         /// Maximiza a janela.
         /// </summary>
