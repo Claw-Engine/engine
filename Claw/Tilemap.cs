@@ -488,7 +488,7 @@ namespace Claw
         {
             tile = 0;
             Vector2 check = Mathf.GetGridPosition(position, map.GridSize) / map.GridSize;
-
+            
             if (check.X < 0 || check.Y < 0 || check.X >= map.Size.X || check.Y >= map.Size.Y) return false;
 
             tile = this[check];

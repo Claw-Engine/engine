@@ -49,12 +49,11 @@ namespace Claw.Tiled
             var hasTile = LayerForeach(map.layers, tiledMap);
             links = null;
 
+            if (hasTile) Game.Instance.Tilemap = tiledMap;
+
             foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
 
             waiting = null;
-
-            if (hasTile) Game.Instance.Tilemap = tiledMap;
-
             GameObject.InstantlyAdd = previousInstantlyAdd;
         }
 

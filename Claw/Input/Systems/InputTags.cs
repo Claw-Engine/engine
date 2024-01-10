@@ -47,8 +47,8 @@ namespace Claw.Input.Systems
 
         public void Update(TaggedPlayer player)
         {
-            bool gamepad = player.GamePad != -1 && Button != null && AltButton != null && Input.GamePadExists(player.GamePad);
-
+            bool gamepad = Button != null && AltButton != null && Input.GamePadExists(player.GamePad);
+            
             IsDown = (MouseButton.HasValue && Input.MouseButtonDown(MouseButton.Value)) ||
                 (Input.KeyDown(Key) || Input.KeyDown(AltKey)) ||
                 (gamepad && (Input.GamePadButtonDown(player.GamePad, Button.Value) || Input.GamePadButtonDown(player.GamePad, AltButton.Value)));
@@ -60,7 +60,7 @@ namespace Claw.Input.Systems
             IsReleased = (MouseButton.HasValue && Input.MouseButtonReleased(MouseButton.Value)) ||
                 (Input.KeyReleased(Key) || Input.KeyReleased(AltKey)) ||
                 (gamepad && (Input.GamePadButtonReleased(player.GamePad, Button.Value) || Input.GamePadButtonReleased(player.GamePad, AltButton.Value)));
-
+            
             if (BufferTimer > 0) BufferTimer -= Time.UnscaledDeltaTime;
             else if (IsPressed) BufferTimer = Buffer;
         }
@@ -100,7 +100,9 @@ namespace Claw.Input.Systems
 
         public void Update(TaggedPlayer player)
         {
-            bool gamepad = player.GamePad != -1 && Input.GamePadExists(player.GamePad) && Buttons != null;
+            bool gamepadExists = Input.GamePadExists(player.GamePad);
+            bool gamepad = gamepadExists && Buttons != null;
+            
             int up = (Input.KeyDown(Keys.Up) || Input.KeyDown(AltKeys.Up) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Up))) ? 1 : 0,
                 down = (Input.KeyDown(Keys.Down) || Input.KeyDown(AltKeys.Down) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Down))) ? 1 : 0,
                 right = (Input.KeyDown(Keys.Right) || Input.KeyDown(AltKeys.Right) || (gamepad && Input.GamePadButtonDown(player.GamePad, Buttons.Value.Right))) ? 1 : 0,
@@ -110,12 +112,12 @@ namespace Claw.Input.Systems
 
             if (CurrentAxis == Vector2.Zero)
             {
-                if (UseLeftThumb && player.GamePad != -1)
+                if (UseLeftThumb && gamepadExists)
                 {
                     var l = Input.LeftThumbStick(player.GamePad);
                     CurrentAxis = new Vector2(Math.Abs(l.X) >= TaggedInput.DeadAxis.X ? l.X : 0, Math.Abs(l.Y) >= TaggedInput.DeadAxis.Y ? l.Y : 0);
                 }
-                else if (UseRightThumb && player.GamePad != -1)
+                else if (UseRightThumb && gamepadExists)
                 {
                     var r = Input.RightThumbStick(player.GamePad);
                     CurrentAxis = new Vector2(Math.Abs(r.X) >= TaggedInput.DeadAxis.X ? r.X : 0, Math.Abs(r.Y) >= TaggedInput.DeadAxis.Y ? r.Y : 0);
