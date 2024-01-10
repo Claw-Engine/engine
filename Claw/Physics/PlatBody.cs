@@ -20,7 +20,7 @@ namespace Claw.Physics
 
         protected virtual float GroundSpeed { get; } = 6;
         protected virtual float AirSpeed { get; } = 8;
-        protected float WalkSpeed => Grounded ? GroundSpeed : AirSpeed;
+        protected float WalkSpeed => Grounded && speed.Y >= 0 ? GroundSpeed : AirSpeed;
         protected virtual float JumpSpeed { get; } = 12;
         protected virtual float Gravity { get; } = 24;
         protected virtual Vector2 MinSpeed { get; } = new Vector2(-24);
