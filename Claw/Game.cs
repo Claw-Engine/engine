@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Claw.Graphics;
 using Claw.Audio;
+using static Claw.SDL;
 
 namespace Claw
 {
@@ -132,6 +133,7 @@ namespace Claw
         private void HandleEvents()
         {
             SDL.SDL_Event sdlEvent;
+            bool scroll = false;
 
             while(SDL.SDL_PollEvent(out sdlEvent) != 0)
             {
@@ -148,7 +150,11 @@ namespace Claw
                             case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED: Window.ClientResized?.Invoke(); break;
                         }
                         break;
-                    case SDL.SDL_EventType.SDL_MOUSEWHEEL: Input.Input.UpdateScroll(sdlEvent.wheel); break;
+                    case SDL.SDL_EventType.SDL_MOUSEWHEEL:
+                        Input.Input.UpdateScroll(sdlEvent.wheel);
+
+                        scroll = true;
+                        break;
                     case SDL.SDL_EventType.SDL_MOUSEMOTION: Input.Input.UpdateMouseMotion(sdlEvent.motion); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEADDED: Input.Input.AddController(sdlEvent.cdevice.which); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEREMOVED: Input.Input.RemoveController(sdlEvent.cdevice.which); break;
@@ -156,6 +162,8 @@ namespace Claw
 
                 SDL.SDL_PumpEvents();
             }
+
+            if (!scroll) Input.Input.UpdateScroll(new SDL_MouseWheelEvent());
         }
         private void Clear()
         {

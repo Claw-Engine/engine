@@ -56,7 +56,7 @@ namespace Claw.Input
             int wheel = wheelEvent.y;
 
             if (wheelEvent.direction == (uint)SDL.SDL_MouseWheelDirection.SDL_MOUSEWHEEL_FLIPPED) wheel *= -1;
-
+            
             if (canMouse && previousMouseScroll != wheel) MouseScroll = Math.Sign(wheel);
             else MouseScroll = 0;
 
