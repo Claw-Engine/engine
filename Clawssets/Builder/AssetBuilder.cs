@@ -206,6 +206,9 @@ namespace Clawssets.Builder
             for (int i = 0; i < files.Length; i++)
             {
                 string fileName = Path.GetFileName(files[i]);
+
+                if (fileName == CacheFile) continue;
+
                 string outputPath = Path.Combine(output, fileName);
                 string outputDirectory = Path.GetDirectoryName(outputPath);
 

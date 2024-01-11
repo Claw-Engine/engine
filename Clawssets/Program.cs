@@ -21,11 +21,11 @@ namespace Clawssets
         private static void Release(string[] args)
         {
             string configFile = string.Empty;
-
-            if (args.Length > 0 && args[0].Length > 0) configFile = args[0];
+            
+            if (args.Length > 0 && args[0].Length > 1) configFile = args[0];
             else
             {
-                string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
+                string[] files = Directory.GetFiles(Environment.CurrentDirectory);
 
                 for (int i = 0; i < files.Length; i++)
                 {
@@ -33,7 +33,7 @@ namespace Clawssets
                     {
                         configFile = files[i];
 
-                        return;
+                        break;
                     }
                 }
             }
