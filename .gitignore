@@ -12,7 +12,7 @@ bld/
 .bin/
 
 /packages
-.vs
+.vs/
 
 *.user
 

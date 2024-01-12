@@ -32,17 +32,9 @@ namespace Claw
             if (animationIndexes != null)
             {
                 animationIndexes.Clear();
-
-                animationIndexes = null;
-            }
-
-            if (animations != null)
-            {
-                for (int i = 0; i < animations.Count; i++) animations[i].Dispose();
-
                 animations.Clear();
 
-                animations = null;
+                animationIndexes = null;
             }
         }
 
@@ -141,11 +133,11 @@ namespace Claw
         public void Step()
         {
             if (Animatable == null) return;
-
+            
             if (animations.Count > 0 && Animation >= 0 && animations[Animation].Frames.Count > 0 && !Stop)
             {
                 counter += Time.DeltaTime * (float)framesPerSecond;
-
+                
                 if (counter >= 1)
                 {
                     if (!Invert)
@@ -170,7 +162,7 @@ namespace Claw
                     }
 
                     counter = 0;
-
+                    
                     UpdateFrame();
                 }
             }
@@ -179,7 +171,7 @@ namespace Claw
     /// <summary>
     /// Dados de uma animação para o <see cref="Animator"/>.
     /// </summary>
-    public sealed class Animation : IDisposable
+    public sealed class Animation
     {
         public int FramesPerSecond;
         public string Name;
@@ -192,17 +184,6 @@ namespace Claw
             Frames = frames.ToList();
             Name = name;
             Origin = origin;
-        }
-        ~Animation() => Dispose();
-
-        public void Dispose()
-        {
-            if (Frames != null)
-            {
-                Frames.Clear();
-
-                Frames = null;
-            }
         }
 
         /// <summary>
