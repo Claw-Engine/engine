@@ -13,18 +13,20 @@ namespace Claw.Physics
         private float previousBottom, coyoteCounter = 0;
         private Vector2 speed = Vector2.Zero;
 
-        protected bool Grounded = false, OnGhost = false;
-        protected bool WasGrounded { get; private set; } = false;
-        protected bool CanJump { get; private set; } = false;
-        protected bool IgnoreGhost = false, ApplyPhysics = true;
+        public bool Grounded { get; protected set; } = false;
+        public bool OnGhost { get; protected set; } = false;
+        public bool WasGrounded { get; private set; } = false;
+        public bool CanJump { get; private set; } = false;
+        public bool IgnoreGhost { get; protected set; } = false;
+        public bool ApplyPhysics { get; protected set; } = true;
 
-        protected virtual float GroundSpeed { get; } = 6;
-        protected virtual float AirSpeed { get; } = 8;
-        protected float WalkSpeed => Grounded && speed.Y >= 0 ? GroundSpeed : AirSpeed;
-        protected virtual float JumpSpeed { get; } = 12;
-        protected virtual float Gravity { get; } = 24;
-        protected virtual Vector2 MinSpeed { get; } = new Vector2(-24);
-        protected virtual Vector2 MaxSpeed { get; } = new Vector2(24);
+        public virtual float GroundSpeed { get; } = 6;
+        public virtual float AirSpeed { get; } = 8;
+        public float WalkSpeed => Grounded && speed.Y >= 0 ? GroundSpeed : AirSpeed;
+        public virtual float JumpSpeed { get; } = 12;
+        public virtual float Gravity { get; } = 24;
+        public virtual Vector2 MinSpeed { get; } = new Vector2(-24);
+        public virtual Vector2 MaxSpeed { get; } = new Vector2(24);
 
         private Vector2 Grid => Game.Tilemap.GridSize;
 
