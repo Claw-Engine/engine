@@ -195,7 +195,7 @@ namespace Clawssets.Builder
                 case "color": case "string":
                     writer.Write((string)property.value);
                     break;
-                case "float": writer.Write((float)property.value); break;
+                case "float": writer.Write(Convert.ToSingle(property.value)); break;
                 case "int": case "object":
                     writer.Write((long)property.value);
                     break;
