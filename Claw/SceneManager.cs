@@ -95,7 +95,7 @@ namespace Claw
             for (int i = objects.Count - 1; i >= 0; i--)
             {
                 GameObject gO = objects[i];
-
+                
                 if (deleteAll || (!gO.DontDestroy && gO.Parent == null)) gO.SelfDestroy(runDestroy);
             }
         }

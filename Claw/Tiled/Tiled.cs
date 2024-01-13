@@ -90,7 +90,7 @@ namespace Claw.Tiled
         private static bool LayerForeach(Layer[] layers, Tilemap tiledMap)
         {
             bool hasTile = false;
-
+            
             foreach (Layer layer in layers)
             {
                 if (GetPropertyValue(layer.properties, "TiledIgnore", "bool", false)) continue;

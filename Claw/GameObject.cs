@@ -285,7 +285,7 @@ namespace Claw
 
             if (children.Count > 0)
             {
-                foreach (GameObject gameObject in children) gameObject.SelfDestroy(runDestroy);
+                for (int i = children.Count - 1; i >= 0; i--) children[i].SelfDestroy(runDestroy);
             }
 
             Game.Components.Remove(this);
