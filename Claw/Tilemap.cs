@@ -262,18 +262,8 @@ namespace Claw
             if (tileSets.Count > 0 && GridSize != Vector2.Zero && Size != Vector2.Zero && layers.Count > 0)
             {
                 CameraState camera = Draw.GetCamera()?.State ?? CameraState.Neutral;
-                Vector2 topLeft = camera.Position - camera.Origin / camera.Zoom;
-                Vector2 bottomRight = Game.Instance.Window.Size;
-
-                if (camera.Camera != null)
-                {
-                    if (camera.viewport.Size != Vector2.Zero) bottomRight = camera.viewport.End;
-
-                    bottomRight = camera.Camera.ScreenToWorld(bottomRight);
-                }
-
-                Vector2 start = Mathf.GetGridPosition(topLeft, GridSize) / GridSize - new Vector2(OutOfView);
-                Vector2 end = Mathf.GetGridPosition(bottomRight, GridSize) / GridSize + new Vector2(OutOfView * 2);
+                Vector2 start = Mathf.GetGridPosition(camera.TopLeft, GridSize) / GridSize - new Vector2(OutOfView);
+                Vector2 end = Mathf.GetGridPosition(camera.BottomRight, GridSize) / GridSize + new Vector2(OutOfView * 2);
 
                 start = Vector2.Clamp(start, Vector2.Zero, Size);
                 end = Vector2.Clamp(end, Vector2.Zero, Size);

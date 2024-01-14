@@ -51,9 +51,11 @@ namespace Claw.Graphics
         /// </summary>
         public void Follow(Vector2 position)
         {
-            if (Position.X + Border.X != position.X && Position.X * Zoom - Border.X != position.X) Position.X = position.X - Border.X;
-            if (Position.Y + Border.Y != position.Y && Position.Y * Zoom - Border.Y != position.Y) Position.Y = position.Y - Border.Y;
-
+            Vector2 center = State.TopLeft + (State.BottomRight - State.TopLeft) * .5f;
+            
+            if (center.X + Border.X != position.X && center.X - Border.X != position.X) Position.X = position.X - Border.X;
+            if (center.Y + Border.Y != position.Y && center.Y - Border.Y != position.Y) Position.Y = position.Y - Border.Y;
+            
             Position = Vector2.Clamp(Position, MinPosition, MaxPosition);
         }
         
@@ -77,6 +79,17 @@ namespace Claw.Graphics
         public float Rotation { get; private set; }
         public Vector2 Position { get; private set; }
         public Vector2 Origin { get; private set; }
+        public Vector2 TopLeft { get; private set; }
+        public Vector2 BottomRight
+        {
+            get
+            {
+                if (Camera == null) return Game.Instance.Window.Size;
+
+                return bottomRight;
+            }
+        }
+        private Vector2 bottomRight;
         internal Rectangle viewport => Camera != null ? Camera.Viewport : new Rectangle();
 
         internal CameraState(Camera camera) => Camera = camera;
@@ -90,6 +103,12 @@ namespace Claw.Graphics
             Rotation = Camera.Rotation;
             Position = Camera.Position;
             Origin = Camera.Origin;
+            TopLeft = (Position - Origin) / Zoom;
+            bottomRight = Game.Instance.Window.Size;
+
+            if (viewport.Size != Vector2.Zero) bottomRight = viewport.End;
+
+            bottomRight = Camera.ScreenToWorld(bottomRight);
         }
     }
 }
