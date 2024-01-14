@@ -64,7 +64,7 @@ namespace Claw.Graphics
             if (position.Y < area.Y) area.Y = position.Y;
             else if (position.Y > area.Bottom) area.Y = position.Y - area.Height;
 
-            return Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition);
+            return Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition * Zoom);
         }
         
         /// <summary>
