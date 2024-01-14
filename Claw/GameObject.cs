@@ -81,17 +81,25 @@ namespace Claw
             {
                 if (parent != null) parent.children.Remove(this);
 
-                if (value == null) parent = null;
+                if (value == null)
+                {
+                    position = Position;
+                    scale = Scale;
+                    rotation = Rotation;
+                    parent = null;
+                }
                 else if (value != this && value.parent != this)
                 {
                     parent = value;
+                    rotation = rotation - Parent.Rotation;
+                    scale = Parent.Scale / scale;
+                    position = position - Parent.Position;
 
                     value.children.Add(this);
                 }
             }
         }
         public string[] Tags => tags.ToArray();
-        public GameObject[] Children => children.ToArray();
         private GameObject parent;
         internal List<string> tags = new List<string>();
         internal List<GameObject> children = new List<GameObject>();
@@ -110,7 +118,7 @@ namespace Claw
         {
             get
             {
-                if (Parent != null) return Vector2.Rotate(PositionInParent * Parent.Scale + Parent.Position, Parent.Position, Parent.Rotation);
+                if (Parent != null) return Vector2.Rotate(position * Parent.Scale + Parent.Position, Parent.Position, Parent.Rotation);
 
                 return position;
             }
@@ -125,48 +133,6 @@ namespace Claw
                 return scale;
             }
             set => scale = value;
-        }
-        public float RotationInParent
-        {
-            get
-            {
-                if (Parent != null) return rotation - Parent.rotation;
-
-                return 0;
-            }
-            set
-            {
-                if (Parent != null) Rotation = Parent.Rotation + value;
-                else Rotation = value;
-            }
-        }
-        public Vector2 PositionInParent
-        {
-            get
-            {
-                if (parent != null) return position - parent.position;
-
-                return Vector2.Zero;
-            }
-            set
-            {
-                if (parent != null) Position = parent.Position + value;
-                else Position = value;
-            }
-        }
-        public Vector2 ScaleInParent
-        {
-            get
-            {
-                if (parent != null) return Scale / parent.Scale;
-
-                return new Vector2(1, 1);
-            }
-            set
-            {
-                if (parent != null) Scale = parent.Scale * value;
-                else Scale = value;
-            }
         }
         public Vector2 Facing => Vector2.FindFacing(rotation);
         public List<Polygon> Colliders = new List<Polygon>();
@@ -265,6 +231,15 @@ namespace Claw
         /// Diz se este <see cref="GameObject"/> possui uma tag específica.
         /// </summary>
         public bool HasTag(string tag) => tags.Contains(tag.ToLower());
+
+        /// <summary>
+        /// Retorna a quantidade de filhos deste objeto.
+        /// </summary>
+        public int ChildCount() => children.Count;
+        /// <summary>
+        /// Retorna um filho deste objeto.
+        /// </summary>
+        public GameObject GetChild(int index) => children[index];
 
         public virtual void Step() => animator?.Step();
         public virtual void Render()
