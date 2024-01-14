@@ -51,12 +51,16 @@ namespace Claw.Graphics
         /// </summary>
         public void Follow(Vector2 position)
         {
-            Vector2 center = State.TopLeft + (State.BottomRight - State.TopLeft) * .5f;
-            
-            if (center.X + Border.X != position.X && center.X - Border.X != position.X) Position.X = position.X - Border.X;
-            if (center.Y + Border.Y != position.Y && center.Y - Border.Y != position.Y) Position.Y = position.Y - Border.Y;
-            
-            Position = Vector2.Clamp(Position, MinPosition, MaxPosition);
+            Vector2 topLeft = State.TopLeft + Border;
+            Rectangle area = new Rectangle(topLeft, State.BottomRight - Border - topLeft);
+
+            if (position.X < area.X) area.X = position.X;
+            else if (position.X > area.Right) area.X = position.X - area.Width;
+
+            if (position.Y < area.Y) area.Y = position.Y;
+            else if (position.Y > area.Bottom) area.Y = position.Y - area.Height;
+
+            Position = Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition);
         }
         
         /// <summary>
