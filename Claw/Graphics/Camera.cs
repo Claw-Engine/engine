@@ -5,7 +5,7 @@ namespace Claw.Graphics
     /// <summary>
     /// Representa uma câmera 2D para operações no <see cref="Draw"/>.
     /// </summary>
-    public sealed class Camera
+    public class Camera
     {
         public float Zoom = 1, Rotation;
         public Vector2 Position, Origin, Border, MinPosition, MaxPosition;
@@ -49,7 +49,11 @@ namespace Claw.Graphics
         /// <summary>
         /// Segue uma posição específica, sem passar dos limites estipulados.
         /// </summary>
-        public void Follow(Vector2 position)
+        public virtual void Follow(Vector2 position) => Position = CalculateFollow(position);
+        /// <summary>
+        /// Cálculo de posição usado pelo método <see cref="Follow(Vector2)"/>.
+        /// </summary>
+        public Vector2 CalculateFollow(Vector2 position)
         {
             Vector2 topLeft = State.TopLeft + Border;
             Rectangle area = new Rectangle(topLeft, State.BottomRight - Border - topLeft);
@@ -60,7 +64,7 @@ namespace Claw.Graphics
             if (position.Y < area.Y) area.Y = position.Y;
             else if (position.Y > area.Bottom) area.Y = position.Y - area.Height;
 
-            Position = Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition);
+            return Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition);
         }
         
         /// <summary>
