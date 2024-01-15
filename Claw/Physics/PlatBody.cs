@@ -70,6 +70,8 @@ namespace Claw.Physics
             Impulse(new Vector2(0, -JumpSpeed * boost * Grid.Y), false, true);
 
             coyoteCounter = 0;
+            CanJump = false;
+            Grounded = false;
             IgnoreGhost = false;
         }
         /// <summary>
