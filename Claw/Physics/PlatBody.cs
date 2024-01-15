@@ -30,7 +30,7 @@ namespace Claw.Physics
 
         private Vector2 Grid => Game.Tilemap.GridSize;
 
-        public virtual Rectangle Bounds => new Rectangle(Position - Origin, Grid);
+        public virtual Rectangle Bounds => new Rectangle(Position, Grid);
 
         /// <summary>
         /// Retorna a velocidade do <see cref="PlatBody"/>.
