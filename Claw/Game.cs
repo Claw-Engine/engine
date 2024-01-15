@@ -97,8 +97,14 @@ namespace Claw
         /// <summary>
         /// Fecha o jogo.
         /// </summary>
-        public void Close() => isRunning = false;
+        public void Close()
+        {
+            isRunning = false;
 
+            OnClose();
+        }
+
+        protected virtual void OnClose() { }
         protected virtual void Initialize() { }
         protected virtual void Step() { }
         protected virtual void Render() { }
