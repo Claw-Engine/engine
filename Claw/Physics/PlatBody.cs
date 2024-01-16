@@ -181,7 +181,7 @@ namespace Claw.Physics
             int tile = 0;
             float checkY = (speed.Y < 0 ? area.Top : area.Bottom) + speed.Y * Time.DeltaTime;
             float dir = speed.Y != 0 ? speed.Y : 1;
-
+            
             for (float x = area.Left; x < area.Right; x++)
             {
                 if (Game.Tilemap[TileCollisionLayer].CheckCollision(new Vector2(x, checkY), out tile))
@@ -232,7 +232,7 @@ namespace Claw.Physics
                     float offset = Position.X - area.Location.X;
                     Vector2 targetPos = new Vector2(tilePos.X + repos + offset, Position.Y);
                     
-                    if (!Game.Tilemap[TileCollisionLayer].CheckCollision(new Vector2(targetPos.X, area.Top - 1), out int tile) || tile == PlatTypes.DontPassUp)
+                    if (!Game.Tilemap[TileCollisionLayer].CheckCollision(new Vector2(targetPos.X, collisionPoint.Y), out int tile) || tile == PlatTypes.DontPassUp)
                     {
                         Position = targetPos;
 
