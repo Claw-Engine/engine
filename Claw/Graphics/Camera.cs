@@ -51,7 +51,7 @@ namespace Claw.Graphics
         /// </summary>
         public virtual void Follow(Vector2 position, FollowMode mode = FollowMode.Border) => Position = CalculateFollow(position, mode);
         /// <summary>
-        /// Cálculo de posição usado pelo método <see cref="Follow(Vector2)"/>.
+        /// Cálculo de posição usado pelo método <see cref="Follow(Vector2, FollowMode)"/>.
         /// </summary>
         public Vector2 CalculateFollow(Vector2 position, FollowMode mode = FollowMode.Border)
         {
