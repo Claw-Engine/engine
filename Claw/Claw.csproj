@@ -63,8 +63,10 @@
     <Compile Include="Graphics\BlendMode.cs" />
     <Compile Include="Graphics\BlendFunction.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\CameraState.cs" />
     <Compile Include="Graphics\Draw.cs" />
     <Compile Include="Graphics\Flip.cs" />
+    <Compile Include="Graphics\FollowMode.cs" />
     <Compile Include="Graphics\Systems\HUD.cs" />
     <Compile Include="Graphics\NineSlice.cs" />
     <Compile Include="Graphics\Systems\Parallax.cs" />

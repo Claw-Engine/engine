@@ -49,22 +49,34 @@ namespace Claw.Graphics
         /// <summary>
         /// Segue uma posição específica, sem passar dos limites estipulados.
         /// </summary>
-        public virtual void Follow(Vector2 position) => Position = CalculateFollow(position);
+        public virtual void Follow(Vector2 position, FollowMode mode = FollowMode.Border) => Position = CalculateFollow(position, mode);
         /// <summary>
         /// Cálculo de posição usado pelo método <see cref="Follow(Vector2)"/>.
         /// </summary>
-        public Vector2 CalculateFollow(Vector2 position)
+        public Vector2 CalculateFollow(Vector2 position, FollowMode mode = FollowMode.Border)
         {
-            Vector2 topLeft = State.TopLeft + Border;
-            Rectangle area = new Rectangle(topLeft, State.BottomRight - Border - topLeft);
+            Vector2 topLeft = State.TopLeft + Border, bottomRight = State.BottomRight;
+            Vector2 result = position;
 
-            if (position.X < area.X) area.X = position.X;
-            else if (position.X > area.Right) area.X = position.X - area.Width;
+            switch (mode)
+            {
+                case FollowMode.Border:
 
-            if (position.Y < area.Y) area.Y = position.Y;
-            else if (position.Y > area.Bottom) area.Y = position.Y - area.Height;
+                    Rectangle area = new Rectangle(topLeft, bottomRight - Border - topLeft);
 
-            return Vector2.Clamp((area.Location - Border + Origin) * Zoom, MinPosition, MaxPosition * Zoom);
+                    if (position.X < area.X) area.X = position.X;
+                    else if (position.X > area.Right) area.X = position.X - area.Width;
+
+                    if (position.Y < area.Y) area.Y = position.Y;
+                    else if (position.Y > area.Bottom) area.Y = position.Y - area.Height;
+
+                    result = (area.Location - Border + Origin) * Zoom;
+
+                    break;
+                case FollowMode.AwaysCenter: result = (position - (bottomRight - topLeft) * .5f + Origin) * Zoom; break;
+            }
+
+            return Vector2.Clamp(result, MinPosition, MaxPosition * Zoom);
         }
         
         /// <summary>
@@ -75,48 +87,5 @@ namespace Claw.Graphics
         /// Converte um ponto do mundo em um ponto da tela, com base no <see cref="State"/>.
         /// </summary>
         public Vector2 WorldToScreen(Vector2 point) => Vector2.Rotate(point * State.Zoom - State.Position + State.Origin, State.Origin, State.Rotation) + Viewport.Location;
-    }
-    /// <summary>
-    /// Estado da câmera para operações que envolvem zoom, rotação, posição e origem da câmera.
-    /// </summary>
-    public sealed class CameraState
-    {
-        public static readonly CameraState Neutral = new CameraState(null);
-        public readonly Camera Camera;
-        public float Zoom { get; private set; } = 1;
-        public float Rotation { get; private set; }
-        public Vector2 Position { get; private set; }
-        public Vector2 Origin { get; private set; }
-        public Vector2 TopLeft { get; private set; }
-        public Vector2 BottomRight
-        {
-            get
-            {
-                if (Camera == null) return Game.Instance.Window.Size;
-
-                return bottomRight;
-            }
-        }
-        private Vector2 bottomRight;
-        internal Rectangle viewport => Camera != null ? Camera.Viewport : new Rectangle();
-
-        internal CameraState(Camera camera) => Camera = camera;
-
-        /// <summary>
-        /// Atualiza o estado da câmera.
-        /// </summary>
-        public void Update()
-        {
-            Zoom = Camera.Zoom;
-            Rotation = Camera.Rotation;
-            Position = Camera.Position;
-            Origin = Camera.Origin;
-            TopLeft = (Position - Origin) / Zoom;
-            bottomRight = Game.Instance.Window.Size;
-
-            if (viewport.Size != Vector2.Zero) bottomRight = viewport.End;
-
-            bottomRight = Camera.ScreenToWorld(bottomRight);
-        }
     }
 }
