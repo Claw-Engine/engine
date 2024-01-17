@@ -11,6 +11,10 @@ namespace Claw.Graphics
     public static class TextureAtlas
     {
         /// <summary>
+        /// Define se as sprites serão automaticamente adicionadas no momento que forem carregadas pelo <see cref="Asset.Load{T}(string)"/>.
+        /// </summary>
+        public static bool InstantlyAdd = true;
+        /// <summary>
         /// Qual a última <see cref="Sprite.Texture"/> usada pelo <see cref="Draw"/>.
         /// </summary>
         public static Texture CurrentPage { get; internal set; }
@@ -50,9 +54,12 @@ namespace Claw.Graphics
             
             if (spriteNumber == 0 || texture == null) return null;
 
-            string spriteName;
+            for (int i = 0; i < spriteNumber; i++)
+            {
+                sprites[i] = new Sprite(texture, reader.ReadString(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
 
-            for (int i = 0; i < spriteNumber; i++) sprites[i] = new Sprite(texture, reader.ReadString(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+                if (InstantlyAdd) TextureAtlas.sprites.Add(sprites[i].Name, sprites[i]);
+            }
 
             stream.Close();
             reader.Close();
