@@ -71,28 +71,27 @@ namespace Clawssets.Builder
             
             foreach (KeyValuePair<Image, Texture> image in orderedImages)
             {
-                image.Value.Area.Location = location;
-                canvas.DrawImage(image.Key, location.X, location.Y, image.Key.Width, image.Key.Height);
-
-                addToY = Math.Max(addToY, image.Key.Height);
-                location.X += image.Key.Width + 1;
-                size.Width = Math.Max(location.X, size.Width);
-
-                if (location.X >= baseAtlas.Width)
+                if (location.X + image.Key.Width > baseAtlas.Width)
                 {
                     location.X = 0;
                     location.Y += addToY + 1;
                     addToY = 0;
                 }
 
-                size.Height = Math.Max(location.Y + image.Key.Height + 1, size.Height);
-
-                if (size.Width > baseAtlas.Width || size.Height > baseAtlas.Height)
+                if (location.Y + image.Key.Height > baseAtlas.Height)
                 {
                     Console.WriteLine("Erro: O texture atlas passou do limite!");
 
                     return;
                 }
+
+                image.Value.Area.Location = location;
+                canvas.DrawImage(image.Key, location.X, location.Y, image.Key.Width, image.Key.Height);
+
+                addToY = Math.Max(addToY, image.Key.Height);
+                location.X += image.Key.Width + 1;
+                size.Width = Math.Max(location.X, size.Width);
+                size.Height = Math.Max(location.Y + image.Key.Height + 1, size.Height);
             }
             
             byte[] pixels = GetPixels(baseAtlas, new Rectangle(Point.Empty, size));
