@@ -25,7 +25,7 @@ namespace Tests
         }
         private void LoadContent()
         {
-            TextureAtlas.AddSprites(Asset.Load<Sprite[]>("MainAtlas"));
+            Asset.Load<Sprite[]>("MainAtlas");
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
         }

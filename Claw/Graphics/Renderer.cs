@@ -125,6 +125,15 @@ namespace Claw.Graphics
         /// </summary>
         public void Clear() => SDL.SDL_RenderClear(sdlRenderer);
         /// <summary>
+        /// Limpa a tela com uma cor específica.
+        /// </summary>
+        public void Clear(Color color)
+        {
+            SDL.SDL_SetRenderDrawColor(sdlRenderer, color.R, color.G, color.B, color.A);
+            SDL.SDL_RenderClear(sdlRenderer);
+            SDL.SDL_SetRenderDrawColor(sdlRenderer, ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
+        }
+        /// <summary>
         /// Desenha o que foi renderizado.
         /// </summary>
         internal void Present() => SDL.SDL_RenderPresent(sdlRenderer);
