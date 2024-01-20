@@ -83,6 +83,8 @@ namespace Claw.Physics
         {
             if (ApplyPhysics)
             {
+                WasGrounded = Grounded;
+
                 GetInput();
                 HorizontalMovement();
                 VerticalMovement();
@@ -173,7 +175,6 @@ namespace Claw.Physics
         }
         private void HandleY()
         {
-            WasGrounded = Grounded;
             Grounded = false;
             Rectangle area = Bounds;
             float offset = Position.Y - area.Location.Y;
