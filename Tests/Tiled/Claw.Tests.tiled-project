@@ -1,0 +1,16 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "Maps",
+        "Objects",
+        "Tilesets"
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+    ]
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Globalization;
+using Claw.Maps;
 using Claw.Graphics;
 using Claw.Extensions;
 
@@ -19,6 +20,17 @@ namespace Claw.Tiled
         private static List<IGameComponent> waiting;
         private static Dictionary<int, LinkObjectData> links;
         private static Dictionary<Type, Dictionary<string, (PropertySetter, Type)>> reflectionCache = new Dictionary<Type, Dictionary<string, (PropertySetter, Type)>>();
+        private static Dictionary<string, Type> mapTypes = new Dictionary<string, Type>()
+        {
+            { "orthogonal", typeof(OrthogonalTilemap) },
+            { "isometric", typeof(IsometricTilemap) },
+            { "staggered", typeof(StaggeredTilemap) }
+        };
+
+        /// <summary>
+        /// Altera o tipo que será usado para instanciar um mapa com determinada orientação.
+        /// </summary>
+        public static void SetType<T>(string orientation) where T : Tilemap => mapTypes[orientation] = typeof(T);
 
         /// <summary>
         /// Carrega um mapa do Tiled.
@@ -31,15 +43,13 @@ namespace Claw.Tiled
 
             bool previousInstantlyAdd = GameObject.InstantlyAdd;
             GameObject.InstantlyAdd = false;
-            Tilemap tiledMap = new Tilemap();
-            tiledMap.Size = new Vector2(map.width, map.height);
-            tiledMap.GridSize = new Vector2(map.tilewidth, map.tileheight);
+            Tilemap tiledMap = (Tilemap)Activator.CreateInstance(mapTypes[map.orientation], new Vector2(map.width, map.height), new Vector2(map.tilewidth, map.tileheight));
 
             if (map.tilesets != null && map.tilesets.Length > 0)
             {
                 var tilesets = map.tilesets.OrderBy(t => t.firstgid).ToArray();
 
-                foreach (Tileset tileset in map.tilesets) tiledMap.AddPalette(Config.GetPalette(tileset.name), tileset.margin, tileset.spacing);
+                foreach (Tileset tileset in map.tilesets) tiledMap.AddPalette(Config.GetPalette(tileset.name), new Vector2(tileset.tilewidth, tileset.tileheight), tileset.margin, tileset.spacing);
             }
 
             if (map.layers == null || map.layers.Length == 0) return;
@@ -101,7 +111,7 @@ namespace Claw.Tiled
                         hasTile = true;
                         var drawOrder = GetPropertyValue(layer.properties, "DrawOrder", "int", tiledMap.LayerCount);
                         var priority = Mathf.Clamp(GetPropertyValue(layer.properties, "Priority", "float", 0), 0, 1);
-
+                        
                         if (layer.chunks.Length == 0) tiledMap.AddLayer(drawOrder, layer.name, layer.visible, priority, layer.opacity, new Color(layer.tintcolor), layer.data);
                         else
                         {
@@ -111,7 +121,7 @@ namespace Claw.Tiled
 
                             if (layer.height > size.Y) size.Y = layer.height;
 
-                            if (size != tiledMap.Size) tiledMap.Size = size;
+                            if (size != tiledMap.Size) tiledMap.Resize(size);
 
                             var index = tiledMap.AddLayer(drawOrder, layer.name, layer.visible, priority, layer.opacity, new Color(layer.tintcolor), new int[(int)(tiledMap.Size.X * tiledMap.Size.Y)]);
 

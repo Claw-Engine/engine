@@ -67,7 +67,6 @@
     <Compile Include="Graphics\Draw.cs" />
     <Compile Include="Graphics\Flip.cs" />
     <Compile Include="Graphics\FollowMode.cs" />
-    <Compile Include="Graphics\Systems\HUD.cs" />
     <Compile Include="Graphics\NineSlice.cs" />
     <Compile Include="Graphics\Systems\Parallax.cs" />
     <Compile Include="Graphics\Renderer.cs" />
@@ -93,6 +92,12 @@
     <Compile Include="Input\Systems\TaggedInput.cs" />
     <Compile Include="Input\Systems\TaggedPlayer.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="Maps\StaggeredTilemap.cs" />
+    <Compile Include="Maps\IsometricTilemap.cs" />
+    <Compile Include="Maps\OrthogonalTilemap.cs" />
+    <Compile Include="Maps\TileLayer.cs" />
+    <Compile Include="Maps\Tilemap.cs" />
+    <Compile Include="Maps\TilePalette.cs" />
     <Compile Include="Mathf.cs" />
     <Compile Include="Save\SaveAttributes.cs" />
     <Compile Include="Particles\Particle.cs" />
@@ -114,6 +119,7 @@
     <Compile Include="SceneManager.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Tiled\Config.cs" />
+    <Compile Include="Utils\InternalUtils.cs" />
     <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />
     <Compile Include="TagManager.cs" />
@@ -124,7 +130,6 @@
     <Compile Include="Tiled\Property.cs" />
     <Compile Include="Tiled\Tiled.cs" />
     <Compile Include="Tiled\Tileset.cs" />
-    <Compile Include="Tilemap.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\ComponentSortingFilteringCollection.cs" />
     <Compile Include="Utils\StringCrypt.cs" />

@@ -10,7 +10,6 @@ namespace Claw.Tiled
     /// </summary>
     public sealed class Config
     {
-        private readonly static Sprite NotFoundPalette = new Sprite(Texture.Pixel, "_pixel_", new Rectangle(0, 0, 1, 1));
         private string assemblyName, prefixNamespace;
         private Dictionary<string, Sprite> palettes = new Dictionary<string, Sprite>();
 
@@ -47,7 +46,7 @@ namespace Claw.Tiled
         {
             if (palettes.TryGetValue(tileset, out Sprite palette)) return palette;
 
-            return NotFoundPalette;
+            throw new KeyNotFoundException(string.Format("A paleta \"{0}\" não existe!", tileset));
         }
     }
 }

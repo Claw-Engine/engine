@@ -51,16 +51,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Maps\isotest.tmj" />
+    <None Include="Assets\Maps\ortest.tmj" />
+    <None Include="Assets\Maps\sisotest.tmj" />
+    <None Include="Assets\Tests.cb" />
+    <Content Include="Assets\collision_tiles.png" />
+    <None Include="Assets\font.csf" />
+    <Content Include="Assets\isometric_tiles.png" />
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Claw\Claw.csproj">
       <Project>{673096a4-9f32-4d37-83b2-ad0daa73ca45}</Project>
       <Name>Claw</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Tests.cb" />
-    <Content Include="Assets\collision_tiles.png" />
-    <None Include="Assets\font.csf" />
-    <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

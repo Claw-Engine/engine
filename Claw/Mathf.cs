@@ -14,11 +14,6 @@ namespace Claw
         public const float PI = 3.14159265358979f;
 
         /// <summary>
-        /// Checa se um número é par.
-        /// </summary>
-        public static bool IsEval(this int number) => number % 2 == 0;
-
-        /// <summary>
         /// Checa se um número é aproximadamente igual a outro.
         /// </summary>
         public static bool Approximately(this float a, float b, float tolerance = .25f) => Math.Abs(a - b) <= Math.Abs(tolerance);

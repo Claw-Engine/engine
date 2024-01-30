@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Claw.Graphics;
 using Claw.Audio;
-using static Claw.SDL;
+using Claw.Maps;
 
 namespace Claw
 {
@@ -169,7 +169,7 @@ namespace Claw
                 SDL.SDL_PumpEvents();
             }
 
-            if (!scroll) Input.Input.UpdateScroll(new SDL_MouseWheelEvent());
+            if (!scroll) Input.Input.UpdateScroll(new SDL.SDL_MouseWheelEvent());
         }
         private void Clear()
         {
