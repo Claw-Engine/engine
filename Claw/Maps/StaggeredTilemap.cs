@@ -15,11 +15,12 @@ namespace Claw.Maps
 
         public override Vector2 PositionToGrid(Vector2 position)
         {
+            // CORRIJA
             float cellY = (float)Math.Floor((position.Y + GridSize.Y * .5f) / (GridSize.Y * .5f));
-            float addX = (int)cellY % 2 != 0 ? GridSize.X * .5f : 0;
+            float addX = (int)cellY % 2 == 0 ? GridSize.X * .5f : 0;
             float cellX = (float)Math.Floor(position.X / GridSize.X);
             
-            return new Vector2(cellX * GridSize.X + addX, cellY * (GridSize.Y * .5f));
+            return new Vector2((cellX + .5f) * GridSize.X - addX, cellY * (GridSize.Y * .5f));
         }
 
         public override void Resize(Vector2 newSize)
