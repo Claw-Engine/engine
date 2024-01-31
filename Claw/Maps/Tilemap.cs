@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Claw.Graphics;
+using Claw.Utils;
 
 namespace Claw.Maps
 {
@@ -17,11 +18,24 @@ namespace Claw.Maps
         public static int OutOfView = 1;
         public int LayerCount => layers.Count;
         public Vector2 GridSize = Vector2.Zero;
-        public Vector2 Size { get; protected set; } = Vector2.Zero;
+        public Vector2 Size
+        {
+            get => size;
+            set
+            {
+                if (value.Y >= 0 && value.X >= 0)
+                {
+                    for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, Size);
+
+                    size = value;
+                }
+            }
+        }
         /// <summary>
         /// É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).
         /// </summary>
         public Action<int, TileLayer, Vector2> OnTileChange = null;
+        private Vector2 size = Vector2.Zero;
         private List<TileLayer> layers = new List<TileLayer>();
         internal Dictionary<string, int> layerIndexes = new Dictionary<string, int>();
         internal List<TilePalette> tileSets = new List<TilePalette>();
@@ -47,6 +61,10 @@ namespace Claw.Maps
         /// </summary>
         public int GetTileIndex(int palette, Vector2 index) => (int)(index.Y * (tileSets[palette].Texture.Width / GridSize.X) + index.X);
 
+        /// <summary>
+        /// Adiciona uma paleta ao <see cref="Tilemap"/>.
+        /// </summary>
+        public void AddPalette(Sprite palette, int margin = 0, int spacing = 0) => AddPalette(palette, GridSize, margin, spacing);
         /// <summary>
         /// Adiciona uma paleta ao <see cref="Tilemap"/>.
         /// </summary>
@@ -99,7 +117,7 @@ namespace Claw.Maps
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
             var layer = new TileLayer(layers.Count, name, this) { DrawOrder = drawOrder, Visible = visible, Color = color, Opacity = opacity };
-            layer.Data = data.ToList();
+            layer.data = data.ToList();
 
             layerIndexes.Add(layer.Name, layers.Count);
             layers.Add(layer);
@@ -201,11 +219,6 @@ namespace Claw.Maps
         /// Transforma uma posição livre em uma posição em grid.
         /// </summary>
         public abstract Vector2 PositionToGrid(Vector2 position);
-
-        /// <summary>
-        /// Altera as dimensões do mapa.
-        /// </summary>
-        public abstract void Resize(Vector2 newSize);
 
         /// <summary>
         /// Renderiza uma layer neste mapa.

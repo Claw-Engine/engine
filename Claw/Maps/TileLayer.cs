@@ -26,9 +26,9 @@ namespace Claw.Maps
             }
         }
         public Color Color;
-        public List<int> Data = new List<int>();
         internal int index;
         internal Tilemap map;
+        internal List<int> data = new List<int>();
         private string name = string.Empty;
 
         public event EventHandler<EventArgs> DrawOrderChanged;
@@ -62,10 +62,10 @@ namespace Claw.Maps
         /// </summary>
         public int this[Vector2 cell]
         {
-            get => Data[Mathf.Get1DIndex(cell, map.Size)];
+            get => data[Mathf.Get1DIndex(cell, map.Size)];
             set
             {
-                Data[Mathf.Get1DIndex(cell, map.Size)] = value;
+                data[Mathf.Get1DIndex(cell, map.Size)] = value;
 
                 map.OnTileChange?.Invoke(value, this, cell);
             }
@@ -75,11 +75,11 @@ namespace Claw.Maps
         /// </summary>
         public int this[int x, int y]
         {
-            get => Data[Mathf.Get1DIndex(new Vector2(x, y), map.Size)];
+            get => data[Mathf.Get1DIndex(new Vector2(x, y), map.Size)];
             set
             {
                 var position = new Vector2(x, y);
-                Data[Mathf.Get1DIndex(position, map.Size)] = value;
+                data[Mathf.Get1DIndex(position, map.Size)] = value;
 
                 map.OnTileChange?.Invoke(value, this, position);
             }
@@ -97,11 +97,16 @@ namespace Claw.Maps
 
             for (int x = 0; x < size.X; x++)
             {
-                for (int y = 0; y < size.Y; y++) Data.Add(0);
+                for (int y = 0; y < size.Y; y++) data.Add(0);
             }
         }
 
         public void Initialize() { }
+
+        /// <summary>
+        /// Retorna todos os tiles da layer.
+        /// </summary>
+        public int[] GetData() => data.ToArray();
 
         /// <summary>
         /// Muda vários tiles de uma layer. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
@@ -110,9 +115,9 @@ namespace Claw.Maps
         {
             for (int i = 0; i < mapData.Length; i++)
             {
-                if (i >= Data.Count) break;
+                if (i >= data.Count) break;
 
-                Data[i] = mapData[i];
+                data[i] = mapData[i];
             }
         }
         /// <summary>
@@ -127,7 +132,7 @@ namespace Claw.Maps
                 for (int y = (int)chunk.Location.Y; y < end.Y; y++)
                 {
                     Vector2 pos = new Vector2(x, y);
-                    Data[Mathf.Get1DIndex(pos, map.Size)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size)];
+                    data[Mathf.Get1DIndex(pos, map.Size)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size)];
                 }
             }
         }
@@ -136,7 +141,7 @@ namespace Claw.Maps
         /// </summary>
         public void Clear()
         {
-            for (int i = 0; i < Data.Count; i++) Data[i] = 0;
+            for (int i = 0; i < data.Count; i++) data[i] = 0;
         }
 
         /// <summary>

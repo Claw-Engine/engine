@@ -49,6 +49,7 @@ namespace Claw.Utils
         {
             Vector2 add = newSize - oldSize;
             var result = InternalUtils.List1DTo2D(list, oldSize);
+            int start = result.Count;
 
             if (add.Y < 0) result.RemoveRange(result.Count + (int)add.Y, (int)Math.Abs(add.Y));
             else if (add.Y > 0)
@@ -57,7 +58,7 @@ namespace Claw.Utils
                 {
                     result.Add(new List<T>());
 
-                    for (int x = 0; x < newSize.X; x++) result[y].Add(default);
+                    for (int x = 0; x < newSize.X; x++) result[start + y].Add(default);
                 }
             }
 

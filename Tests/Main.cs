@@ -40,8 +40,8 @@ namespace Tests
         {
             if (Input.KeyDown(Keys.Right)) Draw.GetCamera().Position.X += 4;
             else if (Input.KeyDown(Keys.Left)) Draw.GetCamera().Position.X -= 4;
-            else if (Input.KeyPressed(Keys.Down)) Tilemap.Resize(Tilemap.Size - new Vector2(1, 0));
-            else if (Input.KeyPressed(Keys.Up)) Tilemap.Resize(Tilemap.Size + new Vector2(1, 0));
+            else if (Input.KeyPressed(Keys.Down)) Tilemap.Size = Tilemap.Size - new Vector2(1);
+            else if (Input.KeyPressed(Keys.Up)) Tilemap.Size = Tilemap.Size + new Vector2(1);
             else if (Input.MouseButtonPressed(MouseButtons.Left)) Tilemap[0][Tilemap.PositionToCell(Draw.GetCamera().ScreenToWorld(Input.MousePosition))] = 1;
 
             updateables.ForEach((u) => u.Step());

@@ -17,6 +17,7 @@ namespace Claw.Maps
 
         public override Vector2 PositionToCell(Vector2 position)
         {
+            // Corrigir!!!
             Vector2 result = Vector2.Zero;
             result.Y = (float)Math.Floor((position.Y + GridSize.Y * .5f) / (GridSize.Y * .5f));
             float addX = (int)result.Y % 2 == 0 ? GridSize.X * .5f : 0;
@@ -35,16 +36,6 @@ namespace Claw.Maps
             if (addX != 0) cell.X += 1;
 
             return new Vector2((cell.X + .5f) * GridSize.X - addX, cell.Y * (GridSize.Y * .5f));
-        }
-
-        public override void Resize(Vector2 newSize)
-        {
-            if (newSize.Y >= 0 && newSize.X >= 0)
-            {
-                for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].Data = InternalUtils.ResizeList(this[layerIndex].Data, newSize, Size);
-
-                Size = newSize;
-            }
         }
 
         public override void Render(TileLayer layer)

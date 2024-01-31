@@ -121,7 +121,7 @@ namespace Claw.Tiled
 
                             if (layer.height > size.Y) size.Y = layer.height;
 
-                            if (size != tiledMap.Size) tiledMap.Resize(size);
+                            if (size != tiledMap.Size) tiledMap.Size = size;
 
                             var index = tiledMap.AddLayer(drawOrder, layer.name, layer.visible, priority, layer.opacity, new Color(layer.tintcolor), new int[(int)(tiledMap.Size.X * tiledMap.Size.Y)]);
 

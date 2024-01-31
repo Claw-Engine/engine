@@ -18,16 +18,6 @@ namespace Claw.Maps
         public override Vector2 PositionToCell(Vector2 position) => Mathf.GetGridPosition(position, GridSize) / GridSize;
         public override Vector2 PositionToGrid(Vector2 position) => Mathf.GetGridPosition(position, GridSize);
 
-        public override void Resize(Vector2 newSize)
-        {
-            if (newSize.Y >= 0 && newSize.X >= 0)
-            {
-                for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].Data = InternalUtils.ResizeList(this[layerIndex].Data, newSize, Size);
-
-                Size = newSize;
-            }
-        }
-
         public override void Render(TileLayer layer)
         {
             if (tileSets.Count > 0 && GridSize != Vector2.Zero && Size != Vector2.Zero)
@@ -40,9 +30,9 @@ namespace Claw.Maps
                 end = Vector2.Clamp(end, Vector2.Zero, Size);
                 TilePalette tileset = null;
 
-                for (int x = (int)start.X; x < end.X; x++)
+                for (int y = (int)start.Y; y < end.Y; y++)
                 {
-                    for (int y = (int)start.Y; y < end.Y; y++)
+                    for (int x = (int)start.X; x < end.X; x++)
                     {
                         int tile = layer[x, y];
 
