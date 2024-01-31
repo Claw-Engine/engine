@@ -10,6 +10,8 @@ namespace Claw.Maps
     /// </summary>
     public class OrthogonalTilemap : Tilemap
     {
+        public override Vector2 PixelSize => Size * GridSize;
+
         public OrthogonalTilemap() { }
         public OrthogonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 

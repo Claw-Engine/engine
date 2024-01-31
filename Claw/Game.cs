@@ -89,7 +89,12 @@ namespace Claw
                 Input.Input.SetControllers();
                 Initialize();
 
-                if (Texture.Pixel == null) Texture.Pixel = new Texture(1, 1, 0xffffffff);
+                if (Texture.Pixel == null)
+                {
+                    Texture.Pixel = new Texture(1, 1, 0xffffffff);
+
+                    Draw.Initialize();
+                }
                 
                 GameLoop();
             }

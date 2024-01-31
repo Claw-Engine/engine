@@ -15,8 +15,10 @@ namespace Claw.Graphics
         public static bool IgnoreCamera = false;
         private static Camera camera;
         private static BlendMode? forcedBlendMode;
-        private static Texture pixelTexture = Texture.Pixel;
+        private static Texture pixelTexture;
         private static Rectangle pixelArea = new Rectangle(0, 0, 1, 1);
+
+        internal static void Initialize() => pixelTexture = Texture.Pixel;
 
         #region Sprite
         /// <summary>

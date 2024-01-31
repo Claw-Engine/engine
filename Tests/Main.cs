@@ -49,8 +49,9 @@ namespace Tests
         protected override void Render()
         {
             drawables.ForEach((d) => d.Render());
-            Draw.FilledCircle(0, 4, Tilemap.PositionToGrid(Draw.GetCamera().ScreenToWorld(Input.MousePosition)), 0, Color.Red);
+            //Draw.FilledCircle(0, 4, Tilemap.PositionToGrid(Draw.GetCamera().ScreenToWorld(Input.MousePosition)), 0, Color.Red);
             //Draw.Text(Font, "Testando coisas...", Vector2.Zero, Color.White);
+            Draw.Rectangle(1, new Rectangle(Vector2.Zero, Tilemap.PixelSize), Color.Red);
         }
     }
 }

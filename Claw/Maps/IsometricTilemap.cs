@@ -9,6 +9,8 @@ namespace Claw.Maps
     /// </summary>
     public class IsometricTilemap : Tilemap
     {
+        public override Vector2 PixelSize => Size * GridSize;
+
         public IsometricTilemap() { }
         public IsometricTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 

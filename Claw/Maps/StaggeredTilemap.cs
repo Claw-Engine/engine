@@ -10,6 +10,8 @@ namespace Claw.Maps
     /// </summary>
     public class StaggeredTilemap : Tilemap
     {
+        public override Vector2 PixelSize => new Vector2(Size.X * GridSize.X + GridSize.X * .5f, Size.Y * (GridSize.Y * .5f) + GridSize.Y * .5f);
+
         public StaggeredTilemap() { }
         public StaggeredTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 

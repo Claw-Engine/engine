@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Maps/isotest.tmx",
+    "activeFile": "Maps/sisotest.tmx",
     "expandedProjectPaths": [
-        "Objects",
+        "Maps",
         "Tilesets",
-        "Maps"
+        "Objects"
     ],
     "fileStates": {
         "C:/Users/Admin/Desktop/isometric-sandbox-32x32/isometric-sandbox-map.tmx": {
@@ -25,24 +25,24 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 321,
-                "y": 196.66666666666663
+                "x": 320.33333333333326,
+                "y": 196
             }
         },
         "Maps/ortest.tmx": {
             "scale": 1.9712500000000002,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 240.2029169308814,
-                "y": 160.30437539632211
+                "x": 239.69562460367786,
+                "y": 159.79708306911857
             }
         },
         "Maps/sisotest.tmx": {
-            "scale": 1,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 436.5,
-                "y": 175
+                "x": 315.6666666666667,
+                "y": 62.66666666666666
             }
         },
         "Tilesets/iso.tsx": {
@@ -62,14 +62,17 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
+        "Tilesets/ort.tsx",
         "Maps/isotest.tmx",
-        "Maps/sisotest.tmx"
+        "Maps/sisotest.tmx",
+        "Maps/ortest.tmx"
     ],
     "project": "Claw.Tests.tiled-project",
     "recentFiles": [
         "Tilesets/ort.tsx",
-        "Maps/sisotest.tmx",
         "Maps/isotest.tmx",
+        "Maps/ortest.tmx",
+        "Maps/sisotest.tmx",
         "C:/Users/Admin/Desktop/isometric-sandbox-32x32/isometric-sandbox-map.tmx",
         "Tilesets/iso.tsx"
     ],

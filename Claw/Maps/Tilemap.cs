@@ -189,6 +189,11 @@ namespace Claw.Maps
         #endregion
 
         /// <summary>
+        /// Tamanho do mapa (em pixels).
+        /// </summary>
+        public abstract Vector2 PixelSize { get; }
+
+        /// <summary>
         /// Transforma uma posição livre em uma posição em grid.
         /// </summary>
         public abstract Vector2 PositionToGrid(Vector2 position);
