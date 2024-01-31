@@ -10,18 +10,31 @@ namespace Claw.Maps
     /// </summary>
     public class StaggeredTilemap : Tilemap
     {
-        public override Vector2 PixelSize => new Vector2(Size.X * GridSize.X + GridSize.X * .5f, Size.Y * (GridSize.Y * .5f) + GridSize.Y * .5f);
+        public override Vector2 PixelSize => new Vector2(Size.X * GridSize.X + GridSize.X * .5f, (Size.Y + 1) * (GridSize.Y * .5f));
 
         public StaggeredTilemap() { }
         public StaggeredTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 
+        public override Vector2 PositionToCell(Vector2 position)
+        {
+            Vector2 result = Vector2.Zero;
+            result.Y = (float)Math.Floor((position.Y + GridSize.Y * .5f) / (GridSize.Y * .5f));
+            float addX = (int)result.Y % 2 == 0 ? GridSize.X * .5f : 0;
+            result.X = (float)Math.Floor((position.X + addX) / GridSize.X);
+            result -= Vector2.One;
+
+            if (addX == 0) result.X += 1;
+
+            return result;
+        }
         public override Vector2 PositionToGrid(Vector2 position)
         {
-            float cellY = (float)Math.Floor((position.Y + GridSize.Y * .5f) / (GridSize.Y * .5f));
-            float addX = (int)cellY % 2 == 0 ? GridSize.X * .5f : 0;
-            float cellX = (float)Math.Floor((position.X + addX) / GridSize.X);
-            
-            return new Vector2((cellX + .5f) * GridSize.X - addX, cellY * (GridSize.Y * .5f));
+            Vector2 cell = PositionToCell(position) + Vector2.UnitY;
+            float addX = (int)cell.Y % 2 == 0 ? GridSize.X * .5f : 0;
+
+            if (addX != 0) cell.X += 1;
+
+            return new Vector2((cell.X + .5f) * GridSize.X - addX, cell.Y * (GridSize.Y * .5f));
         }
 
         public override void Resize(Vector2 newSize)

@@ -145,7 +145,7 @@ namespace Claw.Maps
         public bool CheckCollision(Vector2 position, out int tile)
         {
             tile = 0;
-            Vector2 check = Mathf.GetGridPosition(position, map.GridSize) / map.GridSize;
+            Vector2 check = map.PositionToCell(position);
 
             if (check.X < 0 || check.Y < 0 || check.X >= map.Size.X || check.Y >= map.Size.Y) return false;
 

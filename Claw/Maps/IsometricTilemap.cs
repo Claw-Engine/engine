@@ -14,14 +14,18 @@ namespace Claw.Maps
         public IsometricTilemap() { }
         public IsometricTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 
+        public override Vector2 PositionToCell(Vector2 position)
+        {
+            return Vector2.Zero;
+        }
         public override Vector2 PositionToGrid(Vector2 position)
         {
-            throw new NotImplementedException();
+            return Vector2.Zero;
         }
 
         public override void Resize(Vector2 newSize)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Render(TileLayer layer)

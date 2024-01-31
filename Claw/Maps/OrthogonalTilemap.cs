@@ -15,6 +15,7 @@ namespace Claw.Maps
         public OrthogonalTilemap() { }
         public OrthogonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 
+        public override Vector2 PositionToCell(Vector2 position) => Mathf.GetGridPosition(position, GridSize) / GridSize;
         public override Vector2 PositionToGrid(Vector2 position) => Mathf.GetGridPosition(position, GridSize);
 
         public override void Resize(Vector2 newSize)

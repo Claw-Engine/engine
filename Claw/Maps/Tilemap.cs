@@ -194,6 +194,10 @@ namespace Claw.Maps
         public abstract Vector2 PixelSize { get; }
 
         /// <summary>
+        /// Transforma uma posição livre em uma célula.
+        /// </summary>
+        public abstract Vector2 PositionToCell(Vector2 position);
+        /// <summary>
         /// Transforma uma posição livre em uma posição em grid.
         /// </summary>
         public abstract Vector2 PositionToGrid(Vector2 position);

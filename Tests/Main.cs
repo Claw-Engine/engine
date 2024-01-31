@@ -23,7 +23,7 @@ namespace Tests
             drawables = Components.CreateForDraw();
 
             LoadContent();
-            Draw.SetCamera(new Camera());
+            Draw.SetCamera(new Camera() { Position = new Vector2(0, -64) });
         }
         private void LoadContent()
         {
@@ -33,7 +33,7 @@ namespace Tests
             Tiled.Config = new Config("Tests");
             
             Tiled.Config.AddPalettes(("iso", TextureAtlas.Sprites["MainAtlas/isometric_tiles"]), ("ort", TextureAtlas.Sprites["MainAtlas/collision_tiles"]));
-            Tiled.Load(Asset.Load<Map>("Maps/sisotest"));
+            Tiled.Load(Asset.Load<Map>("Maps/isotest"));
         }
         
         protected override void Step()
@@ -42,16 +42,17 @@ namespace Tests
             else if (Input.KeyDown(Keys.Left)) Draw.GetCamera().Position.X -= 4;
             else if (Input.KeyPressed(Keys.Down)) Tilemap.Resize(Tilemap.Size - new Vector2(1, 0));
             else if (Input.KeyPressed(Keys.Up)) Tilemap.Resize(Tilemap.Size + new Vector2(1, 0));
+            else if (Input.MouseButtonPressed(MouseButtons.Left)) Tilemap[0][Tilemap.PositionToCell(Draw.GetCamera().ScreenToWorld(Input.MousePosition))] = 1;
 
             updateables.ForEach((u) => u.Step());
         }
 
         protected override void Render()
         {
-            drawables.ForEach((d) => d.Render());
-            //Draw.FilledCircle(0, 4, Tilemap.PositionToGrid(Draw.GetCamera().ScreenToWorld(Input.MousePosition)), 0, Color.Red);
-            //Draw.Text(Font, "Testando coisas...", Vector2.Zero, Color.White);
             Draw.Rectangle(1, new Rectangle(Vector2.Zero, Tilemap.PixelSize), Color.Red);
+            drawables.ForEach((d) => d.Render());
+            Draw.FilledCircle(0, 4, Tilemap.PositionToGrid(Draw.GetCamera().ScreenToWorld(Input.MousePosition)), 0, Color.Red);
+            Draw.Text(Font, Tilemap.PositionToCell(Draw.GetCamera().ScreenToWorld(Input.MousePosition)).ToString(), new Vector2(0, 300), Color.Red);
         }
     }
 }

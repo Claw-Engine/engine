@@ -26,7 +26,7 @@
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 320.33333333333326,
-                "y": 196
+                "y": 195.33333333333334
             }
         },
         "Maps/ortest.tmx": {
@@ -34,15 +34,15 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 239.69562460367786,
-                "y": 159.79708306911857
+                "y": 159.289790741915
             }
         },
         "Maps/sisotest.tmx": {
-            "scale": 1.5,
+            "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 315.6666666666667,
-                "y": 62.66666666666666
+                "x": 346.5,
+                "y": 134
             }
         },
         "Tilesets/iso.tsx": {
