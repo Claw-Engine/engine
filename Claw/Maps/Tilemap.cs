@@ -216,7 +216,7 @@ namespace Claw.Maps
         /// </summary>
         public abstract Vector2 PositionToCell(Vector2 position);
         /// <summary>
-        /// Transforma uma posição livre em uma posição em grid.
+        /// Transforma uma posição livre em uma posição em grid centralizada.
         /// </summary>
         public abstract Vector2 PositionToGrid(Vector2 position);
 

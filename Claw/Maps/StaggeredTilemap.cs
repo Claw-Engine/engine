@@ -17,25 +17,25 @@ namespace Claw.Maps
 
         public override Vector2 PositionToCell(Vector2 position)
         {
-            // Corrigir!!!
-            Vector2 result = Vector2.Zero;
-            result.Y = (float)Math.Floor((position.Y + GridSize.Y * .5f) / (GridSize.Y * .5f));
-            float addX = (int)result.Y % 2 == 0 ? GridSize.X * .5f : 0;
-            result.X = (float)Math.Floor((position.X + addX) / GridSize.X);
-            result -= Vector2.One;
+            Vector2 guess1 = Mathf.GetGridPosition(position, GridSize);
+            Vector2 guess2 = Mathf.GetGridPosition(position - GridSize * .5f, GridSize) + GridSize * .5f;
+            Vector2 result = guess1;
 
-            if (addX == 0) result.X += 1;
-
-            return result;
+            if (Vector2.Distance(position, guess2 + GridSize * .5f) <= Vector2.Distance(position, guess1 + GridSize * .5f))
+            {
+                result.X = guess2.X + -GridSize.X * .5f;
+                result.Y = (Mathf.ToGrid(guess2.Y + GridSize.Y * .5f, (int)(GridSize.Y * .5f)) / (GridSize.Y * .5f)) * GridSize.Y - 1;
+            }
+            else if (result.Y != 0) result.Y = (Mathf.ToGrid(result.Y, (int)(GridSize.Y * .5f)) / (GridSize.Y * .5f)) * GridSize.Y;
+            
+            return Mathf.GetGridPosition(result, GridSize) / GridSize;
         }
         public override Vector2 PositionToGrid(Vector2 position)
         {
-            Vector2 cell = PositionToCell(position) + Vector2.UnitY;
-            float addX = (int)cell.Y % 2 == 0 ? GridSize.X * .5f : 0;
+            Vector2 cell = PositionToCell(position);
+            float addX = (int)cell.Y % 2 != 0 ? GridSize.X * .5f : 0;
 
-            if (addX != 0) cell.X += 1;
-
-            return new Vector2((cell.X + .5f) * GridSize.X - addX, cell.Y * (GridSize.Y * .5f));
+            return new Vector2(cell.X * GridSize.X + addX + GridSize.X * .5f, cell.Y * (GridSize.Y * .5f) + GridSize.Y * .5f);
         }
 
         public override void Render(TileLayer layer)
@@ -57,7 +57,7 @@ namespace Claw.Maps
                     for (int x = (int)start.X; x < end.X; x++)
                     {
                         int tile = layer[x, y];
-
+                        
                         if (tile >= 1)
                         {
                             if (tileset == null || !tileset.Contains(tile)) tileset = GetTileset(tile);

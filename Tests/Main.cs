@@ -33,7 +33,7 @@ namespace Tests
             Tiled.Config = new Config("Tests");
             
             Tiled.Config.AddPalettes(("iso", TextureAtlas.Sprites["MainAtlas/isometric_tiles"]), ("ort", TextureAtlas.Sprites["MainAtlas/collision_tiles"]));
-            Tiled.Load(Asset.Load<Map>("Maps/isotest"));
+            Tiled.Load(Asset.Load<Map>("Maps/sisotest"));
         }
         
         protected override void Step()
