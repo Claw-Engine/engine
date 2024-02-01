@@ -40,9 +40,12 @@ namespace Tests
         {
             if (Input.KeyDown(Keys.Right)) Draw.GetCamera().Position.X += 4;
             else if (Input.KeyDown(Keys.Left)) Draw.GetCamera().Position.X -= 4;
-            else if (Input.KeyPressed(Keys.Down)) Tilemap.Size = Tilemap.Size - new Vector2(1);
-            else if (Input.KeyPressed(Keys.Up)) Tilemap.Size = Tilemap.Size + new Vector2(1);
-            else if (Input.MouseButtonPressed(MouseButtons.Left)) Tilemap[0][Tilemap.PositionToCell(Draw.GetCamera().ScreenToWorld(Input.MousePosition))] = 1;
+            else if (Input.KeyDown(Keys.Down)) Draw.GetCamera().Position.Y += 4;
+            else if (Input.KeyDown(Keys.Up)) Draw.GetCamera().Position.Y -= 4;
+            else if (Input.MouseButtonPressed(MouseButtons.Left)) Tilemap[Tilemap.LayerCount - 1][Tilemap.PositionToCell(Draw.GetCamera().ScreenToWorld(Input.MousePosition))] = 1;
+            else if (Input.KeyPressed(Keys.NumPad0)) Tiled.Load(Asset.Load<Map>("Maps/ortest"));
+            else if (Input.KeyPressed(Keys.NumPad1)) Tiled.Load(Asset.Load<Map>("Maps/sisotest"));
+            else if (Input.KeyPressed(Keys.NumPad2)) Tiled.Load(Asset.Load<Map>("Maps/isotest"));
 
             updateables.ForEach((u) => u.Step());
         }

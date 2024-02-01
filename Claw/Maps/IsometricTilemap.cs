@@ -21,29 +21,31 @@ namespace Claw.Maps
 
         public override Vector2 PositionToCell(Vector2 position)
         {
-            // Corrigir!!!
-            position -= GetOffset() - GridSize * .5f;
+            position -= GetOffset() + new Vector2(-GridSize.X * .5f, 0);
             Vector2 cell = new Vector2(position.X / GridSize.X, position.Y / GridSize.Y);
             
-            return new Vector2((float)Math.Floor(cell.X + cell.Y), (float)Math.Floor(-cell.X + cell.Y));
+            return new Vector2((float)Math.Floor(cell.X + cell.Y) - 2, (float)Math.Floor(-cell.X + cell.Y));
         }
-        public override Vector2 PositionToGrid(Vector2 position) => CellToPosition(PositionToCell(position)) + GetOffset();
+        public override Vector2 PositionToGrid(Vector2 position) => CellToPosition(PositionToCell(position)) + GetOffset() + new Vector2(GridSize.X * .5f, GridSize.Y * 1.5f);
         private Vector2 CellToPosition(Vector2 cell) => new Vector2((cell.X - cell.Y) * (GridSize.X * .5f), (cell.X + cell.Y) * (GridSize.Y * .5f));
 
         public override void Render(TileLayer layer)
         {
             if (tileSets.Count > 0 && GridSize != Vector2.Zero && Size != Vector2.Zero)
             {
-                // Realizar o cálculo de corte!!!
-                //CameraState camera = Draw.GetCamera()?.State ?? CameraState.Neutral;
-                //Vector2 start = Mathf.GetGridPosition(camera.TopLeft, GridSize) / GridSize - new Vector2(OutOfView);
-                //Vector2 end = Mathf.GetGridPosition(camera.BottomRight, GridSize) / GridSize + new Vector2(OutOfView * 2);
-                //
-                //start = Vector2.Clamp(start, Vector2.Zero, Size);
-                //end = Vector2.Clamp(end, Vector2.Zero, Size);
-                Vector2 start = Vector2.Zero, end = Size;
-                TilePalette tileset = null;
                 Vector2 middle = GetOffset();
+                CameraState camera = Draw.GetCamera()?.State ?? CameraState.Neutral;
+                Vector2 bottomRight = camera.BottomRight;
+                
+                Vector2 start = PositionToCell(new Vector2(Math.Max(middle.X, camera.TopLeft.X + GridSize.X), Math.Max(middle.Y, camera.TopLeft.Y - Size.X * .5f * GridSize.Y)));
+                Vector2 end = Vector2.Zero;
+                end.X = PositionToCell(new Vector2(bottomRight.X + PixelSize.X, 0)).X;
+                end.Y = PositionToCell(new Vector2(0, bottomRight.Y)).Y;
+
+                start = Vector2.Clamp(start - new Vector2(OutOfView), Vector2.Zero, Size);
+                end = Vector2.Clamp(end + new Vector2(OutOfView * 2), Vector2.Zero, Size);
+
+                TilePalette tileset = null;
 
                 for (int y = (int)start.Y; y < end.Y; y++)
                 {
