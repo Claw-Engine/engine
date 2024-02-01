@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Claw.Graphics;
-using Claw.Utils;
 
 namespace Claw.Maps
 {

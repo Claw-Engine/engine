@@ -41,16 +41,16 @@
             "scale": 1.9712500000000002,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 239.94927076727961,
-                "y": 159.54343690551678
+                "x": 239.69562460367786,
+                "y": 159.289790741915
             }
         },
         "Maps/sisotest.tmx": {
             "scale": 4,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 328,
-                "y": 83.875
+                "x": 62.875,
+                "y": 107.25
             }
         },
         "Tilesets/iso.tsx": {
@@ -71,8 +71,8 @@
     "map.lastUsedExportFilter": "Ficheiros de mapa JSON (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.orientation": null,
-    "map.tileHeight": 16,
-    "map.tileWidth": 64,
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
     "map.width": 20,
     "openFiles": [
         "Maps/isotest.tmx",
@@ -94,7 +94,7 @@
     "tileset.margin": 0,
     "tileset.spacing": 0,
     "tileset.tileSize": {
-        "height": 32,
-        "width": 64
+        "height": 48,
+        "width": 32
     }
 }

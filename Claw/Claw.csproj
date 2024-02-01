@@ -92,6 +92,7 @@
     <Compile Include="Input\Systems\TaggedInput.cs" />
     <Compile Include="Input\Systems\TaggedPlayer.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="Maps\HexagonalTilemap.cs" />
     <Compile Include="Maps\StaggeredTilemap.cs" />
     <Compile Include="Maps\IsometricTilemap.cs" />
     <Compile Include="Maps\OrthogonalTilemap.cs" />

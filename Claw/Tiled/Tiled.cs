@@ -24,7 +24,8 @@ namespace Claw.Tiled
         {
             { "orthogonal", typeof(OrthogonalTilemap) },
             { "isometric", typeof(IsometricTilemap) },
-            { "staggered", typeof(StaggeredTilemap) }
+            { "staggered", typeof(StaggeredTilemap) },
+            { "hexagonal", typeof(HexagonalTilemap) }
         };
 
         /// <summary>
