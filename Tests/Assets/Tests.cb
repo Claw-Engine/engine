@@ -4,14 +4,6 @@
 
 #Texture:MainAtlas
 collision_tiles.png
-isometric_tiles.png
-hexagonal_tiles.png
-
-#Map:Maps
-Maps/isotest.tmj
-Maps/sisotest.tmj
-Maps/ortest.tmj
-Maps/hextest.tmj
 
 #SpriteFont:Fonts
 font.csf

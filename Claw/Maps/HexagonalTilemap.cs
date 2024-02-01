@@ -4,7 +4,7 @@ using Claw.Graphics;
 namespace Claw.Maps
 {
     /// <summary>
-    /// Representa um mapa isométrico de tiles.
+    /// Representa um mapa hexagonal escalado de tiles.
     /// </summary>
     public class HexagonalTilemap : StaggeredTilemap
     {

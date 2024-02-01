@@ -51,15 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Maps\hextest.tmj" />
-    <None Include="Assets\Maps\isotest.tmj" />
-    <None Include="Assets\Maps\ortest.tmj" />
-    <None Include="Assets\Maps\sisotest.tmj" />
     <None Include="Assets\Tests.cb" />
     <Content Include="Assets\collision_tiles.png" />
     <None Include="Assets\font.csf" />
-    <Content Include="Assets\hexagonal_tiles.png" />
-    <Content Include="Assets\isometric_tiles.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
