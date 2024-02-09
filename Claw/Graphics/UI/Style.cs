@@ -11,7 +11,7 @@ namespace Claw.Graphics.UI
         public float TransitionAmount, FontScale = 1;
         public string NineSlice = string.Empty;
         public Vector2 Size, Gap, TopLeftPadding, BottomRightPadding, Offset;
-        public Color Color = Color.White, TextColor = Color.White;
+        public Color Color = Color.White;
         public SpriteFont Font;
         public ValueTransition TransitionFunction = DefaultTransition;
 
@@ -36,7 +36,6 @@ namespace Claw.Graphics.UI
                 BottomRightPadding = TransitionTo(BottomRightPadding, other.BottomRightPadding);
                 Offset = TransitionTo(Offset, other.Offset);
                 Color = TransitionTo(Color, other.Color);
-                TextColor = TransitionTo(TextColor, other.TextColor);
                 Font = other.Font;
             }
         }

@@ -30,7 +30,7 @@ namespace Tests
             Font = Asset.Load<SpriteFont>("Fonts/font");
             UI = new UI();
             UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), Size = new Vector2(128, 0), NineSlice = "base" } };
-            
+
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(32), Color = Color.Blue, NineSlice = "base" } });
@@ -42,6 +42,8 @@ namespace Tests
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Image() { Sprite = TextureAtlas.Sprites["MainAtlas/collision_tiles"], Style = new Style() { Size = new Vector2(0, 128), Color = Color.Yellow } });
+            UI.Body.Elements.Add(new Label() { Text = "MEU TEXTO", Style = new Style() { Font = Font, FontScale = .5f, Color = Color.Black } });
         }
         
         protected override void Step() => updateables.ForEach((u) => u.Step());

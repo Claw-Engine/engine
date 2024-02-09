@@ -81,6 +81,8 @@
     <Compile Include="GameComponentTypes.cs" />
     <Compile Include="Graphics\UI\Container.cs" />
     <Compile Include="Graphics\UI\Element.cs" />
+    <Compile Include="Graphics\UI\Image.cs" />
+    <Compile Include="Graphics\UI\Label.cs" />
     <Compile Include="Graphics\UI\Style.cs" />
     <Compile Include="Graphics\UI\UI.cs" />
     <Compile Include="Input\Buttons.cs" />

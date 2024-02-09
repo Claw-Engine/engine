@@ -52,7 +52,7 @@ namespace Claw.Graphics.UI
                                 {
                                     elementPos.X = 0;
                                     fitHeight += Style.Gap.Y + addY;
-                                    addY = 0;
+                                    addY = element.RealSize.Y;
                                 }
                                 else addY = Math.Max(addY, element.RealSize.Y);
                             }
@@ -97,7 +97,7 @@ namespace Claw.Graphics.UI
                         {
                             elementPos.X = contentArea.X;
                             elementPos.Y += Style.Gap.Y + addY;
-                            addY = 0;
+                            addY = element.RealSize.Y;
                         }
                         else addY = Math.Max(addY, element.RealSize.Y);
                         
