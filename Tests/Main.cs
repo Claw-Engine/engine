@@ -1,9 +1,7 @@
 ﻿using System;
 using Claw;
 using Claw.Graphics;
-using Claw.Input;
-using Claw.Save;
-using Claw.Tiled;
+using Claw.Graphics.UI;
 using Claw.Utils;
 
 namespace Tests
@@ -27,8 +25,23 @@ namespace Tests
         private void LoadContent()
         {
             Asset.Load<Sprite[]>("MainAtlas");
+            NineSlice.AddTexture("base", TextureAtlas.Sprites["MainAtlas/slice"]);
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
+            UI = new UI();
+            UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), Size = new Vector2(128, 0), NineSlice = "base" } };
+            
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(32), Color = Color.Blue, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(16), Color = Color.Green, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24, 36), Color = Color.Black, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
+            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
         }
         
         protected override void Step() => updateables.ForEach((u) => u.Step());

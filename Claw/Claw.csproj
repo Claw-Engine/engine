@@ -79,6 +79,10 @@
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\TextureAtlas.cs" />
     <Compile Include="GameComponentTypes.cs" />
+    <Compile Include="Graphics\UI\Container.cs" />
+    <Compile Include="Graphics\UI\Element.cs" />
+    <Compile Include="Graphics\UI\Style.cs" />
+    <Compile Include="Graphics\UI\UI.cs" />
     <Compile Include="Input\Buttons.cs" />
     <Compile Include="Input\ControllerTypes.cs" />
     <Compile Include="Input\GameController.cs" />

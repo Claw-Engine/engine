@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Claw.Graphics;
+using Claw.Graphics.UI;
 using Claw.Audio;
 using Claw.Maps;
 
@@ -30,6 +31,7 @@ namespace Claw
                 }
             }
         }
+        public UI UI;
         public GameComponentCollection Components => components;
         private bool isRunning;
         private Tilemap tilemap;
@@ -126,10 +128,12 @@ namespace Claw
                 Input.Input.Update();
                 Time.Update(frameTime);
                 Step();
+                UI?.Step();
 
                 Renderer.Clear();
                 Draw.UpdateCamera();
                 Render();
+                UI?.Render();
                 Renderer.Present();
 
                 frameTime = (int)(SDL.SDL_GetTicks() - frameStart);
