@@ -10,8 +10,8 @@ namespace Claw.Graphics.UI
         public bool Hide;
         public float TransitionAmount, FontScale = 1;
         public string NineSlice = string.Empty;
-        public Vector2 Size, Gap, TopLeftPadding, BottomRightPadding, Offset;
-        public Color Color = Color.White;
+        public Vector2 Size, MinSize, MaxSize, Gap, TopLeftPadding, BottomRightPadding, Offset;
+        public Color Color = Color.White, TextColor = Color.White;
         public SpriteFont Font;
         public ValueTransition TransitionFunction = DefaultTransition;
 
@@ -31,11 +31,14 @@ namespace Claw.Graphics.UI
                 FontScale = TransitionFunction(FontScale, other.FontScale, TransitionAmount);
                 NineSlice = other.NineSlice;
                 Size = TransitionTo(Size, other.Size);
+                MinSize = TransitionTo(MinSize, other.MinSize);
+                MaxSize = TransitionTo(MaxSize, other.MaxSize);
                 Gap = TransitionTo(Gap, other.Gap);
                 TopLeftPadding = TransitionTo(TopLeftPadding, other.TopLeftPadding);
                 BottomRightPadding = TransitionTo(BottomRightPadding, other.BottomRightPadding);
                 Offset = TransitionTo(Offset, other.Offset);
                 Color = TransitionTo(Color, other.Color);
+                TextColor = TransitionTo(TextColor, other.TextColor);
                 Font = other.Font;
             }
         }

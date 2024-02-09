@@ -91,14 +91,6 @@ namespace Claw.Graphics
             Vector2 topLeftOffset = pieces[0].area.Size, topRightOffset = pieces[2].area.Size, bottomLeftOffset = pieces[6].area.Size, bottomRightOffset = pieces[8].area.Size;
             Rectangle rectangle = Rectangle.Positive(new Rectangle(Location + topLeftOffset, Size - new Vector2(bottomRightOffset.X * 2, bottomRightOffset.Y * 2)));
 
-            // TopLeft
-            Graphics.Draw.Sprite(pieces[0].texture, Location, pieces[0].area, blendColor);
-            // TopRight
-            Graphics.Draw.Sprite(pieces[2].texture, new Vector2(area.Right - topRightOffset.X, Location.Y), pieces[2].area, blendColor);
-            // BottomLeft
-            Graphics.Draw.Sprite(pieces[6].texture, new Vector2(Location.X, area.Bottom - bottomLeftOffset.Y), pieces[6].area, blendColor);
-            // BottomRight
-            Graphics.Draw.Sprite(pieces[8].texture, new Vector2(area.Right - topRightOffset.X, area.Bottom - bottomLeftOffset.Y), pieces[8].area, blendColor); 
             // Top
             TiledSprite(pieces[1], GetDestination(Location + new Vector2(topLeftOffset.X, 0), Location + new Vector2(topLeftOffset.X, 0),
                 new Vector2(area.Right - topRightOffset.X, Location.Y + topLeftOffset.Y)), blendColor);
@@ -121,6 +113,15 @@ namespace Claw.Graphics
                 Graphics.Draw.Sprite(pieces[4].texture, (Location + topLeftOffset), pieces[4].area, blendColor, 0, Vector2.Zero, scale, Flip.None);
             }
             else TiledSprite(pieces[4], GetDestination((Location + topLeftOffset), Location + topLeftOffset, new Vector2(area.Right - bottomRightOffset.X, area.Bottom - bottomRightOffset.Y)), blendColor);
+
+            // TopLeft
+            Graphics.Draw.Sprite(pieces[0].texture, Location, pieces[0].area, blendColor);
+            // TopRight
+            Graphics.Draw.Sprite(pieces[2].texture, new Vector2(area.Right - topRightOffset.X, Location.Y), pieces[2].area, blendColor);
+            // BottomLeft
+            Graphics.Draw.Sprite(pieces[6].texture, new Vector2(Location.X, area.Bottom - bottomLeftOffset.Y), pieces[6].area, blendColor);
+            // BottomRight
+            Graphics.Draw.Sprite(pieces[8].texture, new Vector2(area.Right - topRightOffset.X, area.Bottom - bottomLeftOffset.Y), pieces[8].area, blendColor);
 
             return rectangle;
         }

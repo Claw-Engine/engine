@@ -19,7 +19,7 @@ namespace Claw.Graphics.UI
                 if (result.Y <= 0) result.Y = measure.Y;
             }
 
-            return result;
+            return ClampSize(result);
         }
 
         public override void Render(Vector2 position)
@@ -28,7 +28,7 @@ namespace Claw.Graphics.UI
             {
                 Vector2 measure = Style.Font.MeasureString(Text) * Style.FontScale;
 
-                Draw.Text(Style.Font, Text, position, Style.Color, 0, Vector2.Zero, (RealSize / measure) * Style.FontScale, 0);
+                Draw.Text(Style.Font, Text, position + Style.TopLeftPadding, Style.TextColor, 0, Vector2.Zero, (RealSize / measure) * Style.FontScale, 0);
             }
         }
     }

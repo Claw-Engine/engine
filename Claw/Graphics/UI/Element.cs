@@ -29,6 +29,22 @@ namespace Claw.Graphics.UI
         /// </summary>
         internal void UpdateRealSize() => RealSize = CalculateSize();
 
+        /// <summary>
+        /// Retorna um tamanho com limite baseado no <see cref="Style"/>.
+        /// </summary>
+        public Vector2 ClampSize(Vector2 size)
+        {
+            if (Style.MinSize.X > 0) size.X = Math.Max(size.X, Style.MinSize.X);
+
+            if (Style.MinSize.Y > 0) size.Y = Math.Max(size.Y, Style.MinSize.Y);
+
+            if (Style.MaxSize.X > 0) size.X = Math.Min(size.X, Style.MaxSize.X);
+
+            if (Style.MaxSize.Y > 0) size.Y = Math.Min(size.Y, Style.MaxSize.Y);
+            
+            return size;
+        }
+
         public abstract void Render(Vector2 position);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Claw.Graphics.UI
 {
@@ -15,15 +14,15 @@ namespace Claw.Graphics.UI
         {
             if (Style.Hide) return Vector2.Zero;
 
-            Vector2 styleSize = Style.Size;
-            Vector2 result = styleSize;
+            Vector2 result = Style.Size;
 
             if (Elements != null)
             {
                 Element element = null, previous = null;
-                float fitHeight = 0, addY = 0;
+                float addY = 0, fitHeight = 0;
                 Vector2 elementPos = Vector2.Zero;
                 Vector2 contentSize = Style.Size - Style.TopLeftPadding - Style.BottomRightPadding;
+                Vector2 maxSize = Style.MaxSize - Style.TopLeftPadding - Style.BottomRightPadding;
 
                 for (int i = 0; i < Elements.Count; i++)
                 {
@@ -33,16 +32,37 @@ namespace Claw.Graphics.UI
 
                     if (!element.Style.Hide) element.UpdateRealSize();
 
-                    if (styleSize.X <= 0 || styleSize.Y <= 0)
+                    if (Style.Size.X <= 0 || Style.Size.Y <= 0)
                     {
                         if (!element.Style.Hide)
                         {
-                            if (styleSize.X <= 0)
+                            if (Style.Size.X <= 0)
                             {
-                                result.X += element.RealSize.X;
-                                fitHeight = Math.Max(fitHeight, element.RealSize.Y);
+                                if (maxSize.X > 0)
+                                {
+                                    if (previous != null) elementPos.X += Style.Gap.X + previous.RealSize.X;
 
-                                if (previous != null) result.X += Style.Gap.X;
+                                    if (elementPos.X + element.RealSize.X > maxSize.X)
+                                    {
+                                        if (result.X == 0 && previous != null)
+                                        {
+                                            result.X = Math.Min(elementPos.X - Style.Gap.X - previous.RealSize.X + Style.TopLeftPadding.X + Style.BottomRightPadding.X, Style.MaxSize.X);
+                                            maxSize.X = result.X;
+                                        }
+
+                                        elementPos.X = 0;
+                                        fitHeight += Style.Gap.Y + addY;
+                                        addY = element.RealSize.Y;
+                                    }
+                                    else addY = Math.Max(addY, element.RealSize.Y);
+                                }
+                                else
+                                {
+                                    result.X += element.RealSize.X;
+                                    fitHeight = Math.Max(fitHeight, element.RealSize.Y);
+
+                                    if (previous != null) result.X += Style.Gap.X;
+                                }
                             }
                             else
                             {
@@ -60,13 +80,13 @@ namespace Claw.Graphics.UI
                     }
                 }
 
-                if (styleSize.Y <= 0) result.Y += fitHeight + addY;
+                if (Style.Size.Y <= 0) result.Y += fitHeight + addY;
             }
 
-            if (styleSize.X <= 0) result.X += Style.TopLeftPadding.X + Style.BottomRightPadding.X;
+            if (Style.Size.X <= 0) result.X += Style.TopLeftPadding.X + Style.BottomRightPadding.X;
 
-            if (styleSize.Y <= 0) result.Y += Style.TopLeftPadding.Y + Style.BottomRightPadding.Y;
-
+            if (Style.Size.Y <= 0) result.Y += Style.TopLeftPadding.Y + Style.BottomRightPadding.Y;
+            
             return result;
         }
 
@@ -74,7 +94,7 @@ namespace Claw.Graphics.UI
         {
             Rectangle area = new Rectangle(position, RealSize);
 
-            if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, Style.Color, Style.Color, Game.Instance.UI.ScaleCenter);
+            if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, 0, Style.Color, Game.Instance.UI.ScaleCenter);
 
             if (Elements != null && Elements.Count > 0)
             {
@@ -101,7 +121,7 @@ namespace Claw.Graphics.UI
                         }
                         else addY = Math.Max(addY, element.RealSize.Y);
                         
-                        element.Render(elementPos);
+                        element.Render(elementPos + element.Style.Offset);
                     }
                 }
             }

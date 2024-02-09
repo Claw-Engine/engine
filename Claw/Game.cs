@@ -128,7 +128,6 @@ namespace Claw
                 Input.Input.Update();
                 Time.Update(frameTime);
                 Step();
-                UI?.Step();
 
                 Renderer.Clear();
                 Draw.UpdateCamera();

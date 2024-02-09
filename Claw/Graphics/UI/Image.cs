@@ -26,12 +26,12 @@ namespace Claw.Graphics.UI
                 }
             }
 
-            return result;
+            return ClampSize(result);
         }
 
         public override void Render(Vector2 position)
         {
-            if (Sprite != null) Draw.Sprite(Sprite, position, SpriteArea, Style.Color, 0, Vector2.Zero, new Vector2(RealSize.X / Sprite.Width, RealSize.Y / Sprite.Height), 0);
+            if (Sprite != null) Draw.Sprite(Sprite, position + Style.TopLeftPadding, SpriteArea, Style.Color, 0, Vector2.Zero, new Vector2(RealSize.X / Sprite.Width, RealSize.Y / Sprite.Height), 0);
         }
     }
 }

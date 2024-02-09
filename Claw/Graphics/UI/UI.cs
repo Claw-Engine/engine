@@ -13,23 +13,14 @@ namespace Claw.Graphics.UI
         /// Define se o <see cref="NineSlice"/> dos elementos deverá desenhar a textura central escalada.
         /// </summary>
         public bool ScaleCenter = true;
-        /// <summary>
-        /// Define se os tamanhos dos elementos precisarão ser recalculados.
-        /// </summary>
-        public bool RecalculateSizes = true;
         public Vector2 Offset = Vector2.Zero;
         public Container Body;
         public Dictionary<string, Style> Styles = new Dictionary<string, Style>();
 
-        public void Step()
-        {
-            if (RecalculateSizes)
-            {
-                Body.UpdateRealSize();
-
-                RecalculateSizes = false;
-            }
-        }
+        /// <summary>
+        /// Recalcula o tamanho dos elementos visíveis.
+        /// </summary>
+        public void Recalculate() => Body.UpdateRealSize();
 
         public void Render()
         {
