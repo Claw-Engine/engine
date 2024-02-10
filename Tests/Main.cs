@@ -2,6 +2,7 @@
 using Claw;
 using Claw.Graphics;
 using Claw.Graphics.UI;
+using Claw.Input;
 using Claw.Utils;
 
 namespace Tests
@@ -29,7 +30,8 @@ namespace Tests
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
             UI = new UI();
-            UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), MaxSize = new Vector2(150, 0), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), NineSlice = "base" } };
+            UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), MaxSize = new Vector2(150, 0), Size = new Vector2(0, 128), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), NineSlice = "base" } };
+            UI.Body.Scrollable = true;
 
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
@@ -47,7 +49,13 @@ namespace Tests
             UI.Recalculate();
         }
         
-        protected override void Step() => updateables.ForEach((u) => u.Step());
+        protected override void Step()
+        {
+            updateables.ForEach((u) => u.Step());
+            
+            if (Input.KeyDown(Keys.Down)) UI.Body.ScrollOffset = UI.Body.ScrollOffset + Vector2.UnitY;
+            else if (Input.KeyDown(Keys.Up)) UI.Body.ScrollOffset = UI.Body.ScrollOffset - Vector2.UnitY;
+        }
 
         protected override void Render() => drawables.ForEach((d) => d.Render());
     }

@@ -33,7 +33,8 @@ namespace Claw
         public static int Clamp(int value, int min, int max)
         {
             if (value > max) value = max;
-            else if (value < min) value = min;
+
+            if (value < min) value = min;
 
             return value;
         }
@@ -43,7 +44,8 @@ namespace Claw
         public static float Clamp(float value, float min, float max)
         {
             if (value > max) value = max;
-            else if (value < min) value = min;
+
+            if (value < min) value = min;
 
             return value;
         }

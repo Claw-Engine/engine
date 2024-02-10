@@ -7,6 +7,9 @@ A Claw é um projeto pessoal que eu faço por diversão. Mas sinta-se livre para
 # Como usar
 Além dos comentários de documentação em XML, você pode encontrar instruções mais específicas em [ClawDocs](https://github.com/tomateuso/ClawDocs).
 
+# Quais são os planos da engine?
+Os planos atuais de features/versões podem ser encontrados no [Projeto](https://github.com/users/Lucas-Souto/projects/3).
+
 # Dependências
 ## Claw
 A única dependência da Claw é o **SDL2**, para o back-end.

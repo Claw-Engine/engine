@@ -8,7 +8,22 @@ namespace Claw.Graphics.UI
     /// </summary>
     public sealed class Container : Element
     {
+        /// <summary>
+        /// Se verdadeiro, as partes fora deste <see cref="Container"/> serão cortadas por <see cref="RenderTarget"/>.
+        /// </summary>
+        public bool Scrollable = false;
+        public Vector2 ScrollOffset
+        {
+            get => scrollOffset;
+            set => scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
+        }
+        /// <summary>
+        /// Scroll máximo possível (calculado durante o <see cref="Render(Vector2)"/>).
+        /// </summary>
+        public Vector2 ScrollMaxOffset { get; private set; } = Vector2.Zero;
         public List<Element> Elements = new List<Element>();
+        private Vector2 scrollOffset = Vector2.Zero, previousTopLeft, previousBottomRight;
+        private RenderTarget surface;
 
         public override Vector2 CalculateSize()
         {
@@ -86,20 +101,45 @@ namespace Claw.Graphics.UI
             if (Style.Size.X <= 0) result.X += Style.TopLeftPadding.X + Style.BottomRightPadding.X;
 
             if (Style.Size.Y <= 0) result.Y += Style.TopLeftPadding.Y + Style.BottomRightPadding.Y;
+
+            if (Scrollable && (result != RealSize || Style.TopLeftPadding != previousTopLeft || Style.BottomRightPadding != previousBottomRight))
+            {
+                if (surface != null) surface.Destroy();
+
+                Vector2 surfaceSize = result - Style.TopLeftPadding - Style.BottomRightPadding;
+                surface = new RenderTarget((int)surfaceSize.X, (int)surfaceSize.Y);
+            }
+
+            previousTopLeft = Style.TopLeftPadding;
+            previousBottomRight = Style.BottomRightPadding;
             
             return result;
         }
 
         public override void Render(Vector2 position)
         {
-            Rectangle area = new Rectangle(position, RealSize);
+            if (Scrollable && surface == null) return;
 
+            RenderTarget previousTarget = Game.Instance.Renderer.GetRenderTarget();
+            Vector2 drawingPos = position + Style.TopLeftPadding, scroll = Vector2.Zero;
+            Rectangle area = new Rectangle(position, RealSize);
+            
             if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, 0, Style.Color, Game.Instance.UI.ScaleCenter);
+
+            if (Scrollable && surface != null)
+            {
+                drawingPos = Vector2.Zero;
+                scroll = scrollOffset;
+                
+                Game.Instance.Renderer.SetRenderTarget(surface);
+                Game.Instance.Renderer.Clear();
+                NineSlice.Draw(Style.NineSlice, new Rectangle(-Style.TopLeftPadding, RealSize), 0, Style.Color, Game.Instance.UI.ScaleCenter);
+            }
 
             if (Elements != null && Elements.Count > 0)
             {
-                Rectangle contentArea = new Rectangle(position + Style.TopLeftPadding, RealSize - Style.TopLeftPadding - Style.BottomRightPadding);
-                Vector2 elementPos = contentArea.Location;
+                Rectangle contentArea = new Rectangle(Vector2.Zero, RealSize - Style.TopLeftPadding - Style.BottomRightPadding);
+                Vector2 elementPos = Vector2.Zero;
                 float addY = 0;
                 Element element = null, previous = null;
 
@@ -120,10 +160,18 @@ namespace Claw.Graphics.UI
                             addY = element.RealSize.Y;
                         }
                         else addY = Math.Max(addY, element.RealSize.Y);
-                        
-                        element.Render(elementPos + element.Style.Offset);
+
+                        ScrollMaxOffset = new Vector2(Math.Max(ScrollMaxOffset.X, elementPos.X + element.RealSize.X), Math.Max(ScrollMaxOffset.Y, elementPos.Y + element.RealSize.Y)) - contentArea.Size;
+
+                        element.Render(drawingPos + elementPos + Style.Offset + element.Style.Offset - scroll);
                     }
                 }
+            }
+
+            if (Scrollable && surface != null)
+            {
+                Game.Instance.Renderer.SetRenderTarget(previousTarget);
+                Draw.Sprite(surface, position + Style.TopLeftPadding, Color.White);
             }
         }
     }
