@@ -163,7 +163,11 @@ namespace Claw.Graphics.UI
 
                         ScrollMaxOffset = new Vector2(Math.Max(ScrollMaxOffset.X, elementPos.X + element.RealSize.X), Math.Max(ScrollMaxOffset.Y, elementPos.Y + element.RealSize.Y)) - contentArea.Size;
 
-                        element.Render(drawingPos + elementPos + Style.Offset + element.Style.Offset - scroll);
+                        Vector2 pos = elementPos + element.Style.Offset - scroll;
+
+                        if (pos.X > contentArea.Right || pos.Y > contentArea.Bottom || pos.X + element.RealSize.X < contentArea.X || pos.Y + element.RealSize.Y < contentArea.Y) continue;
+
+                        element.Render(drawingPos + Style.Offset + pos);
                     }
                 }
             }
