@@ -34,15 +34,15 @@ namespace Claw.Graphics.UI
 
             if (Vertical)
             {
-                if (result.X <= 0) result.X = 6;
+                if (result.X <= 0) result.X = 6 + Style.TopLeftPadding.X + Style.BottomRightPadding.X;
 
-                if (result.Y <= 0) result.Y = 64;
+                if (result.Y <= 0) result.Y = 64 + Style.TopLeftPadding.Y + Style.BottomRightPadding.Y;
             }
             else
             {
-                if (result.X <= 0) result.X = 64;
+                if (result.X <= 0) result.X = 64 + Style.TopLeftPadding.X + Style.BottomRightPadding.X;
 
-                if (result.Y <= 0) result.Y = 6;
+                if (result.Y <= 0) result.Y = 6 + Style.TopLeftPadding.Y + Style.BottomRightPadding.Y;
             }
 
             return result;
@@ -67,21 +67,22 @@ namespace Claw.Graphics.UI
             else Draw.Pixel(RealSize, position, Style.Color);
 
             Vector2 innerOffset = Vector2.Zero;
-            Vector2 innerSize = RealSize;
+            Vector2 contentSize = RealSize - Style.TopLeftPadding - Style.BottomRightPadding;
+            Vector2 innerSize = contentSize;
 
             if (Vertical)
             {
-                innerSize.Y = RealSize.Y * InnerSize;
-                innerOffset.Y = (RealSize.Y - innerSize.Y) * value;
+                innerSize.Y = contentSize.Y * InnerSize;
+                innerOffset.Y = (contentSize.Y - innerSize.Y) * value;
             }
             else
             {
-                innerSize.X = RealSize.X * InnerSize;
-                innerOffset.X = (RealSize.X - innerSize.X) * value;
+                innerSize.X = contentSize.X * InnerSize;
+                innerOffset.X = (contentSize.X - innerSize.X) * value;
             }
             
-            if (Style.InnerNineSlice.Length > 0) NineSlice.Draw(Style.InnerNineSlice, new Rectangle(position + innerOffset, innerSize), 0, Style.Color, UI.ScaleCenter);
-            else Draw.Pixel(innerSize, position + innerOffset, new Color(255 - Style.Color.R, 255 - Style.Color.G, 255 - Style.Color.B, 127));
+            if (Style.InnerNineSlice.Length > 0) NineSlice.Draw(Style.InnerNineSlice, new Rectangle(position + innerOffset + Style.TopLeftPadding, innerSize), 0, Style.Color, UI.ScaleCenter);
+            else Draw.Pixel(innerSize, position + innerOffset + Style.TopLeftPadding, new Color(255 - Style.Color.R, 255 - Style.Color.G, 255 - Style.Color.B, 127));
         }
     }
 }
