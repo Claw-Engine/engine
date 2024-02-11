@@ -121,7 +121,7 @@ namespace Claw.Graphics.UI
             if (Scrollable && surface == null) return;
 
             RenderTarget previousTarget = Game.Instance.Renderer.GetRenderTarget();
-            Vector2 drawingPos = position + Style.TopLeftPadding, scroll = Vector2.Zero;
+            Vector2 drawingPos = position + Style.TopLeftPadding + Style.Offset, scroll = Vector2.Zero;
             Rectangle area = new Rectangle(position, RealSize);
             
             if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, 0, Style.Color, Game.Instance.UI.ScaleCenter);
@@ -167,7 +167,7 @@ namespace Claw.Graphics.UI
 
                         if (pos.X > contentArea.Right || pos.Y > contentArea.Bottom || pos.X + element.RealSize.X < contentArea.X || pos.Y + element.RealSize.Y < contentArea.Y) continue;
 
-                        element.Render(drawingPos + Style.Offset + pos);
+                        element.Render(drawingPos + pos);
                     }
                 }
             }
