@@ -4,7 +4,6 @@
 
 #Texture:MainAtlas
 collision_tiles.png
-slice.png
 
 #SpriteFont:Fonts
 font.csf
