@@ -57,7 +57,7 @@ namespace Claw.Graphics.UI
                                 {
                                     if (previous != null) elementPos.X += Style.Gap.X + previous.RealSize.X;
 
-                                    if (elementPos.X + element.RealSize.X > maxSize.X)
+                                    if ((element.Style.Display == Display.InlineBlock && elementPos.X + element.RealSize.X > maxSize.X) || element.Style.Display == Display.Block)
                                     {
                                         if (result.X == 0 && previous != null)
                                         {
@@ -77,13 +77,20 @@ namespace Claw.Graphics.UI
                                     fitHeight = Math.Max(fitHeight, element.RealSize.Y);
 
                                     if (previous != null) result.X += Style.Gap.X;
+
+                                    if (element.Style.Display == Display.Block)
+                                    {
+                                        fitHeight += Style.Gap.Y + addY;
+                                        addY = element.RealSize.Y;
+                                    }
+                                    else addY = Math.Max(addY, element.RealSize.Y);
                                 }
                             }
                             else
                             {
                                 if (previous != null) elementPos.X += Style.Gap.X + previous.RealSize.X;
 
-                                if (elementPos.X + element.RealSize.X > contentSize.X)
+                                if ((element.Style.Display == Display.InlineBlock && elementPos.X + element.RealSize.X > contentSize.X) || element.Style.Display == Display.Block)
                                 {
                                     elementPos.X = 0;
                                     fitHeight += Style.Gap.Y + addY;
@@ -153,7 +160,7 @@ namespace Claw.Graphics.UI
                     {
                         if (previous != null) elementPos.X += Style.Gap.X + previous.RealSize.X;
 
-                        if (elementPos.X + element.RealSize.X > contentArea.Right)
+                        if ((element.Style.Display == Display.InlineBlock && elementPos.X + element.RealSize.X > contentArea.Right) || element.Style.Display == Display.Block)
                         {
                             elementPos.X = contentArea.X;
                             elementPos.Y += Style.Gap.Y + addY;
@@ -169,13 +176,13 @@ namespace Claw.Graphics.UI
 
                         element.Render(drawingPos + pos);
 
-                        if (UI.Cursor != null && UI.Cursor.Selected == null)
+                        if (UI.Cursor != null && UI.Cursor.Hover == null)
                         {
                             Vector2 correction = Vector2.Zero;
 
                             if (Scrollable) correction = position + Style.TopLeftPadding + Style.Offset;
 
-                            if (element.Contains(UI.Cursor.Position, drawingPos + pos + correction)) UI.Cursor.Selected = element;
+                            UI.Cursor.TrySetHover(element, drawingPos + pos + correction);
                         }
                     }
                 }

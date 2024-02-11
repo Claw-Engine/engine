@@ -9,7 +9,8 @@ namespace Claw.Graphics.UI
     {
         public bool Hide;
         public float TransitionAmount, FontScale = 1;
-        public string NineSlice = string.Empty;
+        public string NineSlice = string.Empty, InnerNineSlice = string.Empty;
+        public Display Display = Display.InlineBlock;
         public Vector2 Size, MinSize, MaxSize, Gap, TopLeftPadding, BottomRightPadding, Offset;
         public Color Color = Color.White, TextColor = Color.White;
         public SpriteFont Font;
@@ -30,6 +31,8 @@ namespace Claw.Graphics.UI
                 Hide = other.Hide;
                 FontScale = TransitionFunction(FontScale, other.FontScale, TransitionAmount);
                 NineSlice = other.NineSlice;
+                InnerNineSlice = other.InnerNineSlice;
+                Display = other.Display;
                 Size = TransitionTo(Size, other.Size);
                 MinSize = TransitionTo(MinSize, other.MinSize);
                 MaxSize = TransitionTo(MaxSize, other.MaxSize);

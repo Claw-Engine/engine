@@ -28,7 +28,7 @@ namespace Claw.Graphics.UI
             bool previousIgnore = Draw.IgnoreCamera;
             Draw.IgnoreCamera = false;
 
-            if (Cursor != null) Cursor.Selected = null;
+            if (Cursor != null) Cursor.Hover = null;
 
             if (Body != null)
             {
@@ -36,7 +36,7 @@ namespace Claw.Graphics.UI
 
                 Body.Render(bodyPosition);
 
-                if (Cursor != null && Cursor.Selected == null && Body.Contains(Cursor.Position, bodyPosition)) Cursor.Selected = Body;
+                if (Cursor != null && Cursor.Hover == null) Cursor.TrySetHover(Body, bodyPosition);
             }
 
             if (Cursor != null)

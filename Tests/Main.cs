@@ -30,36 +30,38 @@ namespace Tests
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
             UI = new UI();
-            UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), MaxSize = new Vector2(150, 0), Size = new Vector2(0, 128), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), NineSlice = "base" } };
+            UI.Body = new Container() { Style = new Style() { Size = new Vector2(128), Gap = new Vector2(8), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), NineSlice = "base" } };
             UI.Body.Scrollable = true;
             UI.Cursor = new UICursor();
 
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(32), Color = Color.Blue, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(16), Color = Color.Green, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24, 36), Color = Color.Black, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
-            UI.Body.Elements.Add(new Image() { Sprite = TextureAtlas.Sprites["MainAtlas/collision_tiles"], Style = new Style() { Color = Color.Yellow } });
-            UI.Body.Elements.Add(new Label() { Text = "MEU TEXTO", Style = new Style() { Font = Font, FontScale = .5f, TextColor = Color.Black } });
+            Container other = new Container() { Scrollable = true, Style = new Style() { NineSlice = "base", Color = Color.Yellow, Display = Display.Block, TopLeftPadding = new Vector2(4), BottomRightPadding = new Vector2(4), Gap = new Vector2(4), Size = new Vector2(128 - 16, 64) } };
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Blue, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Blue, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Blue, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Magenta, Display = Display.Inline } });
+            other.Elements.Add(new Container() { Style = new Style() { NineSlice = "base", Size = new Vector2(24), Color = Color.Blue, Display = Display.Inline } });
+            UI.Body.Elements.Add(new Slider() { Style = new Style() { Color = Color.Black }, Sync = (value) => other.ScrollOffset = new Vector2(other.ScrollMaxOffset.X * value, 0) });
+            UI.Body.Elements.Add(other);
             UI.Recalculate();
         }
         
         protected override void Step()
         {
-            updateables.ForEach((u) => u.Step());
-
             UI.Cursor.Position = Input.MousePosition;
 
-            if (Input.KeyDown(Keys.Down)) UI.Body.ScrollOffset = UI.Body.ScrollOffset + Vector2.UnitY;
-            else if (Input.KeyDown(Keys.Up)) UI.Body.ScrollOffset = UI.Body.ScrollOffset - Vector2.UnitY;
+            updateables.ForEach((u) => u.Step());
 
-            if (Input.MouseButtonPressed(MouseButtons.Left) && UI.Cursor.Selected != null) UI.Cursor.Selected.Style.Color = Color.Magenta;
+            if (Input.KeyPressed(Keys.Right)) ((Slider)UI.Body.Elements[0]).Value += .1f;
+            else if (Input.KeyPressed(Keys.Left)) ((Slider)UI.Body.Elements[0]).Value -= .1f;
+
+            if (Input.MouseButtonDown(MouseButtons.Left) && UI.Cursor.Hover is Slider slider) slider.SetValue(UI.Cursor.HoverDifference);
         }
 
         protected override void Render() => drawables.ForEach((d) => d.Render());
