@@ -85,6 +85,7 @@
     <Compile Include="Graphics\UI\Label.cs" />
     <Compile Include="Graphics\UI\Style.cs" />
     <Compile Include="Graphics\UI\UI.cs" />
+    <Compile Include="Graphics\UI\UICursor.cs" />
     <Compile Include="Input\Buttons.cs" />
     <Compile Include="Input\ControllerTypes.cs" />
     <Compile Include="Input\GameController.cs" />

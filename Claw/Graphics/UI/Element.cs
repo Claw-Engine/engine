@@ -9,6 +9,7 @@ namespace Claw.Graphics.UI
     {
         public string Name = string.Empty;
         public Vector2 RealSize { get; private set; }
+        public UI UI => Game.Instance.UI;
         public Style Style
         {
             get => style;
@@ -19,6 +20,13 @@ namespace Claw.Graphics.UI
             }
         }
         private Style style = new Style();
+
+        /// <summary>
+        /// Checa se este elemento contém um ponto.
+        /// </summary>
+        /// <param name="point">Ponto da checagem.</param>
+        /// <param name="drawPosition">Posição em que este elemento foi desenhado.</param>
+        public virtual bool Contains(Vector2 point, Vector2 drawPosition) => drawPosition.X <= point.X && point.X < drawPosition.X + RealSize.X && drawPosition.Y <= point.Y && point.Y < drawPosition.Y + RealSize.Y;
 
         /// <summary>
         /// Calcula o tamanho real deste elemento para a <see cref="UI"/>.

@@ -32,6 +32,7 @@ namespace Tests
             UI = new UI();
             UI.Body = new Container() { Style = new Style() { Gap = new Vector2(4), MaxSize = new Vector2(150, 0), Size = new Vector2(0, 128), TopLeftPadding = new Vector2(8), BottomRightPadding = new Vector2(8), NineSlice = "base" } };
             UI.Body.Scrollable = true;
+            UI.Cursor = new UICursor();
 
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
             UI.Body.Elements.Add(new Container() { Style = new Style() { Size = new Vector2(24), Color = Color.Red, NineSlice = "base" } });
@@ -52,9 +53,13 @@ namespace Tests
         protected override void Step()
         {
             updateables.ForEach((u) => u.Step());
-            
+
+            UI.Cursor.Position = Input.MousePosition;
+
             if (Input.KeyDown(Keys.Down)) UI.Body.ScrollOffset = UI.Body.ScrollOffset + Vector2.UnitY;
             else if (Input.KeyDown(Keys.Up)) UI.Body.ScrollOffset = UI.Body.ScrollOffset - Vector2.UnitY;
+
+            if (Input.MouseButtonPressed(MouseButtons.Left) && UI.Cursor.Selected != null) UI.Cursor.Selected.Style.Color = Color.Magenta;
         }
 
         protected override void Render() => drawables.ForEach((d) => d.Render());

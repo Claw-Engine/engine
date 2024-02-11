@@ -124,7 +124,7 @@ namespace Claw.Graphics.UI
             Vector2 drawingPos = position + Style.TopLeftPadding + Style.Offset, scroll = Vector2.Zero;
             Rectangle area = new Rectangle(position, RealSize);
             
-            if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, 0, Style.Color, Game.Instance.UI.ScaleCenter);
+            if (Style.NineSlice.Length > 0) NineSlice.Draw(Style.NineSlice, area, 0, Style.Color, UI.ScaleCenter);
 
             if (Scrollable && surface != null)
             {
@@ -133,7 +133,7 @@ namespace Claw.Graphics.UI
                 
                 Game.Instance.Renderer.SetRenderTarget(surface);
                 Game.Instance.Renderer.Clear();
-                NineSlice.Draw(Style.NineSlice, new Rectangle(-Style.TopLeftPadding, RealSize), 0, Style.Color, Game.Instance.UI.ScaleCenter);
+                NineSlice.Draw(Style.NineSlice, new Rectangle(-Style.TopLeftPadding, RealSize), 0, Style.Color, UI.ScaleCenter);
             }
 
             if (Elements != null && Elements.Count > 0)
@@ -168,6 +168,15 @@ namespace Claw.Graphics.UI
                         if (pos.X > contentArea.Right || pos.Y > contentArea.Bottom || pos.X + element.RealSize.X < contentArea.X || pos.Y + element.RealSize.Y < contentArea.Y) continue;
 
                         element.Render(drawingPos + pos);
+
+                        if (UI.Cursor != null && UI.Cursor.Selected == null)
+                        {
+                            Vector2 correction = Vector2.Zero;
+
+                            if (Scrollable) correction = position + Style.TopLeftPadding + Style.Offset;
+
+                            if (element.Contains(UI.Cursor.Position, drawingPos + pos + correction)) UI.Cursor.Selected = element;
+                        }
                     }
                 }
             }
