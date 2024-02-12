@@ -54,7 +54,6 @@
     <None Include="Assets\Tests.cb" />
     <Content Include="Assets\collision_tiles.png" />
     <None Include="Assets\font.csf" />
-    <Content Include="Assets\slice.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

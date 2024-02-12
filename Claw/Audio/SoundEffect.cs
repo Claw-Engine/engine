@@ -9,6 +9,10 @@ namespace Claw.Audio
     public class SoundEffect
     {
         public readonly Channels Channels;
+        /// <summary>
+        /// Duração deste áudio, em segundos.
+        /// </summary>
+        public readonly float Duration;
         public long Length => samples.LongLength;
         private readonly float[] samples;
         
@@ -17,6 +21,7 @@ namespace Claw.Audio
         {
             Channels = channels;
             this.samples = samples;
+            Duration = AudioManager.CalculateDuration(samples.LongLength, Channels);
         }
 
         /// <summary>

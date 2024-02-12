@@ -17,7 +17,15 @@ namespace Claw.Audio
             get => volume;
             set => volume = Mathf.Clamp(value, 0, 1);
         }
-        public long Length => file.BaseStream.Length / 4;
+        /// <summary>
+        /// Duração deste áudio, em segundos.
+        /// </summary>
+        public readonly float Duration;
+        /// <summary>
+        /// Momento em que o áudio está, em segundos.
+        /// </summary>
+        public float Current => AudioManager.CalculateDuration((file.BaseStream.Position - AudioStart) / 4, Channels);
+        public readonly long Length;
         private const int AudioStart = 9; // BYTE, INT64
         private float volume = 1;
         private BinaryReader file;
@@ -26,6 +34,8 @@ namespace Claw.Audio
         {
             Channels = channels;
             this.file = file;
+            Length = file.BaseStream.Length / 4;
+            Duration = AudioManager.CalculateDuration(Length, Channels);
         }
         ~Music() => Dispose();
 
@@ -54,11 +64,19 @@ namespace Claw.Audio
         /// <summary>
         /// Retorna o próximo sample.
         /// </summary>
-        internal float GetSample()
+        internal float GetSample(out bool ended)
         {
+            ended = false;
+
+            if (file == null) return 0;
+
             float sample = file.ReadSingle();
 
-            if (file.BaseStream.Position >= file.BaseStream.Length) file.BaseStream.Position = AudioStart;
+            if (file.BaseStream.Position >= file.BaseStream.Length)
+            {
+                file.BaseStream.Position = AudioStart;
+                ended = true;
+            }
 
             return sample;
         }

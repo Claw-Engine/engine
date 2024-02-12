@@ -15,9 +15,13 @@ namespace Claw.Audio
         /// </summary>
         public static int MaxConcurrent = 15;
         /// <summary>
-        /// Velocidade de transição entre músicas.
+        /// O quanto o volume deve aumentar/diminuir a cada sample do fade.
         /// </summary>
         public static float FadeSpeed = .01f;
+        /// <summary>
+        /// A distância do fim da música e do começo do fade, em segundos.
+        /// </summary>
+        public static float TrackDistance = 1;
 
         public bool PauseMusic = false;
         /// <summary>
@@ -37,13 +41,21 @@ namespace Claw.Audio
             set => musicVolume = Mathf.Clamp(value, 0, 1);
         }
         /// <summary>
+        /// Evento executado quando a música é trocada.
+        /// </summary>
+        public event Action OnMusicChange;
+        /// <summary>
         /// Evento executado quando um efeito sonoro termina, sem loop.
         /// </summary>
         public event Action<SoundEffectInstance> OnSoundEffectEnd;
 
+        private enum Fade { None, In, Out }
+
+        private int track;
+        private Fade fade = Fade.None;
         private float fadeMultipliyer = 1, masterVolume = 1, musicVolume = 1;
-        private Music music, nextMusic;
         private float[] groupVolumes;
+        private List<Music> trackList;
         private List<SoundEffectInstance> soundEffects;
 
         private uint device = 0;
@@ -66,6 +78,7 @@ namespace Claw.Audio
 
             int groupSize = Enum.GetValues(typeof(SoundEffectGroup)).Length;
             groupVolumes = new float[groupSize];
+            trackList = new List<Music>();
             soundEffects = new List<SoundEffectInstance>();
 
             for (int i = 0; i < groupSize; i++) groupVolumes[i] = 1;
@@ -74,10 +87,18 @@ namespace Claw.Audio
 
         public void Dispose()
         {
+            if (trackList.Count > 0)
+            {
+                track = trackList.Count;
+
+                for (int i = 0; i < trackList.Count; i++) trackList[i].Dispose();
+
+                trackList.Clear();
+            }
+
             soundEffects.Clear();
 
             groupVolumes = null;
-            nextMusic = null;
             want.callback = null;
 
             if (device != 0)
@@ -87,7 +108,12 @@ namespace Claw.Audio
                 device = 0;
             }
         }
-        
+
+        /// <summary>
+        /// Calcula duração de um áudio.
+        /// </summary>
+        public static float CalculateDuration(long sampleLength, Channels channels) => (float)((double)(sampleLength / (int)channels) / SampleRate);
+
         /// <summary>
         /// Retorna o volume geral de um grupo.
         /// </summary>
@@ -116,15 +142,60 @@ namespace Claw.Audio
         public void Stop(SoundEffectInstance soundEffect) => soundEffects.Remove(soundEffect);
 
         /// <summary>
-        /// Inicia a troca de música.
+        /// Adiciona uma música na lista de faixas.
         /// </summary>
-        public void SetMusic(Music music)
+        public void AddMusic(Music music) => trackList.Add(music);
+        /// <summary>
+        /// Pula para a próxima música.
+        /// </summary>
+        public void JumpMusic()
         {
-            if (this.music == null) this.music = music;
-            
-            nextMusic = music;
+            if (track == trackList.Count - 1) track = 0;
+            else track++;
 
-            if (music != null) music.ResetPosition();
+            ResetMusic();
+            OnMusicChange?.Invoke();
+        }
+        /// <summary>
+        /// Volta para a música anterior.
+        /// </summary>
+        public void BackMusic()
+        {
+            if (track == 0) track = trackList.Count - 1;
+            else track--;
+
+            ResetMusic();
+            OnMusicChange?.Invoke();
+        }
+        /// <summary>
+        /// Reseta a música atual.
+        /// </summary>
+        public void ResetMusic()
+        {
+            fade = Fade.None;
+            fadeMultipliyer = 1;
+
+            if (trackList.Count > track) trackList[track].ResetPosition();
+        }
+        /// <summary>
+        /// Limpa a lista de faixas.
+        /// </summary>
+        public void ClearTrack()
+        {
+            track = 0;
+            fade = Fade.None;
+            fadeMultipliyer = 1;
+
+            trackList.Clear();
+        }
+        /// <summary>
+        /// Retorna a música atual.
+        /// </summary>
+        public Music CurrentMusic()
+        {
+            if (trackList.Count == 0) return null;
+
+            return trackList[track];
         }
 
         /// <summary>
@@ -132,15 +203,10 @@ namespace Claw.Audio
         /// </summary>
         private unsafe void AudioCallback(void* userData, byte* stream, int length)
         {
-            if (!PauseMusic)
-            {
-                if (music != nextMusic && fadeMultipliyer != 0) fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
-                else if (music == nextMusic && fadeMultipliyer != 1) fadeMultipliyer = Math.Min(fadeMultipliyer + Math.Abs(FadeSpeed), 1);
-            }
-
             length /= 4;
             float* buffer = (float*)stream;
             bool finished;
+            Music music = trackList.Count > track ? trackList[track] : null;
             SoundEffectInstance current;
 
             for (int i = 0; i < length; i += 2)
@@ -150,9 +216,45 @@ namespace Claw.Audio
 
                 if (!PauseMusic && music != null)
                 {
-                    SetSample(buffer, i, music.GetSample(), (musicVolume * fadeMultipliyer), music.Channels);
+                    switch (fade)
+                    {
+                        case Fade.None:
+                            if (trackList.Count > 1 && music.Current >= music.Duration - TrackDistance)
+                            {
+                                fade = Fade.Out;
 
-                    if (music.Channels == Channels.Stereo) SetSample(buffer, i + 1, music.GetSample(), (musicVolume * fadeMultipliyer), 0);
+                                goto case Fade.Out;
+                            }
+
+                            break;
+                        case Fade.Out:
+                            fadeMultipliyer = Math.Max(fadeMultipliyer - Math.Abs(FadeSpeed), 0);
+
+                            if (fadeMultipliyer == 0)
+                            {
+                                JumpMusic();
+
+                                fade = Fade.In;
+                                music = trackList[track];
+                            }
+                            break;
+                        case Fade.In:
+                            fadeMultipliyer = Math.Min(fadeMultipliyer + Math.Abs(FadeSpeed), 1);
+                            
+                            if (fadeMultipliyer == 1) fade = Fade.None;
+                            break;
+                    }
+
+                    SetSample(buffer, i, music.GetSample(out bool ended), (musicVolume * fadeMultipliyer), music.Channels);
+
+                    if (music.Channels == Channels.Stereo) SetSample(buffer, i + 1, music.GetSample(out ended), (musicVolume * fadeMultipliyer), 0);
+
+                    if (ended && fade == Fade.Out)
+                    {
+                        JumpMusic();
+
+                        fade = Fade.In;
+                    }
                 }
 
                 for (int j = soundEffects.Count - 1; j >= 0; j--)
@@ -173,8 +275,6 @@ namespace Claw.Audio
                     }
                 }
             }
-
-            if (fadeMultipliyer == 0) music = nextMusic;
         }
         /// <summary>
         /// <para>Faz a mixagem de um sample no buffer.</para>
