@@ -2,9 +2,12 @@
 
 namespace Claw.Graphics.UI
 {
+    /// <summary>
+    /// Elemento de texto.
+    /// </summary>
     public class Label : Element
     {
-        public string Text;
+        public string Text = string.Empty;
 
         public override Vector2 CalculateSize()
         {
@@ -24,7 +27,7 @@ namespace Claw.Graphics.UI
 
         public override void Render(Vector2 position)
         {
-            if (Text != null && Text.Length > 0 && Style.Font != null)
+            if (Text.Length > 0 && Style.Font != null)
             {
                 Vector2 measure = Style.Font.MeasureString(Text) * Style.FontScale;
 

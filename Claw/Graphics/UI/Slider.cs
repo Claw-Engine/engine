@@ -2,6 +2,9 @@
 
 namespace Claw.Graphics.UI
 {
+    /// <summary>
+    /// Elemento de interação com arrasto para definição de valores.
+    /// </summary>
     public class Slider : Element
     {
         public bool Vertical = false;
@@ -24,7 +27,7 @@ namespace Claw.Graphics.UI
         /// <summary>
         /// Ação realizada quando <see cref="Value"/> for alterado.
         /// </summary>
-        public Action<float> Sync;
+        public event Action<float> Sync;
         private const float InnerSize = .25f;
         private float value;
 

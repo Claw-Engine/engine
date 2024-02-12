@@ -2,6 +2,9 @@
 
 namespace Claw.Graphics.UI
 {
+    /// <summary>
+    /// Elemento de imagem.
+    /// </summary>
     public class Image : Element
     {
         public Sprite Sprite;
