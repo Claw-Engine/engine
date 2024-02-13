@@ -29,6 +29,8 @@ namespace Tests
             Asset.Load<Sprite[]>("MainAtlas");
 
             Font = Asset.Load<SpriteFont>("Fonts/font");
+
+            Audio.AddMusic(Asset.Load<Music>("OGG/ogg"));
         }
         
         protected override void Step() => updateables.ForEach((u) => u.Step());

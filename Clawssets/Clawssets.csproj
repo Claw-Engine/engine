@@ -53,6 +53,8 @@
     <Compile Include="Builder\BuilderCache.cs" />
     <Compile Include="Builder\Data\Audio.cs" />
     <Compile Include="Builder\Data\Kerning.cs" />
+    <Compile Include="Builder\Readers\BitReader.cs" />
+    <Compile Include="Builder\Readers\OggReader.cs" />
     <Compile Include="Builder\Readers\SoundFunctions.cs" />
     <Compile Include="Builder\Readers\WavReader.cs" />
     <Compile Include="Builder\FontBuilder.cs" />

@@ -36,7 +36,7 @@ namespace Clawssets.Builder.Readers
                     
                     if (compressionCode != 1)
                     {
-                        Console.WriteLine("Erro: O compilador aceita apenas arquivos WAV não-comprimidos!");
+                        Console.WriteLine("Erro: O compilador aceita apenas arquivos WAV PCM (não-comprimidos)!");
 
                         return null;
                     }

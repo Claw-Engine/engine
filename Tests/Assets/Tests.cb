@@ -5,5 +5,8 @@
 #Texture:MainAtlas
 collision_tiles.png
 
+#Audio:OGG
+ogg.ogg
+
 #SpriteFont:Fonts
 font.csf

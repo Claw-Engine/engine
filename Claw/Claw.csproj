@@ -85,6 +85,7 @@
     <Compile Include="Graphics\UI\Element.cs" />
     <Compile Include="Graphics\UI\Image.cs" />
     <Compile Include="Graphics\UI\Label.cs" />
+    <Compile Include="Graphics\UI\MixedStyle.cs" />
     <Compile Include="Graphics\UI\Slider.cs" />
     <Compile Include="Graphics\UI\Style.cs" />
     <Compile Include="Graphics\UI\UI.cs" />
