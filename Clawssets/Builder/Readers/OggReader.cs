@@ -17,7 +17,6 @@ namespace Clawssets.Builder.Readers
             public uint VorbisVersion;
             public int BitrateMaximum, BitrateNominal, BitrateMinimum;
             public byte BlockSizes;
-            public bool FramingFlag;
         }
 
         /// <summary>
@@ -35,11 +34,21 @@ namespace Clawssets.Builder.Readers
         }
 
         private static void JumpCommon(this BitReader reader) => reader.JumpBytes(7);// PacketType-Vorbis
-        private static void JumpSignature(this BitReader reader) => reader.JumpBytes(4 + 1 + 1 + 8 + 4 + 4 + 4 + 1);
+        private static void ReadFraming(this BitReader reader)
+        {
+            reader.ReadBit();
+
+            if ((char)reader.ReadByte() != 'O')// Por algum motivo, framing está armazenado em 1 byte ao invés de 1 bit
+            {
+                reader.BackBytes(2);
+                reader.BackBit();
+                reader.ReadByte();
+            }
+            else reader.BackBytes(2);
+        }
         private static IdHeader ReadIdHeader(this BitReader reader, Audio.Description audio)
         {
-            reader.JumpSignature();
-            reader.JumpBytes(1);
+            reader.JumpBytes(4 + 1 + 1 + 8 + 4 + 4 + 4 + 1 + 1);// Signature + 1
 
             IdHeader idHeader = new IdHeader();
 
@@ -52,16 +61,8 @@ namespace Clawssets.Builder.Readers
             idHeader.BitrateNominal = reader.ReadInt32();
             idHeader.BitrateMinimum = reader.ReadInt32();
             idHeader.BlockSizes = reader.ReadByte();
-            idHeader.FramingFlag = reader.ReadBit();
 
-            if ((char)reader.ReadByte() != 'O')
-            {
-                reader.BackBytes(2);
-                reader.BackBit();
-                
-                idHeader.FramingFlag = reader.ReadByte() == 1;
-            }
-            else reader.BackBytes(2);
+            reader.ReadFraming();
             
             if (idHeader.BitrateNominal == 0 && idHeader.BitrateMaximum > 0 && idHeader.BitrateMinimum > 0) idHeader.BitrateNominal = (idHeader.BitrateMaximum + idHeader.BitrateMinimum) / 2;
             
@@ -69,24 +70,16 @@ namespace Clawssets.Builder.Readers
         }
         private static void ReadCommentHeader(this BitReader reader)
         {
-            reader.JumpSignature();
+            reader.JumpBytes(43);// Gap
             reader.JumpCommon();
-
-            uint vendorLength = reader.ReadUInt32();
-
-            reader.JumpBytes(vendorLength);
-
-            uint userCommentListLength = reader.ReadUInt32();
-            uint len;
             
-            for (uint i = 0; i < userCommentListLength; i++)
-            {
-                len = reader.ReadUInt32();
-                
-                reader.JumpBytes(len);
-            }
+            reader.JumpBytes(reader.ReadUInt32());
 
-            reader.ReadBit();
+            uint len = reader.ReadUInt32();
+
+            for (uint i = 0; i < len; i++) reader.JumpBytes(reader.ReadUInt32());
+
+            reader.ReadFraming();
         }
     }
 }
