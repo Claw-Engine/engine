@@ -104,10 +104,6 @@ namespace Clawssets.Builder.Readers
         /// </summary>
         public ushort ReadUInt16() => (ushort)ReadBits(16);
         /// <summary>
-        /// Lê 24 bits, com sinal.
-        /// </summary>
-        public Int24 ReadInt24() => (int)ReadBits(24);
-        /// <summary>
         /// Lê 32 bits, com sinal.
         /// </summary>
         public int ReadInt32() => (int)ReadBits(32);
@@ -126,7 +122,7 @@ namespace Clawssets.Builder.Readers
         /// <summary>
         /// Lê até 64 bits, como um <see cref="long"/>.
         /// </summary>
-        public ulong ReadBits(byte count, bool log = false)
+        public ulong ReadBits(byte count)
         {
             ulong value = 0;
 

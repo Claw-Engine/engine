@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Clawssets
 {
@@ -11,7 +12,7 @@ namespace Clawssets
         private int value;
 
         public static implicit operator int(Int24 value) => value.value;
-        public static implicit operator Int24(int value) => new Int24() { value = value };
+        public static implicit operator Int24(int value) => new Int24() { value = Claw.Mathf.Clamp(value, MinValue, MaxValue) };
         public static implicit operator Int24(byte[] bytes) => new Int24() { value = (bytes[0] << 16) | (bytes[1] << 8) | bytes[2] };
     }
     /// <summary>
