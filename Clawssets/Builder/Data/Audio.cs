@@ -66,7 +66,6 @@ namespace Clawssets.Builder.Data
             switch (audioExtension)
             {
                 case ".wav": case ".wave": result = WavReader.Load(new BinaryReader(reader.BaseStream)); break;
-                case ".ogg": result = OggReader.Load(new BitReader(reader.BaseStream)); break;
                 default: Console.WriteLine("Erro: A extensão \"{0}\" não é suportada!\nArquivo: {1}", audioExtension, path); break;
             }
 
