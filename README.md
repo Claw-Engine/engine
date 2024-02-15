@@ -5,7 +5,7 @@ Claw é uma engine low-end para o desenvolvimento de jogos 2D.
 A Claw é um projeto pessoal que eu faço por diversão. Mas sinta-se livre para olhar o source ou até mesmo fazer um fork.
 
 # Como usar
-Além dos comentários de documentação em XML, você pode encontrar instruções mais específicas em [ClawDocs](https://github.com/tomateuso/ClawDocs).
+Além dos comentários de documentação em XML, você pode encontrar instruções mais específicas em [ClawDocs](https://github.com/Lucas-Souto/ClawDocs).
 
 # Quais são os planos da engine?
 Os planos atuais de features/versões podem ser encontrados no [Projeto](https://github.com/users/Lucas-Souto/projects/3).
