@@ -11,6 +11,7 @@ namespace Clawssets.Builder.Readers
     public class BitReader
     {
         public bool BigEndian;
+        public bool OnByteStart => bit == 0 || bit == 8;
         public readonly Stream BaseStream;
         private int bit;
         private byte currentByte;
@@ -145,7 +146,7 @@ namespace Clawssets.Builder.Readers
                 switch (count)
                 {
                     case 16: value = BitConverter.ToUInt16(bytes, 0); break;
-                    case 24: value = BitConverter.ToUInt32(bytes, 0); break;
+                    case 24: value = (UInt24)bytes; break;
                     case 32: value = BitConverter.ToUInt32(bytes, 0); break;
                     case 64: value = BitConverter.ToUInt64(bytes, 0); break;
                 }

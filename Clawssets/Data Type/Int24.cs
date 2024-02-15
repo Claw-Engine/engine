@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 
 namespace Clawssets
@@ -13,7 +14,19 @@ namespace Clawssets
 
         public static implicit operator int(Int24 value) => value.value;
         public static implicit operator Int24(int value) => new Int24() { value = Claw.Mathf.Clamp(value, MinValue, MaxValue) };
-        public static implicit operator Int24(byte[] bytes) => new Int24() { value = (bytes[0] << 16) | (bytes[1] << 8) | bytes[2] };
+        public static implicit operator Int24(byte[] bytes) => new Int24() { value = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) };
+    }
+    /// <summary>
+    /// Representa um inteiro sem sinal de 24 bits.
+    /// </summary>
+    public struct UInt24
+    {
+        public const uint MaxValue = 16_777_215;
+        private uint value;
+
+        public static implicit operator uint(UInt24 value) => value.value;
+        public static implicit operator UInt24(uint value) => new UInt24() { value = Math.Min(value, MaxValue) };
+        public static implicit operator UInt24(byte[] bytes) => new UInt24() { value = (uint)(bytes[0] | (bytes[1] << 8) | (bytes[2] << 16)) };
     }
     /// <summary>
     /// Extensões relacionadas ao <see cref="Int24"/>.

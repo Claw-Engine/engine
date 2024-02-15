@@ -27,12 +27,15 @@ namespace Clawssets.Builder.Readers
 
         private class CodeBook
         {
-            public byte[] SyncPattern;
-            public ushort Dimensions;
             public int Entries;
-            public uint?[] EntryCodewordLength;
             public bool Ordered;
-            public ushort[] Multiplicands; 
+            public ushort Dimensions;
+            public int?[] EntryCodewordLength;
+
+            public bool SequenceP;
+            public byte ValueBits;
+            public float MinimumValue, DeltaValue;
+            public ushort[] Multiplicands;
         }
 
         /// <summary>
@@ -90,14 +93,15 @@ namespace Clawssets.Builder.Readers
             setup = new Setup();
             setup.CodebookConfigs = new CodeBook[reader.ReadByte() + 1];
             CodeBook codebook;
-
+            
             for (int i = 0; i < setup.CodebookConfigs.Length; i++)
             {
+                reader.JumpBytes(3);// Sync pattern
+
                 codebook = setup.CodebookConfigs[i] = new CodeBook();
-                codebook.SyncPattern = new byte[3] { reader.ReadByte(), reader.ReadByte(), reader.ReadByte() };
-                codebook.Dimensions = reader.ReadUInt16(); ;
+                codebook.Dimensions = reader.ReadUInt16();
                 codebook.Entries = (int)reader.ReadBits(24);
-                codebook.EntryCodewordLength = new uint?[codebook.Entries];
+                codebook.EntryCodewordLength = new int?[codebook.Entries];
                 codebook.Ordered = reader.ReadBit();
 
                 if (!codebook.Ordered)
@@ -110,38 +114,38 @@ namespace Clawssets.Builder.Readers
                         {
                             bool flag = reader.ReadBit();
 
-                            if (flag) codebook.EntryCodewordLength[j] = (uint)reader.ReadBits(5) + 1;
+                            if (flag) codebook.EntryCodewordLength[j] = (int)reader.ReadBits(5) + 1;
                             else codebook.EntryCodewordLength[j] = null;
                         }
-                        else codebook.EntryCodewordLength[j] = (uint)reader.ReadBits(5) + 1;
+                        else codebook.EntryCodewordLength[j] = (int)reader.ReadBits(5) + 1;
                     }
                 }
                 else
                 {
-                    uint currentEntry = 0;
-                    uint currentLength = (uint)reader.ReadBits(5) + 1;
-                
+                    int currentEntry = 0;
+                    int currentLength = (int)reader.ReadBits(5) + 1;
+
                     do
                     {
                         byte number = Ilog(codebook.Entries - currentEntry);
 
-                        for (uint j = currentEntry; j <= currentEntry + number - 1; j++) codebook.EntryCodewordLength[j] = currentLength;
+                        for (int j = currentEntry; j <= currentEntry + number - 1; j++) codebook.EntryCodewordLength[j] = currentLength;
 
                         currentEntry = currentEntry + number;
                         currentLength++;
                     }while (currentEntry < 3);
                 }
-
+                
                 byte lookupType = (byte)reader.ReadBits(4);
 
                 switch (lookupType)
                 {
                     case 0: break;
                     case 1: case 2:
-                        float minimumValue = Float32Unpack(reader.ReadUInt32());
-                        float deltaValue = Float32Unpack(reader.ReadUInt32());
-                        byte valueBits =  (byte)(reader.ReadBits(4) + 1);
-                        bool sequenceP = reader.ReadBit();
+                        codebook.MinimumValue = Float32Unpack(reader.ReadUInt32());
+                        codebook.DeltaValue = Float32Unpack(reader.ReadUInt32());
+                        codebook.ValueBits =  (byte)(reader.ReadBits(4) + 1);
+                        codebook.SequenceP = reader.ReadBit();
                         int lookupValues;
 
                         if (lookupType == 1) lookupValues = Lookup1Values(codebook.Entries, codebook.Dimensions);
@@ -149,13 +153,17 @@ namespace Clawssets.Builder.Readers
 
                         codebook.Multiplicands = new ushort[lookupValues];
 
-                        for (int j = 0; j < lookupValues; j++) codebook.Multiplicands[j] = (ushort)reader.ReadBits(valueBits);
+                        for (int j = 0; j < lookupValues; j++) codebook.Multiplicands[j] = (ushort)reader.ReadBits(codebook.ValueBits);
                         break;
                 }
             }
+            Console.WriteLine("Terminou");
+            reader.JumpBits(16 * ((uint)(reader.ReadBits(6) + 1)));
+
+            byte vorbisFloorCount = (byte)(reader.ReadBits(6) + 1);
         }
 
-        private static byte Ilog(uint x)
+        private static byte Ilog(int x)
         {
             byte result = 0;
 
