@@ -27,8 +27,8 @@ namespace Claw.Input
         public static bool MouseNeedFocus = true;
         public static Vector2 MousePosition { get; private set; }
         public static List<Keys> DownKeys = new List<Keys>();
-        private static bool canButton => ButtonNeedFocus ? Game.Instance.Window.IsActive : true;
-        private static bool canMouse => MouseNeedFocus ? Game.Instance.Window.IsMouseFocused : true;
+        private static bool canButton => Game.Instance.ConsoleOnly || (ButtonNeedFocus ? Game.Instance.Window.IsActive : true);
+        private static bool canMouse => Game.Instance.ConsoleOnly || (MouseNeedFocus ? Game.Instance.Window.IsMouseFocused : true);
         private static int previousMouseScroll = 0;
 
         private static int sdlKeyNumber;

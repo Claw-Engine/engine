@@ -13,6 +13,7 @@ namespace Claw
     public class Game : IDisposable
     {
         public static Game Instance { get; private set; }
+        public bool ConsoleOnly { get; private set; }
         public Window Window { get; private set; }
         public Renderer Renderer { get; private set; }
         public AudioManager Audio { get; private set; }
@@ -62,36 +63,51 @@ namespace Claw
             isRunning = false;
         }
 
-        /// <summary>
-        /// Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="Initialize"/> e o game loop.
-        /// </summary>
-        public void Run()
+		/// <summary>
+		/// Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="Initialize"/> e o game loop.
+		/// </summary>
+		/// <param name="consoleOnly">
+		/// <para>Se verdadeiro, o jogo será aberto apenas pelo console.</para>
+		/// <para>Se falso, o jogo abrirá com <see cref="Claw.Window"/> + <see cref="Claw.Graphics.Renderer"/> + <see cref="Claw.Audio.AudioManager"/>.</para>
+		/// </param>
+		public void Run(bool consoleOnly = false)
         {
             if (isRunning) return;
             else if (Instance != null) throw new Exception("Não é possível rodar duas instâncias de jogo ao mesmo tempo!");
 
-            if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) == 0)
-            {
-                int result = SDL.SDL_CreateWindowAndRenderer(800, 600, 0, out IntPtr window, out IntPtr renderer);
+            ConsoleOnly = consoleOnly;
 
-                if (result == 0)
-                {
-                    isRunning = true;
-                    Instance = this;
-                    Window = new Window(window);
-                    Renderer = new Renderer(renderer);
-                    Audio = new AudioManager();
-                    Renderer.ClearColor = Color.CornflowerBlue;
-                    components = new GameComponentCollection();
-                }
-            }
+			if (!ConsoleOnly)
+            {
+				if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) == 0)
+				{
+					int result = SDL.SDL_CreateWindowAndRenderer(800, 600, 0, out IntPtr window, out IntPtr renderer);
+
+					if (result == 0)
+					{
+						isRunning = true;
+						Instance = this;
+						Window = new Window(window);
+						Renderer = new Renderer(renderer);
+						Audio = new AudioManager();
+						Renderer.ClearColor = Color.CornflowerBlue;
+						components = new GameComponentCollection();
+					}
+				}
+			}
+            else if (SDL.SDL_Init(SDL.SDL_INIT_TIMER | SDL.SDL_INIT_GAMECONTROLLER) == 0)
+            {
+				isRunning = true;
+				Instance = this;
+				components = new GameComponentCollection();
+			}
 
             if (isRunning)
             {
                 Input.Input.SetControllers();
                 Initialize();
 
-                if (Texture.Pixel == null)
+                if (!ConsoleOnly && Texture.Pixel == null)
                 {
                     Texture.Pixel = new Texture(1, 1, 0xffffffff);
 
@@ -129,11 +145,14 @@ namespace Claw
                 Time.Update(frameTime);
                 Step();
 
-                Renderer.Clear();
-                Draw.UpdateCamera();
-                Render();
-                UI?.Render();
-                Renderer.Present();
+                if (!ConsoleOnly)
+                {
+					Renderer.Clear();
+					Draw.UpdateCamera();
+					Render();
+					UI?.Render();
+					Renderer.Present();
+				}
 
                 frameTime = (int)(SDL.SDL_GetTicks() - frameStart);
 

@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <ExportDir>$(SolutionDir)..\Claw Release\Claw\</ExportDir>
+    <ExportDir>$(SolutionDir)Build\</ExportDir>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{673096A4-9F32-4D37-83B2-AD0DAA73CA45}</ProjectGuid>
@@ -154,17 +154,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (
-if not exist "$(ExportDir)" mkdir "$(ExportDir)" /Y
-xcopy "$(TargetDir)$(TargetFileName)" "$(ExportDir)" /Y
-xcopy "$(TargetDir)$(AssemblyName).xml" "$(ExportDir)" /Y
-xcopy "$(TargetDir)SDL2.dll" "$(ExportDir)" /Y
-)</PostBuildEvent>
+    <PostBuildEvent>if not exist "$(ExportDir)$(ConfigurationName)\" mkdir "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)$(TargetFileName)" "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)$(AssemblyName).xml" "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)SDL2.dll" "$(ExportDir)$(ConfigurationName)\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
