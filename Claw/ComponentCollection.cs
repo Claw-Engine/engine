@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Claw.Maps;
 using Claw.Utils;
 
 namespace Claw
@@ -8,27 +9,27 @@ namespace Claw
     /// <summary>
     /// Uma coleção de instâncias de <see cref="IGameComponent"/>.
     /// </summary>
-    public sealed class GameComponentCollection : Collection<IGameComponent>
+    public sealed class ComponentCollection : Collection<IGameComponent>
     {
-        /// <summary>
-        /// Filtragem dos game objects dessa coleção (fora de ordem).
-        /// </summary>
-        public ReadOnlyCollection<GameObject> GameObjects;
-        private Collection<GameObject> gameObjects;
+		/// <summary>
+		/// Filtragem dos game objects desta coleção (fora de ordem).
+		/// </summary>
+		public ReadOnlyCollection<GameObject> GameObjects;
+        private Collection<GameObject> _gameObjects;
         public event EventHandler<IGameComponent> ComponentAdded, ComponentRemoved;
 
-        internal GameComponentCollection()
+        internal ComponentCollection()
         {
-            gameObjects = new Collection<GameObject>();
-            GameObjects = new ReadOnlyCollection<GameObject>(gameObjects);
+            _gameObjects = new Collection<GameObject>();
+            GameObjects = new ReadOnlyCollection<GameObject>(_gameObjects);
         }
 
         /// <summary>
-        /// Cria um <see cref="ComponentSortingFilteringCollection{IUpdateable}"/> configurado.
+        /// Cria um <see cref="SortedComponents{IUpdateable}"/> configurado.
         /// </summary>
-        public ComponentSortingFilteringCollection<IUpdateable> CreateForUpdate()
+        public SortedComponents<IUpdateable> CreateForUpdate()
         {
-            return new ComponentSortingFilteringCollection<IUpdateable>(this,
+            return new SortedComponents<IUpdateable>(this,
                 u => u.Enabled,
                 (u1, u2) => Comparer<int>.Default.Compare(u1.UpdateOrder, u2.UpdateOrder),
                 (u, handler) => u.EnabledChanged += handler,
@@ -38,11 +39,11 @@ namespace Claw
             );
         }
         /// <summary>
-        /// Cria um <see cref="ComponentSortingFilteringCollection{IDrawable}"/> configurado.
+        /// Cria um <see cref="SortedComponents{IDrawable}"/> configurado.
         /// </summary>
-        public ComponentSortingFilteringCollection<IDrawable> CreateForDraw()
+        public SortedComponents<IDrawable> CreateForDraw()
         {
-            return new ComponentSortingFilteringCollection<IDrawable>(this,
+            return new SortedComponents<IDrawable>(this,
                 d => d.Visible,
                 (d1, d2) => Comparer<int>.Default.Compare(d1.DrawOrder, d2.DrawOrder),
                 (d, handler) => d.VisibleChanged += handler,
@@ -65,7 +66,7 @@ namespace Claw
             {
                 OnComponentAdded(component);
 
-                if (component is GameObject gameObject) gameObjects.Add(gameObject);
+                if (component is GameObject gameObject) _gameObjects.Add(gameObject);
 
                 component.Initialize();
             }
@@ -83,21 +84,39 @@ namespace Claw
             {
                 OnComponentRemoved(component);
 
-                if (component is GameObject gameObject) gameObjects.Remove(gameObject);
+                if (component is GameObject gameObject) _gameObjects.Remove(gameObject);
             }
         }
         /// <summary>
-        /// Remove todos os os <see cref="IGameComponent"/> da coleção e chama o evento <see cref="ComponentRemoved"/> para cada um.
+        /// Remove um <see cref="IGameComponent"/> e insere outro no mesmo index.
         /// </summary>
-        protected override void ClearItems()
+		protected override void SetItem(int index, IGameComponent newComponent)
+		{
+			IGameComponent oldComponent = this[index];
+
+			if (oldComponent != null)
+			{
+				OnComponentRemoved(oldComponent);
+
+				if (oldComponent is GameObject oldGameObject) _gameObjects.Remove(oldGameObject);
+
+				base.SetItem(index, newComponent);
+
+				if (newComponent is GameObject newGameObject) _gameObjects.Add(newGameObject);
+
+				newComponent.Initialize();
+			}
+		}
+		/// <summary>
+		/// Remove todos os os <see cref="IGameComponent"/> da coleção e chama o evento <see cref="ComponentRemoved"/> para cada um.
+		/// </summary>
+		protected override void ClearItems()
         {
             for (int i = 0; i < Count; i++) OnComponentRemoved(base[i]);
 
-            gameObjects.Clear();
+            _gameObjects.Clear();
             base.ClearItems();
         }
-
-        protected override void SetItem(int index, IGameComponent item) => throw new NotSupportedException();
 
         private void OnComponentAdded(IGameComponent component) => ComponentAdded?.Invoke(this, component);
         private void OnComponentRemoved(IGameComponent component) => ComponentRemoved?.Invoke(this, component);

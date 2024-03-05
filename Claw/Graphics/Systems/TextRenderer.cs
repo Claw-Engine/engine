@@ -50,24 +50,24 @@ namespace Claw.Graphics.Systems
         /// </summary>
         public int MaxLength
         {
-            get => maxLength;
+            get => _maxLength;
             set
             {
-                if (value != maxLength)
+                if (value != _maxLength)
                 {
-                    maxLength = value;
+                    _maxLength = value;
                     needToUpdate = true;
                 }
             }
         }
         public string Text
         {
-            get => text;
+            get => _text;
             set
             {
-                if (value != text)
+                if (value != _text)
                 {
-                    text = value;
+                    _text = value;
                     needToUpdate = true;
                 }
             }
@@ -78,20 +78,20 @@ namespace Claw.Graphics.Systems
         public string FilteredText { get; private set; } = string.Empty;
         public TextWrap TextWrap
         {
-            get => textWrap;
+            get => _textWrap;
             set
             {
-                if (value != textWrap)
+                if (value != _textWrap)
                 {
-                    textWrap = value;
+                    _textWrap = value;
                     needToUpdate = true;
                 }
             }
         }
         private bool needToUpdate = false;
-        private int maxLength = 0;
-        private string text = string.Empty;
-        private TextWrap textWrap = TextWrap.NoWrap;
+        private int _maxLength = 0;
+        private string _text = string.Empty;
+        private TextWrap _textWrap = TextWrap.NoWrap;
         private List<TextBlock> textBlocks = new List<TextBlock>();
         #endregion
 

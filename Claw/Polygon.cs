@@ -13,10 +13,10 @@ namespace Claw
         public bool CanRotate = true, CanScale = true;
         public bool Enabled
         {
-            get => enabled && GameObject.Enabled;
-            set => enabled = value;
+            get => _enabled && GameObject.Enabled;
+            set => _enabled = value;
         }
-        private bool enabled = true;
+        private bool _enabled = true;
 
         public Vector2 Offset = Vector2.Zero;
         public readonly GameObject GameObject;

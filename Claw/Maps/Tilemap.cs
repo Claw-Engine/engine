@@ -20,14 +20,14 @@ namespace Claw.Maps
         public Vector2 GridSize = Vector2.Zero;
         public Vector2 Size
         {
-            get => size;
+            get => _size;
             set
             {
                 if (value.Y >= 0 && value.X >= 0)
                 {
-                    for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, Size);
+                    for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, _size);
 
-                    size = value;
+                    _size = value;
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace Claw.Maps
         /// É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).
         /// </summary>
         public Action<int, TileLayer, Vector2> OnTileChange = null;
-        private Vector2 size = Vector2.Zero;
+        private Vector2 _size = Vector2.Zero;
         private List<TileLayer> layers = new List<TileLayer>();
         internal Dictionary<string, int> layerIndexes = new Dictionary<string, int>();
         internal List<TilePalette> tileSets = new List<TilePalette>();

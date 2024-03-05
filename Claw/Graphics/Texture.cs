@@ -13,15 +13,15 @@ namespace Claw.Graphics
         public Vector2 Size => new Vector2(Width, Height);
         public BlendMode BlendMode
         {
-            get => blendMode;
+            get => _blendMode;
             set
             {
-                blendMode = value;
+                _blendMode = value;
 
                 SDL.SDL_SetTextureBlendMode(sdlTexture, (SDL.SDL_BlendMode)value);
             }
         }
-        private BlendMode blendMode = BlendMode.None;
+        private BlendMode _blendMode = BlendMode.None;
         internal readonly IntPtr sdlTexture;
 
         internal Texture(int width, int height, IntPtr texture)

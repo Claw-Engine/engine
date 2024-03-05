@@ -14,8 +14,8 @@ namespace Claw.Audio
         /// </summary>
         public float Volume
         {
-            get => volume;
-            set => volume = Mathf.Clamp(value, 0, 1);
+            get => _volume;
+            set => _volume = Mathf.Clamp(value, 0, 1);
         }
         /// <summary>
         /// Duração do áudio, em segundos.
@@ -26,7 +26,7 @@ namespace Claw.Audio
         /// </summary>
         public float Current => AudioManager.CalculateDuration(audio.Length, audio.Channels);
         public readonly SoundEffectGroup Group;
-        private float volume = 1;
+        private float _volume = 1;
         internal long offset = 0;
         internal SoundEffect audio;
 

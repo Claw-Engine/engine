@@ -15,26 +15,26 @@ namespace Claw.Graphics
         /// </summary>
         public static Texture CurrentPage { get; internal set; }
         public static ReadOnlyDictionary<string, Sprite> Sprites;
-        private static Dictionary<string, Sprite> sprites;
+        private static Dictionary<string, Sprite> _sprites;
 
         static TextureAtlas()
         {
-            sprites = new Dictionary<string, Sprite>();
-            Sprites = new ReadOnlyDictionary<string, Sprite>(sprites);
+            _sprites = new Dictionary<string, Sprite>();
+            Sprites = new ReadOnlyDictionary<string, Sprite>(_sprites);
         }
 
         /// <summary>
         /// <para>Adiciona uma sprite ao <see cref="Sprites"/>.</para>
         /// <para>Aviso: O primeiro pixel da sua textura deve ser um pixel branco.</para>
         /// </summary>
-        public static void AddSprite(Sprite sprite) => sprites.Add(sprite.Name, sprite);
+        public static void AddSprite(Sprite sprite) => _sprites.Add(sprite.Name, sprite);
         /// <summary>
         /// <para>Adiciona sprites ao <see cref="Sprites"/>.</para>
         /// <para>Aviso: O primeiro pixel da sua textura deve ser um pixel branco.</para>
         /// </summary>
         public static void AddSprites(params Sprite[] sprites)
         {
-            for (int i = 0; i < sprites.Length; i++) TextureAtlas.sprites.Add(sprites[i].Name, sprites[i]);
+            for (int i = 0; i < sprites.Length; i++) TextureAtlas._sprites.Add(sprites[i].Name, sprites[i]);
         }
         
         /// <summary>
@@ -54,7 +54,7 @@ namespace Claw.Graphics
             {
                 sprites[i] = new Sprite(texture, reader.ReadString(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
 
-                TextureAtlas.sprites.Add(sprites[i].Name, sprites[i]);
+                TextureAtlas._sprites.Add(sprites[i].Name, sprites[i]);
             }
 
             stream.Close();

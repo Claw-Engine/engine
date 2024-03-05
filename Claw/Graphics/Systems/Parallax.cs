@@ -20,26 +20,26 @@ namespace Claw.Graphics.Systems
         
         public int DrawOrder
         {
-            get => drawOrder;
+            get => _drawOrder;
             set
             {
-                if (drawOrder != value) DrawOrderChanged?.Invoke(this, EventArgs.Empty);
+                if (_drawOrder != value) DrawOrderChanged?.Invoke(this, EventArgs.Empty);
 
-                drawOrder = value;
+				_drawOrder = value;
             }
         }
         public bool Visible
         {
-            get => visible;
+            get => _visible;
             set
             {
-                if (visible != value) VisibleChanged?.Invoke(this, EventArgs.Empty);
+                if (_visible != value) VisibleChanged?.Invoke(this, EventArgs.Empty);
 
-                visible = value;
+				_visible = value;
             }
         }
-        private int drawOrder;
-        private bool visible = true;
+        private int _drawOrder;
+        private bool _visible = true;
 
         public event EventHandler<EventArgs> VisibleChanged, DrawOrderChanged;
 

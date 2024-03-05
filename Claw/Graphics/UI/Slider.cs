@@ -13,14 +13,14 @@ namespace Claw.Graphics.UI
         /// </summary>
         public float Value
         {
-            get => value;
+            get => _value;
             set
             {
-                if (value != this.value)
+                if (value != this._value)
                 {
-                    this.value = Mathf.Clamp(value, 0, 1);
+                    this._value = Mathf.Clamp(value, 0, 1);
 
-                    Sync?.Invoke(this.value);
+                    Sync?.Invoke(this._value);
                 }
             }
         }
@@ -29,7 +29,7 @@ namespace Claw.Graphics.UI
         /// </summary>
         public event Action<float> Sync;
         private const float InnerSize = .25f;
-        private float value;
+        private float _value;
 
         public override Vector2 CalculateSize()
         {
@@ -76,12 +76,12 @@ namespace Claw.Graphics.UI
             if (Vertical)
             {
                 innerSize.Y = contentSize.Y * InnerSize;
-                innerOffset.Y = (contentSize.Y - innerSize.Y) * value;
+                innerOffset.Y = (contentSize.Y - innerSize.Y) * _value;
             }
             else
             {
                 innerSize.X = contentSize.X * InnerSize;
-                innerOffset.X = (contentSize.X - innerSize.X) * value;
+                innerOffset.X = (contentSize.X - innerSize.X) * _value;
             }
             
             if (Style.InnerNineSlice.Length > 0) NineSlice.Draw(Style.InnerNineSlice, new Rectangle(position + innerOffset + Style.TopLeftPadding, innerSize), 0, Style.Color, UI.ScaleCenter);

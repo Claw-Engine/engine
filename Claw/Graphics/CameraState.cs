@@ -20,10 +20,10 @@ namespace Claw.Graphics
             {
                 if (Camera == null) return Game.Instance.Window.Size;
 
-                return bottomRight;
+                return _bottomRight;
             }
         }
-        private Vector2 bottomRight;
+        private Vector2 _bottomRight;
         internal Rectangle viewport => Camera != null ? Camera.Viewport : new Rectangle();
 
         internal CameraState(Camera camera) => Camera = camera;
@@ -38,11 +38,11 @@ namespace Claw.Graphics
             Position = Camera.Position;
             Origin = Camera.Origin;
             TopLeft = (Position - Origin) / Zoom;
-            bottomRight = Game.Instance.Window.Size;
+            _bottomRight = Game.Instance.Window.Size;
 
-            if (viewport.Size != Vector2.Zero) bottomRight = viewport.End;
+            if (viewport.Size != Vector2.Zero) _bottomRight = viewport.End;
 
-            bottomRight = Camera.ScreenToWorld(bottomRight);
+			_bottomRight = Camera.ScreenToWorld(_bottomRight);
         }
     }
 }

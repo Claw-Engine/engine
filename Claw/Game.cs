@@ -17,28 +17,28 @@ namespace Claw
         public Window Window { get; private set; }
         public Renderer Renderer { get; private set; }
         public AudioManager Audio { get; private set; }
-        public Tilemap Tilemap
-        {
-            get => tilemap;
-            set
-            {
-                if (value != tilemap)
-                {
-                    if (tilemap != null) tilemap.RemoveAll();
-
-                    if (value != null) value.AddAll();
-
-                    tilemap = value;
-                }
-            }
-        }
         public UI UI;
-        public GameComponentCollection Components => components;
-        private bool isRunning;
-        private Tilemap tilemap;
-        private GameComponentCollection components;
+		public Tilemap Tilemap
+		{
+			get => _tilemap;
+			set
+			{
+				if (value != _tilemap)
+				{
+					if (_tilemap != null) _tilemap.RemoveAll();
 
-        public Game() { }
+					if (value != null) value.AddAll();
+
+					_tilemap = value;
+				}
+			}
+		}
+		public ComponentCollection Components => _components;
+        private bool isRunning;
+		private Tilemap _tilemap;
+		private ComponentCollection _components;
+
+		public Game() { }
         ~Game() => Dispose();
 
         public void Dispose()
@@ -47,14 +47,14 @@ namespace Claw
             Renderer?.Dispose();
             Audio?.Dispose();
 
-            if (components != null)
+            if (_components != null)
             {
-                for (int i = 0; i < components.Count; i++)
+                for (int i = 0; i < _components.Count; i++)
                 {
-                    if (components[i] is IDisposable dispose) dispose.Dispose();
+                    if (_components[i] is IDisposable dispose) dispose.Dispose();
                 }
                 
-                components = null;
+                _components = null;
             }
 
             Window = null;
@@ -91,7 +91,7 @@ namespace Claw
 						Renderer = new Renderer(renderer);
 						Audio = new AudioManager();
 						Renderer.ClearColor = Color.CornflowerBlue;
-						components = new GameComponentCollection();
+						_components = new ComponentCollection();
 					}
 				}
 			}
@@ -99,7 +99,7 @@ namespace Claw
             {
 				isRunning = true;
 				Instance = this;
-				components = new GameComponentCollection();
+				_components = new ComponentCollection();
 			}
 
             if (isRunning)

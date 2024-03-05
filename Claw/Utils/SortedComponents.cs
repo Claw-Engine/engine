@@ -5,14 +5,14 @@ using Claw.Extensions;
 namespace Claw.Utils
 {
     /// <summary>
-    /// Representa um <see cref="GameComponentCollection"/> filtrado e ordenado.
+    /// Representa um <see cref="Claw.ComponentCollection"/> filtrado e ordenado.
     /// </summary>
     /// <typeparam name="T">Tipo que será filtrado.</typeparam>
-    public sealed class ComponentSortingFilteringCollection<T>
+    public sealed class SortedComponents<T>
     {
         public int Count => components.Count;
+        public readonly ComponentCollection ComponentCollection;
 
-        public readonly GameComponentCollection ComponentCollection;
         private bool needSort = true;
         private Predicate<T> filter;
         private Comparison<T> sort;
@@ -20,7 +20,7 @@ namespace Claw.Utils
         private List<T> components;
 
         /// <summary>
-        /// Cria uma lista de componenetes que será sempre o produto filtrado e ordenado de uma <see cref="GameComponentCollection"/>.
+        /// Cria uma lista de componenetes que será sempre o produto filtrado e ordenado de uma <see cref="Claw.ComponentCollection"/>.
         /// </summary>
         /// <param name="componentCollection">A coleção original.</param>
         /// <param name="filter">A condição para a filtragem.</param>
@@ -29,7 +29,7 @@ namespace Claw.Utils
         /// <param name="filterChangedUnsubscriber">Remove o evento que deverá ser chamado quando o filtro mudar de valor.</param>
         /// <param name="sortChangedSubscriber">Adiciona o evento que deverá ser chamado quando a ordem mudar de valor.</param>
         /// <param name="sortChangedUnsubscriber">Remove o evento que deverá ser chamado quando a ordem mudar de valor.</param>
-        public ComponentSortingFilteringCollection(GameComponentCollection componentCollection, Predicate<T> filter, Comparison<T> sort, 
+        public SortedComponents(ComponentCollection componentCollection, Predicate<T> filter, Comparison<T> sort, 
             Action<T, EventHandler<EventArgs>> filterChangedSubscriber, Action<T, EventHandler<EventArgs>> filterChangedUnsubscriber, 
             Action<T, EventHandler<EventArgs>> sortChangedSubscriber, Action<T, EventHandler<EventArgs>> sortChangedUnsubscriber)
         {
@@ -61,7 +61,7 @@ namespace Claw.Utils
 
             QuickSort();
         }
-        ~ComponentSortingFilteringCollection()
+        ~SortedComponents()
         {
             components.Clear();
 

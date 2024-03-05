@@ -91,10 +91,10 @@ namespace Claw
             {
                 unchecked
                 {
-                    return (byte)packedValue;
+                    return (byte)_packedValue;
                 }
             }
-            set => packedValue = (packedValue & 0xffffff00) | value;
+            set => _packedValue = (_packedValue & 0xffffff00) | value;
         }
         public byte G
         {
@@ -102,10 +102,10 @@ namespace Claw
             {
                 unchecked
                 {
-                    return (byte)(packedValue >> 8);
+                    return (byte)(_packedValue >> 8);
                 }
             }
-            set => packedValue = (packedValue & 0xffff00ff) | ((uint)value << 8);
+            set => _packedValue = (_packedValue & 0xffff00ff) | ((uint)value << 8);
         }
         public byte B
         {
@@ -113,10 +113,10 @@ namespace Claw
             {
                 unchecked
                 {
-                    return (byte)(packedValue >> 16);
+                    return (byte)(_packedValue >> 16);
                 }
             }
-            set => packedValue = (packedValue & 0xff00ffff) | ((uint)value << 16);
+            set => _packedValue = (_packedValue & 0xff00ffff) | ((uint)value << 16);
         }
         public byte A
         {
@@ -124,23 +124,23 @@ namespace Claw
             {
                 unchecked
                 {
-                    return (byte)(packedValue >> 24);
+                    return (byte)(_packedValue >> 24);
                 }
             }
-            set => packedValue = (packedValue & 0x00ffffff) | ((uint)value << 24);
+            set => _packedValue = (_packedValue & 0x00ffffff) | ((uint)value << 24);
         }
         /// <summary>
         /// ABGR - 32 bits.
         /// </summary>
-        public uint PackedValue => packedValue;
+        public uint PackedValue => _packedValue;
 
         /// <summary>
         /// ABGR - 32 bits.
         /// </summary>
-        private uint packedValue;
+        private uint _packedValue;
         
-        /// <param name="packedValue">ABGR - 32 bits.</param>
-        public Color(uint packedValue) => this.packedValue = packedValue;
+        /// <param name="_packedValue">ABGR - 32 bits.</param>
+        public Color(uint packedValue) => this._packedValue = packedValue;
         public Color(string hex, HexFormat format = HexFormat.RGBA)
         {
             if (hex.IndexOf('#') != -1) hex = hex.Replace("#", "");
@@ -185,7 +185,7 @@ namespace Claw
                     break;
             }
 
-            packedValue = ((uint)a << 24) | ((uint)b << 16) | ((uint)g << 8) | ((uint)r);
+            _packedValue = ((uint)a << 24) | ((uint)b << 16) | ((uint)g << 8) | ((uint)r);
         }
         /// <param name="r">De 0 a 255.</param>
         /// <param name="g">De 0 a 255.</param>
@@ -199,16 +199,16 @@ namespace Claw
                     clampedG = (uint)Mathf.Clamp(g, Byte.MinValue, Byte.MaxValue),
                     clampedB = (uint)Mathf.Clamp(b, Byte.MinValue, Byte.MaxValue),
                     clampedA = (uint)Mathf.Clamp(alpha, Byte.MinValue, Byte.MaxValue);
-                packedValue = (clampedA << 24) | (clampedB << 16) | (clampedG << 8) | (clampedR);
+                _packedValue = (clampedA << 24) | (clampedB << 16) | (clampedG << 8) | (clampedR);
             }
-            else packedValue = ((uint)alpha << 24) | ((uint)b << 16) | ((uint)g << 8) | ((uint)r);
+            else _packedValue = ((uint)alpha << 24) | ((uint)b << 16) | ((uint)g << 8) | ((uint)r);
         }
         /// <param name="r">De 0 a 1.</param>
         /// <param name="g">De 0 a 1.</param>
         /// <param name="b">De 0 a 1.</param>
         /// <param name="alpha">De 0 a 1.</param>
         public Color(float r, float g, float b, float alpha = 1) : this((int)(r * 255), (int)(g * 255), (int)(b * 255), (int)(alpha * 255)) { }
-        public Color(byte r, byte g, byte b, byte alpha) => packedValue = ((uint)alpha << 24) | ((uint)b << 16) | ((uint)g << 8) | (r);
+        public Color(byte r, byte g, byte b, byte alpha) => _packedValue = ((uint)alpha << 24) | ((uint)b << 16) | ((uint)g << 8) | (r);
 
         /// <summary>
         /// Retorna uma string representando esta cor no formato:
@@ -341,12 +341,12 @@ namespace Claw
         public static Color DeltaLerp(Color a, Color b, float amount, bool scaled = true) => new Color((int)Mathf.DeltaLerp(a.R, b.R, amount, scaled), (int)Mathf.DeltaLerp(a.G, b.G, amount, scaled), (int)Mathf.DeltaLerp(a.B, b.B, amount, scaled), (int)Mathf.DeltaLerp(a.A, b.A, amount, scaled));
 
         public static implicit operator uint(Color value) => value.PackedValue;
-        public static implicit operator Color(uint packedValue) => new Color(packedValue);
+        public static implicit operator Color(uint _packedValue) => new Color(_packedValue);
         public static Color operator *(Color value, float scale) => new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
         public static Color operator *(float scale, Color value) => new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
         public static Color operator *(Color color, Color blendColor) => new Color((byte)(color.R * blendColor.R / 255), (byte)(color.G * blendColor.G / 255), (byte)(color.B * blendColor.B / 255), (byte)(color.A * blendColor.A / 255));
         public static Color operator +(Color a, Color b) => new Color(a.R + b.R, a.G + b.G, a.B + b.B, a.A + b.A);
-        public static bool operator ==(Color a, Color b) => a.packedValue == b.packedValue;
-        public static bool operator !=(Color a, Color b) => a.packedValue != b.packedValue;
+        public static bool operator ==(Color a, Color b) => a._packedValue == b._packedValue;
+        public static bool operator !=(Color a, Color b) => a._packedValue != b._packedValue;
     }
 }

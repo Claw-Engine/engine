@@ -29,16 +29,16 @@ namespace Claw.Audio
         /// </summary>
         public float MasterVolume
         {
-            get => masterVolume;
-            set => masterVolume = Mathf.Clamp(value, 0, 1);
+            get => _masterVolume;
+            set => _masterVolume = Mathf.Clamp(value, 0, 1);
         }
         /// <summary>
         /// Volume geral das músicas (entre 0 e 1).
         /// </summary>
         public float MusicVolume
         {
-            get => musicVolume;
-            set => musicVolume = Mathf.Clamp(value, 0, 1);
+            get => _musicVolume;
+            set => _musicVolume = Mathf.Clamp(value, 0, 1);
         }
         /// <summary>
         /// Evento executado quando a música é trocada.
@@ -53,7 +53,7 @@ namespace Claw.Audio
 
         private int track;
         private Fade fade = Fade.None;
-        private float fadeMultipliyer = 1, masterVolume = 1, musicVolume = 1;
+        private float fadeMultipliyer = 1, _masterVolume = 1, _musicVolume = 1;
         private float[] groupVolumes;
         private List<Music> trackList;
         private List<SoundEffectInstance> soundEffects;
@@ -245,9 +245,9 @@ namespace Claw.Audio
                             break;
                     }
 
-                    SetSample(buffer, i, music.GetSample(out bool ended), (musicVolume * fadeMultipliyer), music.Channels);
+                    SetSample(buffer, i, music.GetSample(out bool ended), (_musicVolume * fadeMultipliyer), music.Channels);
 
-                    if (music.Channels == Channels.Stereo) SetSample(buffer, i + 1, music.GetSample(out ended), (musicVolume * fadeMultipliyer), 0);
+                    if (music.Channels == Channels.Stereo) SetSample(buffer, i + 1, music.GetSample(out ended), (_musicVolume * fadeMultipliyer), 0);
 
                     if (ended && fade == Fade.Out)
                     {
@@ -284,7 +284,7 @@ namespace Claw.Audio
         {
             if (sample == 0) return;
 
-            sample *= masterVolume * volume;
+            sample *= _masterVolume * volume;
 
             if (channels == Channels.Mono)
             {

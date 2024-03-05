@@ -17,59 +17,59 @@ namespace Claw
 
         public int UpdateOrder
         {
-            get => updateOrder;
+            get => _updateOrder;
             set
             {
-                if (updateOrder != value)
+                if (_updateOrder != value)
                 {
-                    updateOrder = value;
+					_updateOrder = value;
 
-                    OnUpdateOrderChanged(this, EventArgs.Empty);
+                    UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
         public int DrawOrder
         {
-            get => drawOrder;
+            get => _drawOrder;
             set
             {
-                if (drawOrder != value)
+                if (_drawOrder != value)
                 {
-                    drawOrder = value;
+					_drawOrder = value;
 
-                    OnDrawOrderChanged(this, EventArgs.Empty);
+					DrawOrderChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
         public bool Enabled
         {
-            get => enabled;
+            get => _enabled;
             set
             {
-                if (enabled != value)
+                if (_enabled != value)
                 {
-                    enabled = value;
+					_enabled = value;
 
-                    OnEnabledChanged(this, EventArgs.Empty);
+                    EnabledChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
         public bool Visible
         {
-            get => visible;
+            get => _visible;
             set
             {
-                if (visible != value)
+                if (_visible != value)
                 {
-                    visible = value;
+					_visible = value;
 
-                    OnVisibleChanged(this, EventArgs.Empty);
+                    VisibleChanged.Invoke(this, EventArgs.Empty);
                 }
             }
         }
         public Game Game => Game.Instance;
-        private int updateOrder, drawOrder;
-        private bool enabled = true, visible = true, disposed = false;
+        private int _updateOrder, _drawOrder;
+        private bool _enabled = true, _visible = true, disposed = false;
 
         public bool DontDestroy = false;
         public bool Exists => Game.Components.GameObjects.IndexOf(this) >= 0;
@@ -83,17 +83,17 @@ namespace Claw
 
                 if (value == null)
                 {
-                    position = Position;
-                    scale = Scale;
-                    rotation = Rotation;
+                    _position = Position;
+                    _scale = Scale;
+                    _rotation = Rotation;
                     parent = null;
                 }
                 else if (value != this && value.parent != this)
                 {
                     parent = value;
-                    rotation = rotation - Parent.Rotation;
-                    scale = Parent.Scale / scale;
-                    position = position - Parent.Position;
+                    _rotation = _rotation - Parent.Rotation;
+                    _scale = Parent.Scale / _scale;
+                    _position = _position - Parent.Position;
 
                     value.children.Add(this);
                 }
@@ -108,36 +108,36 @@ namespace Claw
         {
             get
             {
-                if (Parent != null) return rotation + Parent.Rotation;
+                if (Parent != null) return _rotation + Parent.Rotation;
 
-                return rotation;
+                return _rotation;
             }
-            set => rotation = value;
+            set => _rotation = value;
         }
         public Vector2 Position
         {
             get
             {
-                if (Parent != null) return Vector2.Rotate(position * Parent.Scale + Parent.Position, Parent.Position, Parent.Rotation);
+                if (Parent != null) return Vector2.Rotate(_position * Parent.Scale + Parent.Position, Parent.Position, Parent.Rotation);
 
-                return position;
+                return _position;
             }
-            set => position = value;
+            set => _position = value;
         }
         public Vector2 Scale
         {
             get
             {
-                if (Parent != null) return scale * Parent.Scale;
+                if (Parent != null) return _scale * Parent.Scale;
 
-                return scale;
+                return _scale;
             }
-            set => scale = value;
+            set => _scale = value;
         }
-        public Vector2 Facing => Vector2.FindFacing(rotation);
+        public Vector2 Facing => Vector2.FindFacing(_rotation);
         public List<Polygon> Colliders = new List<Polygon>();
-        private float rotation = 0;
-        private Vector2 position = Vector2.Zero, scale = new Vector2(1);
+        private float _rotation = 0;
+        private Vector2 _position = Vector2.Zero, _scale = new Vector2(1);
 
         public float Opacity = 1;
         public Color Color = Color.White;
@@ -146,18 +146,18 @@ namespace Claw
         public Rectangle? SpriteArea { get; set; }
         public Animator Animator
         {
-            get => animator;
+            get => _animator;
             set
             {
-                if (animator != null && animator != value) animator.Animatable = null;
+                if (_animator != null && _animator != value) _animator.Animatable = null;
 
                 if (value != null) value.Animatable = this;
 
-                animator = value;
+				_animator = value;
             }
         }
         public Flip Flip = Flip.None;
-        private Animator animator;
+        private Animator _animator;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -178,7 +178,7 @@ namespace Claw
         {
             if (!disposed)
             {
-                animator?.Dispose();
+                _animator?.Dispose();
 
                 if (Colliders != null)
                 {
@@ -189,7 +189,7 @@ namespace Claw
                     Colliders = null;
                 }
 
-                animator = null;
+                _animator = null;
                 disposed = true;
             }
         }
@@ -241,7 +241,7 @@ namespace Claw
         /// </summary>
         public GameObject GetChild(int index) => children[index];
 
-        public virtual void Step() => animator?.Step();
+        public virtual void Step() => _animator?.Step();
         public virtual void Render()
         {
             if (Sprite != null) Draw.Sprite(Sprite, Position, SpriteArea, Color * Opacity, Rotation, Origin, Scale, Flip);
@@ -277,30 +277,5 @@ namespace Claw
         /// Chamado quando o objeto é destruído.
         /// </summary>
         protected virtual void OnDestroy() { }
-
-        /// <summary>
-        /// Chamado quando o <see cref="Enabled"/> muda. Usado pelo evento <see cref="EnabledChanged"/>.
-        /// </summary>
-        /// <param name="sender">Este componente.</param>
-        /// <param name="args">Argumentos para o evento.</param>
-        protected virtual void OnEnabledChanged(object sender, EventArgs args) => EnabledChanged?.Invoke(sender, args);
-        /// <summary>
-        /// Chamado quando o <see cref="UpdateOrder"/> muda. Usado pelo evento <see cref="UpdateOrderChanged"/>.
-        /// </summary>
-        /// <param name="sender">Este componente.</param>
-        /// <param name="args">Argumentos para o evento.</param>
-        protected virtual void OnUpdateOrderChanged(object sender, EventArgs args) => UpdateOrderChanged?.Invoke(sender, args);
-        /// <summary>
-        /// Chamado quando o <see cref="Visible"/> muda.
-        /// </summary>
-        /// <param name="sender">Este componente.</param>
-        /// <param name="args">Argumentos para o evento.</param>
-        protected virtual void OnVisibleChanged(object sender, EventArgs args) => VisibleChanged?.Invoke(sender, args);
-        /// <summary>
-        /// Chamado quando o <see cref="DrawOrder"/> muda.
-        /// </summary>
-        /// <param name="sender">Este componente.</param>
-        /// <param name="args">Argumentos para o evento.</param>
-        protected virtual void OnDrawOrderChanged(object sender, EventArgs args) => DrawOrderChanged?.Invoke(sender, args);
     }
 }

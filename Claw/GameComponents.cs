@@ -9,26 +9,26 @@ namespace Claw
     {
         public int UpdateOrder
         {
-            get => updateOrder;
+            get => _updateOrder;
             set
             {
-                if (updateOrder != value) UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
+                if (_updateOrder != value) UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
 
-                updateOrder = value;
+				_updateOrder = value;
             }
         }
         public bool Enabled
         {
-            get => enabled;
+            get => _enabled;
             set
             {
-                if (enabled != value) EnabledChanged?.Invoke(this, EventArgs.Empty);
+                if (_enabled != value) EnabledChanged?.Invoke(this, EventArgs.Empty);
 
-                enabled = value;
+				_enabled = value;
             }
         }
-        private int updateOrder;
-        private bool enabled = true;
+        private int _updateOrder;
+        private bool _enabled = true;
 
         public event EventHandler<EventArgs> EnabledChanged, UpdateOrderChanged;
 
@@ -43,26 +43,26 @@ namespace Claw
     {
         public int DrawOrder
         {
-            get => drawOrder;
+            get => _drawOrder;
             set
             {
-                if (drawOrder != value) DrawOrderChanged?.Invoke(this, EventArgs.Empty);
+                if (_drawOrder != value) DrawOrderChanged?.Invoke(this, EventArgs.Empty);
 
-                drawOrder = value;
+				_drawOrder = value;
             }
         }
         public bool Visible
         {
-            get => visible;
+            get => _visible;
             set
             {
-                if (visible != value) VisibleChanged?.Invoke(this, EventArgs.Empty);
+                if (_visible != value) VisibleChanged?.Invoke(this, EventArgs.Empty);
 
-                visible = value;
+				_visible = value;
             }
         }
-        private int drawOrder;
-        private bool visible = true;
+        private int _drawOrder;
+        private bool _visible = true;
 
         public event EventHandler<EventArgs> VisibleChanged, DrawOrderChanged;
 

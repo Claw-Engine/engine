@@ -56,7 +56,7 @@
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameComponents.cs" />
-    <Compile Include="GameComponentCollection.cs" />
+    <Compile Include="ComponentCollection.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Graphics\Blend.cs" />
     <Compile Include="Graphics\BlendFactory.cs" />
@@ -143,7 +143,7 @@
     <Compile Include="Tiled\Tiled.cs" />
     <Compile Include="Tiled\Tileset.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Utils\ComponentSortingFilteringCollection.cs" />
+    <Compile Include="Utils\SortedComponents.cs" />
     <Compile Include="Utils\StringCrypt.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector2.cs" />

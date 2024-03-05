@@ -36,26 +36,26 @@ namespace Claw.Maps
 
         public int DrawOrder
         {
-            get => drawOrder;
+            get => _drawOrder;
             set
             {
-                drawOrder = value;
+				_drawOrder = value;
 
                 DrawOrderChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public bool Visible
         {
-            get => visible;
+            get => _visible;
             set
             {
-                visible = value;
+				_visible = value;
 
                 VisibleChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        private int drawOrder;
-        private bool visible = true;
+        private int _drawOrder;
+        private bool _visible = true;
 
         /// <summary>
         /// Retorna/muda um tile da layer.

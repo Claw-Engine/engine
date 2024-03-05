@@ -12,14 +12,14 @@ namespace Claw.Graphics.UI
         public UI UI => Game.Instance.UI;
         public Style Style
         {
-            get => style;
+            get => _style;
             set
             {
                 if (value == null) Style = new Style();
-                else style = value;
+                else _style = value;
             }
         }
-        private Style style = new Style();
+        private Style _style = new Style();
 
         /// <summary>
         /// Checa se este elemento contém um ponto.
