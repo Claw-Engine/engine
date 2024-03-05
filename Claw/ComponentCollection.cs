@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Claw.Maps;
 using Claw.Utils;
 
 namespace Claw
@@ -15,8 +14,8 @@ namespace Claw
 		/// Filtragem dos game objects desta coleção (fora de ordem).
 		/// </summary>
 		public ReadOnlyCollection<GameObject> GameObjects;
-        private Collection<GameObject> _gameObjects;
-        public event EventHandler<IGameComponent> ComponentAdded, ComponentRemoved;
+		public event EventHandler<IGameComponent> ComponentAdded, ComponentRemoved;
+		private Collection<GameObject> _gameObjects;
 
         internal ComponentCollection()
         {

@@ -139,7 +139,7 @@ namespace Claw
         /// </summary>
         private uint _packedValue;
         
-        /// <param name="_packedValue">ABGR - 32 bits.</param>
+        /// <param name="packedValue">ABGR - 32 bits.</param>
         public Color(uint packedValue) => this._packedValue = packedValue;
         public Color(string hex, HexFormat format = HexFormat.RGBA)
         {
@@ -341,7 +341,7 @@ namespace Claw
         public static Color DeltaLerp(Color a, Color b, float amount, bool scaled = true) => new Color((int)Mathf.DeltaLerp(a.R, b.R, amount, scaled), (int)Mathf.DeltaLerp(a.G, b.G, amount, scaled), (int)Mathf.DeltaLerp(a.B, b.B, amount, scaled), (int)Mathf.DeltaLerp(a.A, b.A, amount, scaled));
 
         public static implicit operator uint(Color value) => value.PackedValue;
-        public static implicit operator Color(uint _packedValue) => new Color(_packedValue);
+        public static implicit operator Color(uint packedValue) => new Color(packedValue);
         public static Color operator *(Color value, float scale) => new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
         public static Color operator *(float scale, Color value) => new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
         public static Color operator *(Color color, Color blendColor) => new Color((byte)(color.R * blendColor.R / 255), (byte)(color.G * blendColor.G / 255), (byte)(color.B * blendColor.B / 255), (byte)(color.A * blendColor.A / 255));
