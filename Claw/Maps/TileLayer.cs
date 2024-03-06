@@ -24,8 +24,8 @@ namespace Claw.Maps
 
                 name = value;
             }
-        }
-        public Color Color;
+		}
+		public Color Color;
         internal int index;
         internal Tilemap map;
         internal List<int> data = new List<int>();
@@ -168,7 +168,7 @@ namespace Claw.Maps
             return tile > 0 && filterTiles.Contains(tile);
         }
 
-        public void Render()
+		public void Render()
         {
             if (map != null && Color.A != 0 && Opacity > 0) map.Render(this);
         }

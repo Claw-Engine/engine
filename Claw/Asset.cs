@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using Claw.Graphics;
 using Claw.Audio;
-using Claw.Tiled;
 
 namespace Claw
 {
@@ -28,7 +27,6 @@ namespace Claw
             readers = new Dictionary<Type, Func<string, object>>()
             {
                 { typeof(Sprite[]), TextureAtlas.ReadAtlas },
-                { typeof(Map), Map.ReadMap },
                 { typeof(SpriteFont), SpriteFont.ReadFont },
                 { typeof(SoundEffect), SoundEffect.LoadSFX },
                 { typeof(Music), Music.LoadMusic }

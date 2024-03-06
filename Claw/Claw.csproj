@@ -131,18 +131,10 @@
     <Compile Include="Save\Shortcuts.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Cursor.cs" />
-    <Compile Include="Tiled\Config.cs" />
     <Compile Include="Utils\InternalUtils.cs" />
     <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />
     <Compile Include="TagManager.cs" />
-    <Compile Include="Tiled\Chunk.cs" />
-    <Compile Include="Tiled\Layer.cs" />
-    <Compile Include="Tiled\Map.cs" />
-    <Compile Include="Tiled\Object.cs" />
-    <Compile Include="Tiled\Property.cs" />
-    <Compile Include="Tiled\Tiled.cs" />
-    <Compile Include="Tiled\Tileset.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\SortedModules.cs" />
     <Compile Include="Utils\StringCrypt.cs" />
@@ -155,7 +147,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Modules\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(ExportDir)$(ConfigurationName)\" mkdir "$(ExportDir)$(ConfigurationName)\" /Y

@@ -1,5 +1,4 @@
 ﻿using Claw.Maps;
-using Claw.Tiled;
 using System;
 using System.Collections.Generic;
 using System.Linq;

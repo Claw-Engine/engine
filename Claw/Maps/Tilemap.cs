@@ -98,7 +98,7 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, float priority, float opacity, Color color)
+        public int AddLayer(int drawOrder, string name, float opacity, Color color)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
@@ -112,7 +112,7 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova e já insere os tiles dela.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, bool visible, float priority, float opacity, Color color, int[] data)
+        public int AddLayer(int drawOrder, string name, bool visible, float opacity, Color color, int[] data)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
@@ -204,12 +204,12 @@ namespace Claw.Maps
             if (tileset.Index == 0) return tileIndex;
             else return tileIndex - tileset.Sub;
         }
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Tamanho do mapa (em pixels).
-        /// </summary>
-        public abstract Vector2 PixelSize { get; }
+		/// <summary>
+		/// Tamanho do mapa (em pixels).
+		/// </summary>
+		public abstract Vector2 PixelSize { get; }
 
         /// <summary>
         /// Transforma uma posição livre em uma célula.

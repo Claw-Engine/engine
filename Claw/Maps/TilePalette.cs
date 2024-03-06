@@ -1,5 +1,4 @@
 ﻿using Claw.Graphics;
-using Claw.Tiled;
 
 namespace Claw.Maps
 {
