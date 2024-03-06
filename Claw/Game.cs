@@ -95,7 +95,7 @@ namespace Claw
 					}
 				}
 			}
-            else if (SDL.SDL_Init(SDL.SDL_INIT_TIMER | SDL.SDL_INIT_GAMECONTROLLER) == 0)
+            else if (SDL.SDL_Init(SDL.SDL_INIT_TIMER | SDL.SDL_INIT_EVENTS) == 0)
             {
 				isRunning = true;
 				Instance = this;
@@ -199,9 +199,9 @@ namespace Claw
             if (!scroll) Input.Input.UpdateScroll(new SDL.SDL_MouseWheelEvent());
         }
         private void Clear()
-        {
-            Dispose();
-            SDL.SDL_Quit();
+		{
+			Dispose();
+			SDL.SDL_Quit();
         }
     }
 }

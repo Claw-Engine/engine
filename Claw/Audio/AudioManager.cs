@@ -263,9 +263,9 @@ namespace Claw.Audio
                     
                     if (current != null)
                     {
-                        SetSample(buffer, i, current.GetSample(out finished), groupVolumes[(int)current.Group], current.audio.Channels);
+                        SetSample(buffer, i, current.GetSample(out finished), groupVolumes[(int)current.Group], current, true);
                         
-                        if (!finished && current.audio.Channels == Channels.Stereo) SetSample(buffer, i + 1, current.GetSample(out finished), groupVolumes[(int)current.Group], 0);
+                        if (!finished && current.audio.Channels == Channels.Stereo) SetSample(buffer, i + 1, current.GetSample(out finished), groupVolumes[(int)current.Group], current, false);
 
                         if (finished && !current.IsLooped)
                         {
@@ -294,10 +294,33 @@ namespace Claw.Audio
 
             buffer[index] = Mathf.Clamp(buffer[index] + sample, -1, 1);
         }
-        /// <summary>
-        /// Remove um item da lista, sem se preocupar com a ordem.
-        /// </summary>
-        private static void RemoveAt<T>(List<T> list, int index)
+		/// <summary>
+		/// <para>Faz a mixagem de um sample no buffer.</para>
+		/// <para>Se o sample for mono, então divide o som dele entre os dois lados.</para>
+		/// </summary>
+		private unsafe void SetSample(float* buffer, int index, float sample, float volume, SoundEffectInstance sfx, bool isLeft)
+		{
+			if (sample == 0) return;
+
+			sample *= _masterVolume * volume;
+            
+            switch (sfx.audio.Channels)
+            {
+                case Channels.Mono:
+					sample *= .5f;
+					buffer[index] = Mathf.Clamp((buffer[index] + sample) * sfx.LeftVolume, -1, 1);
+					buffer[index + 1] = Mathf.Clamp((buffer[index + 1] + sample) * sfx.RightVolume, -1, 1);
+					break;
+                case Channels.Stereo:
+					if (isLeft) buffer[index] = Mathf.Clamp((buffer[index] + sample) * sfx.LeftVolume, -1, 1);
+                    else buffer[index] = Mathf.Clamp((buffer[index] + sample) * sfx.RightVolume, -1, 1);
+					break;
+            }
+		}
+		/// <summary>
+		/// Remove um item da lista, sem se preocupar com a ordem.
+		/// </summary>
+		private static void RemoveAt<T>(List<T> list, int index)
         {
             list.Swap(index, list.Count - 1);
             list.RemoveAt(list.Count - 1);
