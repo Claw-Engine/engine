@@ -5,15 +5,15 @@ using System.Collections.Generic;
 namespace Claw
 {
     /// <summary>
-    /// Interface para componentes.
+    /// Interface para módulos.
     /// </summary>
-    public interface IGameComponent
+    public interface IGameModule
     {
         void Initialize();
     }
 
     /// <summary>
-    /// Interface para componentes que fazem parte do Update.
+    /// Interface para módulos que fazem parte do Update.
     /// </summary>
     public interface IUpdateable
     {
@@ -26,7 +26,7 @@ namespace Claw
     }
 
     /// <summary>
-    /// Interface para componentes que fazem parte do Draw.
+    /// Interface para módulos que fazem parte do Draw.
     /// </summary>
     public interface IDrawable
     {

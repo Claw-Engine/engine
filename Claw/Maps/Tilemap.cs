@@ -148,7 +148,7 @@ namespace Claw.Maps
         {
             layers[index].map = null;
 
-            Game.Instance.Components.Remove(layers[index]);
+            Game.Instance.Modules.Remove(layers[index]);
             layerIndexes.Remove(layers[index].Name);
             layers.RemoveAt(index);
         }
@@ -167,18 +167,18 @@ namespace Claw.Maps
         public bool LayerExists(string name) => layerIndexes.Keys.Contains(name);
 
         /// <summary>
-        /// Adiciona todas as layers nos componentes do jogo.
+        /// Adiciona todas as layers nos módulos do jogo.
         /// </summary>
         internal void AddAll()
         {
-            foreach (TileLayer layer in layers) Game.Instance.Components.Add(layer);
+            foreach (TileLayer layer in layers) Game.Instance.Modules.Add(layer);
         }
         /// <summary>
-        /// Remove todas as layers dos componentes do jogo.
+        /// Remove todas as layers dos módulos do jogo.
         /// </summary>
         internal void RemoveAll()
         {
-            foreach (TileLayer layer in layers) Game.Instance.Components.Remove(layer);
+            foreach (TileLayer layer in layers) Game.Instance.Modules.Remove(layer);
 
         }
 

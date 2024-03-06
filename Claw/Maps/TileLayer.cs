@@ -8,7 +8,7 @@ namespace Claw.Maps
     /// <summary>
     /// Representa uma camada dentro do <see cref="Tilemap"/>.
     /// </summary>
-    public sealed class TileLayer : IGameComponent, IDrawable
+    public sealed class TileLayer : IGameModule, IDrawable
     {
         public float Opacity = 1;
         public string Name
@@ -93,7 +93,7 @@ namespace Claw.Maps
         }
         internal TileLayer(int index, string name, Tilemap map, Vector2 size) : this(index, name, map)
         {
-            if (Game.Instance.Tilemap == map) Game.Instance.Components.Add(this);
+            if (Game.Instance.Tilemap == map) Game.Instance.Modules.Add(this);
 
             for (int x = 0; x < size.X; x++)
             {

@@ -10,7 +10,7 @@ namespace Claw.Graphics.Systems
     /// <summary>
     /// Realiza a renderização de textos com diferentes efeitos para cada bloco.
     /// </summary>
-    public sealed class TextRenderer : DrawableGameComponent
+    public sealed class TextRenderer : DrawableGameModule
     {
         /// <summary>
         /// Dicionário para armazenar configurações prontas.

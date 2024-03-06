@@ -8,10 +8,10 @@ namespace Claw
     /// <summary>
     /// A classe base dos objetos.
     /// </summary>
-    public class GameObject : IGameComponent, IUpdateable, IDrawable, IAnimatable, IDisposable
+    public class GameObject : IGameModule, IUpdateable, IDrawable, IAnimatable, IDisposable
     {
         /// <summary>
-        /// Com essa opção desativada, será necessário adicionar o objeto aos componentes do jogo manualmente.
+        /// Com essa opção desativada, será necessário adicionar o objeto aos módulos do jogo manualmente.
         /// </summary>
         public static bool InstantlyAdd = true;
 
@@ -72,7 +72,7 @@ namespace Claw
         private bool _enabled = true, _visible = true, disposed = false;
 
         public bool DontDestroy = false;
-        public bool Exists => Game.Components.GameObjects.IndexOf(this) >= 0;
+        public bool Exists => Game.Modules.GameObjects.IndexOf(this) >= 0;
         public string Name = string.Empty;
         public GameObject Parent
         {
@@ -166,12 +166,12 @@ namespace Claw
 
         public GameObject()
         {
-            if (InstantlyAdd) Game.Components.Add(this);
+            if (InstantlyAdd) Game.Modules.Add(this);
         }
         ~GameObject() => Dispose(false);
 
         /// <summary>
-        /// É executado quando o componente é adicionado ao jogo.
+        /// É executado quando o módulo é adicionado ao jogo.
         /// </summary>
         public virtual void Initialize() { }
         protected virtual void Dispose(bool disposing)
@@ -263,7 +263,7 @@ namespace Claw
                 for (int i = children.Count - 1; i >= 0; i--) children[i].SelfDestroy(runDestroy);
             }
 
-            Game.Components.Remove(this);
+            Game.Modules.Remove(this);
 
             for (int i = 0; i < tags.Count; i++) TagManager.RemoveObject(tags[i], this);
 

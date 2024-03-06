@@ -6,7 +6,7 @@ namespace Claw.Graphics.Systems
     /// <summary>
     /// Representa uma sequência de backgrounds para efeito de parallax.
     /// </summary>
-    public sealed class Parallax : IGameComponent, IDrawable
+    public sealed class Parallax : IGameModule, IDrawable
     {
         /// <summary>
         /// Define os eixos em que o background poderá se repetir durante o parallax.

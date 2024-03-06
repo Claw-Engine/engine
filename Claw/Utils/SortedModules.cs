@@ -5,22 +5,22 @@ using Claw.Extensions;
 namespace Claw.Utils
 {
     /// <summary>
-    /// Representa um <see cref="Claw.ComponentCollection"/> filtrado e ordenado.
+    /// Representa um <see cref="Claw.ModuleCollection"/> filtrado e ordenado.
     /// </summary>
     /// <typeparam name="T">Tipo que será filtrado.</typeparam>
-    public sealed class SortedComponents<T>
+    public sealed class SortedModules<TFilter>
     {
-        public int Count => components.Count;
-        public readonly ComponentCollection ComponentCollection;
+        public int Count => modules.Count;
+        public readonly ModuleCollection ModuleCollection;
 
         private bool needSort = true;
-        private Predicate<T> filter;
-        private Comparison<T> sort;
-        private Action<T, EventHandler<EventArgs>> filterChangedSubscriber, filterChangedUnsubscriber, sortChangedSubscriber, sortChangedUnsubscriber;
-        private List<T> components;
+        private Predicate<TFilter> filter;
+        private Comparison<TFilter> sort;
+        private Action<TFilter, EventHandler<EventArgs>> filterChangedSubscriber, filterChangedUnsubscriber, sortChangedSubscriber, sortChangedUnsubscriber;
+        private List<TFilter> modules;
 
         /// <summary>
-        /// Cria uma lista de componenetes que será sempre o produto filtrado e ordenado de uma <see cref="Claw.ComponentCollection"/>.
+        /// Cria uma lista de componenetes que será sempre o produto filtrado e ordenado de uma <see cref="Claw.ModuleCollection"/>.
         /// </summary>
         /// <param name="componentCollection">A coleção original.</param>
         /// <param name="filter">A condição para a filtragem.</param>
@@ -29,13 +29,13 @@ namespace Claw.Utils
         /// <param name="filterChangedUnsubscriber">Remove o evento que deverá ser chamado quando o filtro mudar de valor.</param>
         /// <param name="sortChangedSubscriber">Adiciona o evento que deverá ser chamado quando a ordem mudar de valor.</param>
         /// <param name="sortChangedUnsubscriber">Remove o evento que deverá ser chamado quando a ordem mudar de valor.</param>
-        public SortedComponents(ComponentCollection componentCollection, Predicate<T> filter, Comparison<T> sort, 
-            Action<T, EventHandler<EventArgs>> filterChangedSubscriber, Action<T, EventHandler<EventArgs>> filterChangedUnsubscriber, 
-            Action<T, EventHandler<EventArgs>> sortChangedSubscriber, Action<T, EventHandler<EventArgs>> sortChangedUnsubscriber)
+        public SortedModules(ModuleCollection moduleCollection, Predicate<TFilter> filter, Comparison<TFilter> sort, 
+            Action<TFilter, EventHandler<EventArgs>> filterChangedSubscriber, Action<TFilter, EventHandler<EventArgs>> filterChangedUnsubscriber, 
+            Action<TFilter, EventHandler<EventArgs>> sortChangedSubscriber, Action<TFilter, EventHandler<EventArgs>> sortChangedUnsubscriber)
         {
-            if (componentCollection == null) throw new ArgumentNullException("\"componentCollection\" não pode ser nulo!");
+            if (moduleCollection == null) throw new ArgumentNullException("\"componentCollection\" não pode ser nulo!");
 
-            ComponentCollection = componentCollection;
+			ModuleCollection = moduleCollection;
             this.filter = filter;
             this.sort = sort;
             this.filterChangedSubscriber = filterChangedSubscriber;
@@ -43,30 +43,30 @@ namespace Claw.Utils
             this.sortChangedSubscriber = sortChangedSubscriber;
             this.sortChangedUnsubscriber = sortChangedUnsubscriber;
 
-            ComponentCollection.ComponentAdded += ComponentAdded;
-            ComponentCollection.ComponentRemoved += ComponentRemoved;
+			ModuleCollection.ModuleAdded += ComponentAdded;
+			ModuleCollection.ModuleRemoved += ComponentRemoved;
 
-            components = new List<T>();
+            modules = new List<TFilter>();
 
-            for (int i = 0; i < ComponentCollection.Count; i++)
+            for (int i = 0; i < ModuleCollection.Count; i++)
             {
-                if (ComponentCollection[i] is T component)
+                if (ModuleCollection[i] is TFilter module)
                 {
-                    filterChangedSubscriber(component, FilterChanged);
-                    sortChangedSubscriber(component, SortChanged);
+                    filterChangedSubscriber(module, FilterChanged);
+                    sortChangedSubscriber(module, SortChanged);
 
-                    if (filter(component)) components.Add(component);
+                    if (filter(module)) modules.Add(module);
                 }
             }
 
             QuickSort();
         }
-        ~SortedComponents()
+        ~SortedModules()
         {
-            components.Clear();
+            modules.Clear();
 
-            ComponentCollection.ComponentAdded -= ComponentAdded;
-            ComponentCollection.ComponentRemoved -= ComponentRemoved;
+            ModuleCollection.ModuleAdded -= ComponentAdded;
+			ModuleCollection.ModuleRemoved -= ComponentRemoved;
 
             filter = null;
             sort = null;
@@ -79,32 +79,32 @@ namespace Claw.Utils
         /// <summary>
         /// Executa uma ação para cada elemento da coleção.
         /// </summary>
-        public void ForEach(Action<T> action)
+        public void ForEach(Action<TFilter> action)
         {
             QuickSort();
 
-            for (int i = 0; i < components.Count; i++) action(components[i]);
+            for (int i = 0; i < modules.Count; i++) action(modules[i]);
         }
 
-        private void ComponentAdded(object sender, IGameComponent component)
+        private void ComponentAdded(object sender, IGameModule module)
         {
-            if (component is T myType)
+            if (module is TFilter myType)
             {
                 needSort = true;
 
                 filterChangedSubscriber(myType, FilterChanged);
                 sortChangedSubscriber(myType, SortChanged);
 
-                if (filter(myType)) components.Add(myType);
+                if (filter(myType)) modules.Add(myType);
             }
             
             QuickSort();
         }
-        private void ComponentRemoved(object sender, IGameComponent component)
+        private void ComponentRemoved(object sender, IGameModule module)
         {
-            if (component is T myType)
+            if (module is TFilter myType)
             {
-                components.Remove(myType);
+				modules.Remove(myType);
                 filterChangedUnsubscriber(myType, FilterChanged);
                 sortChangedUnsubscriber(myType, SortChanged);
             }
@@ -112,34 +112,34 @@ namespace Claw.Utils
 
         private void FilterChanged(object sender, EventArgs e)
         {
-            T component = (T)sender;
+            TFilter module = (TFilter)sender;
             
-            if (filter(component))
+            if (filter(module))
             {
                 needSort = true;
 
-                components.Add(component);
+                modules.Add(module);
             }
-            else components.Remove(component);
+            else modules.Remove(module);
         }
         private void SortChanged(object sender, EventArgs e) => needSort = true;
 
         private int Partition(int low, int high)
         {
-            T pivot = components[high];
+            TFilter pivot = modules[high];
             int i = low - 1;
 
             for (int j = low; j < high; j++)
             {
-                if (sort(components[j], pivot) < 0)
+                if (sort(modules[j], pivot) < 0)
                 {
                     i++;
 
-                    components.Swap(i, j);
+					modules.Swap(i, j);
                 }
             }
 
-            components.Swap(i + 1, high);
+			modules.Swap(i + 1, high);
 
             return i + 1;
         }
@@ -147,7 +147,7 @@ namespace Claw.Utils
         {
             int pivot = (int)(high * .5f) + 1;
 
-            components.Swap(high, pivot);
+            modules.Swap(high, pivot);
 
             return Partition(low, high);
         }
@@ -165,7 +165,7 @@ namespace Claw.Utils
         {
             if (needSort)
             {
-                QuickSort(0, components.Count - 1);
+                QuickSort(0, modules.Count - 1);
 
                 needSort = false;
             }

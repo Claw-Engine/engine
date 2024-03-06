@@ -8,27 +8,27 @@ namespace Claw
     /// <summary>
     /// Uma coleção de instâncias de <see cref="IGameComponent"/>.
     /// </summary>
-    public sealed class ComponentCollection : Collection<IGameComponent>
+    public sealed class ModuleCollection : Collection<IGameModule>
     {
 		/// <summary>
 		/// Filtragem dos game objects desta coleção (fora de ordem).
 		/// </summary>
 		public ReadOnlyCollection<GameObject> GameObjects;
-		public event EventHandler<IGameComponent> ComponentAdded, ComponentRemoved;
+		public event EventHandler<IGameModule> ModuleAdded, ModuleRemoved;
 		private Collection<GameObject> _gameObjects;
 
-        internal ComponentCollection()
+        internal ModuleCollection()
         {
             _gameObjects = new Collection<GameObject>();
             GameObjects = new ReadOnlyCollection<GameObject>(_gameObjects);
         }
 
         /// <summary>
-        /// Cria um <see cref="SortedComponents{IUpdateable}"/> configurado.
+        /// Cria um <see cref="SortedModules{IUpdateable}"/> configurado.
         /// </summary>
-        public SortedComponents<IUpdateable> CreateForUpdate()
+        public SortedModules<IUpdateable> CreateForUpdate()
         {
-            return new SortedComponents<IUpdateable>(this,
+            return new SortedModules<IUpdateable>(this,
                 u => u.Enabled,
                 (u1, u2) => Comparer<int>.Default.Compare(u1.UpdateOrder, u2.UpdateOrder),
                 (u, handler) => u.EnabledChanged += handler,
@@ -38,11 +38,11 @@ namespace Claw
             );
         }
         /// <summary>
-        /// Cria um <see cref="SortedComponents{IDrawable}"/> configurado.
+        /// Cria um <see cref="SortedModules{IDrawable}"/> configurado.
         /// </summary>
-        public SortedComponents<IDrawable> CreateForDraw()
+        public SortedModules<IDrawable> CreateForDraw()
         {
-            return new SortedComponents<IDrawable>(this,
+            return new SortedModules<IDrawable>(this,
                 d => d.Visible,
                 (d1, d2) => Comparer<int>.Default.Compare(d1.DrawOrder, d2.DrawOrder),
                 (d, handler) => d.VisibleChanged += handler,
@@ -55,19 +55,19 @@ namespace Claw
         /// <summary>
         /// Adiciona um <see cref="IGameComponent"/> na coleção e chama o evento <see cref="ComponentAdded"/>.
         /// </summary>
-        protected override void InsertItem(int index, IGameComponent component)
+        protected override void InsertItem(int index, IGameModule module)
         {
-            if (IndexOf(component) != -1) throw new ArgumentException("Não é permitido adicionar o mesmo componente duas vezes!");
+            if (IndexOf(module) != -1) throw new ArgumentException("Não é permitido adicionar o mesmo módulo duas vezes!");
 
-            base.InsertItem(index, component);
+            base.InsertItem(index, module);
 
-            if (component != null)
+            if (module != null)
             {
-                OnComponentAdded(component);
+				OnModuleAdded(module);
 
-                if (component is GameObject gameObject) _gameObjects.Add(gameObject);
+                if (module is GameObject gameObject) _gameObjects.Add(gameObject);
 
-                component.Initialize();
+				module.Initialize();
             }
         }
         /// <summary>
@@ -75,35 +75,35 @@ namespace Claw
         /// </summary>
         protected override void RemoveItem(int index)
         {
-            IGameComponent component = this[index];
+            IGameModule module = this[index];
 
             base.RemoveItem(index);
 
-            if (component != null)
+            if (module != null)
             {
-                OnComponentRemoved(component);
+				OnModuleRemoved(module);
 
-                if (component is GameObject gameObject) _gameObjects.Remove(gameObject);
+                if (module is GameObject gameObject) _gameObjects.Remove(gameObject);
             }
         }
         /// <summary>
         /// Remove um <see cref="IGameComponent"/> e insere outro no mesmo index.
         /// </summary>
-		protected override void SetItem(int index, IGameComponent newComponent)
+		protected override void SetItem(int index, IGameModule newModule)
 		{
-			IGameComponent oldComponent = this[index];
+			IGameModule oldModule = this[index];
 
-			if (oldComponent != null)
+			if (oldModule != null)
 			{
-				OnComponentRemoved(oldComponent);
+				OnModuleRemoved(oldModule);
 
-				if (oldComponent is GameObject oldGameObject) _gameObjects.Remove(oldGameObject);
+				if (oldModule is GameObject oldGameObject) _gameObjects.Remove(oldGameObject);
 
-				base.SetItem(index, newComponent);
+				base.SetItem(index, oldModule);
 
-				if (newComponent is GameObject newGameObject) _gameObjects.Add(newGameObject);
+				if (oldModule is GameObject newGameObject) _gameObjects.Add(newGameObject);
 
-				newComponent.Initialize();
+				oldModule.Initialize();
 			}
 		}
 		/// <summary>
@@ -111,13 +111,13 @@ namespace Claw
 		/// </summary>
 		protected override void ClearItems()
         {
-            for (int i = 0; i < Count; i++) OnComponentRemoved(base[i]);
+            for (int i = 0; i < Count; i++) OnModuleRemoved(base[i]);
 
             _gameObjects.Clear();
             base.ClearItems();
         }
 
-        private void OnComponentAdded(IGameComponent component) => ComponentAdded?.Invoke(this, component);
-        private void OnComponentRemoved(IGameComponent component) => ComponentRemoved?.Invoke(this, component);
+        private void OnModuleAdded(IGameModule module) => ModuleAdded?.Invoke(this, module);
+        private void OnModuleRemoved(IGameModule module) => ModuleRemoved?.Invoke(this, module);
     }
 }

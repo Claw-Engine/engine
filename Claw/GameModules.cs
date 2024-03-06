@@ -3,9 +3,9 @@
 namespace Claw
 {
     /// <summary>
-    /// Classe pronta de um <see cref="IGameComponent"/> do tipo <see cref="IUpdateable"/>.
+    /// Classe pronta de um <see cref="IGameModule"/> do tipo <see cref="IUpdateable"/>.
     /// </summary>
-    public class GameComponent : IGameComponent, IUpdateable
+    public class GameModule : IGameModule, IUpdateable
     {
         public int UpdateOrder
         {
@@ -37,9 +37,9 @@ namespace Claw
     }
 
     /// <summary>
-    /// Classe pronta de um <see cref="IGameComponent"/> do tipo <see cref="IUpdateable"/> e <see cref="IDrawable"/>.
+    /// Classe pronta de um <see cref="IGameModule"/> do tipo <see cref="IUpdateable"/> e <see cref="IDrawable"/>.
     /// </summary>
-    public class DrawableGameComponent : GameComponent, IDrawable
+    public class DrawableGameModule : GameModule, IDrawable
     {
         public int DrawOrder
         {

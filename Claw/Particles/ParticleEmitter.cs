@@ -9,7 +9,7 @@ namespace Claw.Particles
     /// <summary>
     /// Classe de emissão e manuseio de partículas.
     /// </summary>
-    public sealed class ParticleEmitter : DrawableGameComponent
+    public sealed class ParticleEmitter : DrawableGameModule
     {
         public Vector2 Position = Vector2.Zero, DrawOffset = Vector2.Zero, ParticleOriginDistortion = Vector2.Zero;
 

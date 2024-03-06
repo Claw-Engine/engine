@@ -240,7 +240,7 @@ namespace Claw
         /// </summary>
         public static CollisionResult[] IntersectList(Vector2 point, Func<GameObject, bool> predicate)
         {
-            GameObject[] GameObjects = Game.Instance.Components.GameObjects.Where(predicate).ToArray();
+            GameObject[] GameObjects = Game.Instance.Modules.GameObjects.Where(predicate).ToArray();
             List<CollisionResult> results = new List<CollisionResult>();
 
             foreach (GameObject GameObject in GameObjects)
@@ -267,7 +267,7 @@ namespace Claw
         {
             if (polygon.Enabled)
             {
-                GameObject[] GameObjects = Game.Instance.Components.GameObjects.Where(predicate).ToArray();
+                GameObject[] GameObjects = Game.Instance.Modules.GameObjects.Where(predicate).ToArray();
                 List<CollisionResult> results = new List<CollisionResult>();
 
                 foreach (GameObject GameObject in GameObjects)

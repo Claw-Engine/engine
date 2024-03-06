@@ -151,7 +151,7 @@ namespace Claw
         public static Vector2 Approach(Vector2 value, Vector2 target, Vector2 shift) => new Vector2(Mathf.Approach(value.X, target.X, shift.X), Mathf.Approach(value.Y, target.Y, shift.Y));
 
         /// <summary>
-        /// Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+        /// Retorna o módulo horizontal do vetor determinado pelo comprimento e direção indicados.
         /// </summary>
         /// <param name="angle">Graus.</param>
         public static Vector2 LengthDir(Vector2 distance, float angle)
@@ -161,7 +161,7 @@ namespace Claw
             return new Vector2(distance.X * (float)Math.Cos(angle), distance.Y * (float)Math.Sin(angle));
         }
         /// <summary>
-        /// Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+        /// Retorna o módulo horizontal do vetor determinado pelo comprimento e direção indicados.
         /// </summary>
         /// <param name="angle">Graus.</param>
         public static Vector2 LengthDir(float distance, float angle) => LengthDir(new Vector2(distance), angle);

@@ -10,7 +10,7 @@ namespace Claw
     /// </summary>
     public static class SceneManager
     {
-        private static ReadOnlyCollection<GameObject> objects => Game.Instance.Components.GameObjects;
+        private static ReadOnlyCollection<GameObject> objects => Game.Instance.Modules.GameObjects;
 
         /// <summary>
         /// Encontra a instância mais próxima na cena com uma tag específica.
@@ -24,7 +24,7 @@ namespace Claw
             return null;
         }
         /// <summary>
-        /// Encontra a instância mais próxima na cena com um componente de um tipo específico.
+        /// Encontra a instância mais próxima na cena com um módulo de um tipo específico.
         /// </summary>
         public static GameObject InstanceNearest<T>(Vector2 position, bool filterEnabled = true) where T : GameObject
         {

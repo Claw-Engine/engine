@@ -17,7 +17,7 @@ namespace Claw.Tiled
         public static Config Config;
         private const BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
-        private static List<IGameComponent> waiting;
+        private static List<IGameModule> waiting;
         private static Dictionary<int, LinkObjectData> links;
         private static Dictionary<Type, Dictionary<string, (PropertySetter, Type)>> reflectionCache = new Dictionary<Type, Dictionary<string, (PropertySetter, Type)>>();
         private static Dictionary<string, Type> mapTypes = new Dictionary<string, Type>()
@@ -55,14 +55,14 @@ namespace Claw.Tiled
 
             if (map.layers == null || map.layers.Length == 0) return;
 
-            waiting = new List<IGameComponent>();
+            waiting = new List<IGameModule>();
             links = new Dictionary<int, LinkObjectData>();
             var hasTile = LayerForeach(map.layers, tiledMap);
             links = null;
 
             if (hasTile) Game.Instance.Tilemap = tiledMap;
 
-            foreach (IGameComponent obj in waiting) Game.Instance.Components.Add(obj);
+            foreach (IGameModule obj in waiting) Game.Instance.Modules.Add(obj);
 
             waiting = null;
             GameObject.InstantlyAdd = previousInstantlyAdd;
@@ -190,7 +190,7 @@ namespace Claw.Tiled
                 foreach (Property property in tObject.properties) SetProperty(obj, tObject, property, properties);
             }
 
-            if (obj is IGameComponent component) waiting.Add(component);
+            if (obj is IGameModule module) waiting.Add(module);
         }
 
         /// <summary>

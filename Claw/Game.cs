@@ -33,10 +33,10 @@ namespace Claw
 				}
 			}
 		}
-		public ComponentCollection Components => _components;
+		public ModuleCollection Modules => _modules;
         private bool isRunning;
 		private Tilemap _tilemap;
-		private ComponentCollection _components;
+		private ModuleCollection _modules;
 
 		public Game() { }
         ~Game() => Dispose();
@@ -47,14 +47,14 @@ namespace Claw
             Renderer?.Dispose();
             Audio?.Dispose();
 
-            if (_components != null)
+            if (_modules != null)
             {
-                for (int i = 0; i < _components.Count; i++)
+                for (int i = 0; i < _modules.Count; i++)
                 {
-                    if (_components[i] is IDisposable dispose) dispose.Dispose();
+                    if (_modules[i] is IDisposable dispose) dispose.Dispose();
                 }
-                
-                _components = null;
+
+				_modules = null;
             }
 
             Window = null;
@@ -91,7 +91,7 @@ namespace Claw
 						Renderer = new Renderer(renderer);
 						Audio = new AudioManager();
 						Renderer.ClearColor = Color.CornflowerBlue;
-						_components = new ComponentCollection();
+						_modules = new ModuleCollection();
 					}
 				}
 			}
@@ -99,7 +99,7 @@ namespace Claw
             {
 				isRunning = true;
 				Instance = this;
-				_components = new ComponentCollection();
+				_modules = new ModuleCollection();
 			}
 
             if (isRunning)
