@@ -102,6 +102,7 @@
     <Compile Include="Input\Systems\InputTags.cs" />
     <Compile Include="Input\Systems\TaggedInput.cs" />
     <Compile Include="Input\Systems\TaggedPlayer.cs" />
+    <Compile Include="Input\TouchInput.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Maps\HexagonalTilemap.cs" />
     <Compile Include="Maps\StaggeredTilemap.cs" />

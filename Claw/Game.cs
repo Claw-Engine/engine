@@ -141,7 +141,8 @@ namespace Claw
             {
                 frameStart = SDL.SDL_GetTicks();
 
-                Input.Input.Update();
+                if (!ConsoleOnly) Input.Input.Update();
+                
                 Time.Update(frameTime);
                 Step();
 
@@ -191,6 +192,16 @@ namespace Claw
                     case SDL.SDL_EventType.SDL_MOUSEMOTION: Input.Input.UpdateMouseMotion(sdlEvent.motion); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEADDED: Input.Input.AddController(sdlEvent.cdevice.which); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEREMOVED: Input.Input.RemoveController(sdlEvent.cdevice.which); break;
+                    case SDL.SDL_EventType.SDL_FINGERDOWN:
+                        Input.TouchInput.DownFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure, new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y));
+                        break;
+                    case SDL.SDL_EventType.SDL_FINGERUP: 
+                        Input.TouchInput.UpFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure, new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y));
+                        break;
+                    case SDL.SDL_EventType.SDL_FINGERMOTION:
+						Input.TouchInput.MotionFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure,
+                            new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y), new Vector2(sdlEvent.tfinger.dx, sdlEvent.tfinger.dy));
+						break;
                 }
 
                 SDL.SDL_PumpEvents();
