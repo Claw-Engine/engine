@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Claw.Graphics;
 using Claw.Graphics.UI;
 using Claw.Audio;

@@ -48,6 +48,8 @@ namespace Claw
 		public float Left { get; private set; }
 		public float Right { get; private set; }
 		public Vector2 Center { get; private set; }
+        public Rectangle BoundingBox => _boundingBox;
+        private Rectangle _boundingBox;
 
 		public Polygon(BaseModule module) => Module = module;
 		public Polygon(BaseModule module, params Line[] lines) : this(module) => Lines = lines;
@@ -66,7 +68,15 @@ namespace Claw
 			Left = Module.Transform.Position.X;
 			Right = Module.Transform.Position.X;
 
-            if (_lines == null) return;
+            if (_lines == null)
+            {
+                _boundingBox.X = Module.Transform.Position.X;
+				_boundingBox.Y = Module.Transform.Position.Y;
+				_boundingBox.Width = 0;
+                _boundingBox.Height = 0;
+
+                return;
+            }
 
 			for (int i = 0; i < _lines.Length; i++)
 			{
@@ -95,6 +105,11 @@ namespace Claw
 			}
 
 			if (_lines.Length > 0) Center = new Vector2(Left + Math.Abs(Right - Left) * .5f, Top + Math.Abs(Bottom - Top) * .5f);
+
+			_boundingBox.X = Left;
+			_boundingBox.Y = Top;
+			_boundingBox.Width = Right - Left;
+			_boundingBox.Height = Bottom - Top;
 		}
         
         /// <summary>

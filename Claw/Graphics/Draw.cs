@@ -357,16 +357,7 @@ namespace Claw.Graphics
         /// </summary>
         public static void DebugCollider(float lineWidth, Polygon polygon, Color color)
         {
-            float top = polygon.Top, bottom = polygon.Bottom, left = polygon.Left, right = polygon.Right;
-            Vector2[] points = new Vector2[]
-            {
-                new Vector2(left, top),
-                new Vector2(right, top),
-                new Vector2(right, bottom),
-                new Vector2(left, bottom)
-            };
-
-            Polygon(lineWidth, color, points);
+            Rectangle(lineWidth, polygon.BoundingBox, color);
             Polygon(lineWidth, color, polygon.LinesInWorld);
         }
         #endregion
