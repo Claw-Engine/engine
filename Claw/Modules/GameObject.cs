@@ -38,7 +38,7 @@ namespace Claw.Modules
 
 		public override void Initialize()
 		{
-			SpriteRenderer = new SpriteRenderer(false);
+			SpriteRenderer = new SpriteRenderer();
 			SpriteRenderer.Transform.Parent = Transform;
 		}
 

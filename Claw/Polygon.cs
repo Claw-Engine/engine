@@ -23,107 +23,79 @@ namespace Claw
 
         public Vector2 Offset = Vector2.Zero;
         public readonly BaseModule Module;
-        public Line[] Lines = new Line[0];
-        public Line[] LinesInWorld
+        public Line[] Lines
         {
-            get
+            get => _lines;
+            set
             {
-                Line[] lines = new Line[this.Lines.Length];
+                int length = _lines != null ? _lines.Length : 0;
+				_lines = value;
 
-                for (int i = 0; i < lines.Length; i++) lines[i] = LineToWorld(this.Lines[i], this);
-
-                return lines;
-            }
-        }
-        
-        public float Top
-        {
-            get
-            {
-                float topS = LinesInWorld.OrderBy(start => start.Start.Y).First().Start.Y;
-                float topE = LinesInWorld.OrderBy(end => end.End.Y).First().End.Y;
-                float top = topS < topE ? topS : topE;
-
-                return top;
-            }
-        }
-        public float Bottom
-        {
-            get
-            {
-                float bottomS = LinesInWorld.OrderBy(start => start.Start.Y).Last().Start.Y;
-                float bottomE = LinesInWorld.OrderBy(end => end.End.Y).Last().End.Y;
-                float bottom = bottomS > bottomE ? bottomS : bottomE;
-
-                return bottom;
-            }
-        }
-        public float Right
-        {
-            get
-            {
-                float rightS = LinesInWorld.OrderBy(start => start.Start.X).Last().Start.X;
-                float rightE = LinesInWorld.OrderBy(end => end.End.X).Last().End.X;
-                float right = rightS > rightE ? rightS : rightE;
-
-                return right;
-            }
-        }
-        public float Left
-        {
-            get
-            {
-                float leftS = LinesInWorld.OrderBy(start => start.Start.X).First().Start.X;
-                float leftE = LinesInWorld.OrderBy(end => end.End.X).First().End.X;
-                float left = leftS < leftE ? leftS : leftE;
-
-                return left;
-            }
-        }
-        public Vector2 Center
-        {
-            get
-            {
-                if (Lines.Length > 0)
+                if (value == null) LinesInWorld = new Line[0];
+                else
                 {
-                    float r = Right, l = Left, t = Top, b = Bottom;
-                    float xx = Math.Abs(r - l), yy = Math.Abs(b - t);
+                    if (length != value.Length) LinesInWorld = new Line[value.Length];
 
-                    return new Vector2(l + xx * .5f, t + yy * .5f);
-                }
-
-                return Module.Transform.Position;
-            }
+					Update();
+				}
+			}
         }
+        public Line[] LinesInWorld { get; private set; }
+        private Line[] _lines;
+        
+        public float Top { get; private set; }
+		public float Bottom { get; private set; }
+		public float Left { get; private set; }
+		public float Right { get; private set; }
+		public Vector2 Center { get; private set; }
 
-        public Polygon(BaseModule module)
-        {
-            Module = module;
-
-            Module.Polygons.Add(this);
-        }
-        public Polygon(BaseModule module, params Line[] lines) : this(module) => Lines = lines;
+		public Polygon(BaseModule module) => Module = module;
+		public Polygon(BaseModule module, params Line[] lines) : this(module) => Lines = lines;
         ~Polygon() => Dispose();
 
         public void Dispose() => Lines = null;
 
-        private static Line LineToWorld(Line line, Polygon polygon)
+        /// <summary>
+        /// Atualiza o estado deste <see cref="Polygon"/>.
+        /// </summary>
+        public void Update()
         {
-            Line result;
+			Center = Module.Transform.Position;
+			Top = Module.Transform.Position.Y;
+			Bottom = Module.Transform.Position.Y;
+			Left = Module.Transform.Position.X;
+			Right = Module.Transform.Position.X;
 
-            if (polygon.CanRotate)
-            {
-                if (polygon.CanScale) result = Line.Rotate(line * polygon.Module.Transform.Scale + polygon.Module.Transform.Position + polygon.Offset, polygon.Module.Transform.Position, polygon.Module.Transform.Rotation);
-                else result = Line.Rotate(line + polygon.Module.Transform.Position + polygon.Offset, polygon.Module.Transform.Position, polygon.Module.Transform.Rotation);
-            }
-            else
-            {
-                if (polygon.CanScale) result = line * polygon.Module.Transform.Scale + polygon.Module.Transform.Position + polygon.Offset;
-                else result = line + polygon.Module.Transform.Position + polygon.Offset;
-            }
+            if (_lines == null) return;
 
-            return result;
-        }
+			for (int i = 0; i < _lines.Length; i++)
+			{
+				if (CanRotate)
+				{
+					if (CanScale) LinesInWorld[i] = Line.Rotate(_lines[i] * Module.Transform.Scale + Module.Transform.Position + Offset, Module.Transform.Position, Module.Transform.Rotation);
+					else LinesInWorld[i] = Line.Rotate(_lines[i] + Module.Transform.Position + Offset, Module.Transform.Position, Module.Transform.Rotation);
+				}
+				else
+				{
+					if (CanScale) LinesInWorld[i] = _lines[i] * Module.Transform.Scale + Module.Transform.Position + Offset;
+					else LinesInWorld[i] = _lines[i] + Module.Transform.Position + Offset;
+				}
+
+                if (Top > LinesInWorld[i].Start.Y) Top = LinesInWorld[i].Start.Y;
+                else if (Top > LinesInWorld[i].End.Y) Top = LinesInWorld[i].End.Y;
+
+				if (Bottom < LinesInWorld[i].Start.Y) Bottom = LinesInWorld[i].Start.Y;
+				else if (Bottom < LinesInWorld[i].End.Y) Bottom = LinesInWorld[i].End.Y;
+
+				if (Left > LinesInWorld[i].Start.X) Left = LinesInWorld[i].Start.X;
+				else if (Left > LinesInWorld[i].End.X) Left = LinesInWorld[i].End.X;
+
+				if (Right < LinesInWorld[i].Start.X) Right = LinesInWorld[i].Start.X;
+				else if (Right < LinesInWorld[i].End.X) Right = LinesInWorld[i].End.X;
+			}
+
+			if (_lines.Length > 0) Center = new Vector2(Left + Math.Abs(Right - Left) * .5f, Top + Math.Abs(Bottom - Top) * .5f);
+		}
         
         /// <summary>
          /// Cria um colisor quadrado.
@@ -161,9 +133,9 @@ namespace Claw
 
             if (polygon.Enabled)
             {
-                foreach (Line nline in polygon.Lines)
-                {
-                    Line line = LineToWorld(nline, polygon);
+				for (int i = 0; i < polygon.LinesInWorld.Length; i++)
+				{
+                    Line line = polygon.LinesInWorld[i];
 
                     if (point.Y > Math.Min(line.Start.Y, line.End.Y) && point.Y <= Math.Max(line.Start.Y, line.End.Y) && point.X <= Math.Max(line.Start.X, line.End.X) && line.Start.Y != line.End.Y)
                     {
@@ -192,11 +164,9 @@ namespace Claw
         {
             if (polygon.Enabled && other.Enabled && polygon != other)
             {
-                foreach (Line nline in polygon.Lines)
+                for (int i = 0; i < polygon.LinesInWorld.Length; i++)
                 {
-                    Line line = LineToWorld(nline, polygon);
-
-                    CollisionResult collisionResult = IntersectRay(line, other);
+                    CollisionResult collisionResult = IntersectRay(polygon.LinesInWorld[i], other);
 
                     if (collisionResult.Intersect) return collisionResult;
                 }

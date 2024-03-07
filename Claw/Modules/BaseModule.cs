@@ -45,6 +45,14 @@ namespace Claw.Modules
 		public abstract void Initialize();
 
 		/// <summary>
+		/// Realiza o método <see cref="Polygon.Update"/> para todos os elementos em <see cref="Polygons"/>.
+		/// </summary>
+		public void UpdatePolygons()
+		{
+			for (int i = 0; i < Polygons.Count; i++) Polygons[i].Update();
+		}
+
+		/// <summary>
 		/// Adiciona uma tag no módulo.
 		/// </summary>
 		/// <param name="tag">Case insensitive.</param>
