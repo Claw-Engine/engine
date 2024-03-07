@@ -78,6 +78,10 @@ namespace Claw.Modules
 		public bool HasTag(string tag) => tags.Contains(tag.ToLower());
 
 		/// <summary>
+		/// Destrói um módulo.
+		/// </summary>
+		protected static void Destroy(BaseModule module, bool runDestroy = true) => module.SelfDestroy(runDestroy);
+		/// <summary>
 		/// Destrói este módulo.
 		/// </summary>
 		public void SelfDestroy(bool runDestroy = true)
