@@ -2,20 +2,46 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Claw.Utils;
+using Claw.Graphics;
 using Claw.Extensions;
 
-namespace Claw.Graphics.Systems
+namespace Claw.Modules
 {
     /// <summary>
     /// Realiza a renderização de textos com diferentes efeitos para cada bloco.
     /// </summary>
-    public sealed class TextRenderer : DrawableGameModule
-    {
-        /// <summary>
-        /// Dicionário para armazenar configurações prontas.
-        /// </summary>
-        public static Dictionary<string, TextConfig> TextConfigs = new Dictionary<string, TextConfig>();
+    public sealed class TextRenderer : BaseModule, IStep, IRender
+	{
+		public int StepOrder
+		{
+			get => _StepOrder;
+			set
+			{
+				if (_StepOrder != value) StepOrderChanged?.Invoke(this);
+
+				_StepOrder = value;
+			}
+		}
+		public int RenderOrder
+		{
+			get => _RenderOrder;
+			set
+			{
+				if (_RenderOrder != value) RenderOrderChanged?.Invoke(this);
+
+				_RenderOrder = value;
+			}
+		}
+		private int _StepOrder, _RenderOrder;
+
+		public event Action<IStep> StepOrderChanged;
+		public event Action<IRender> RenderOrderChanged;
+
+		#region Configurações
+		/// <summary>
+		/// Dicionário para armazenar configurações prontas.
+		/// </summary>
+		public static Dictionary<string, TextConfig> TextConfigs = new Dictionary<string, TextConfig>();
         private static Regex CompilerRegex = new Regex("<[^>]*>|[^</]+");
         private static TextBlock LineBreak = new TextBlock("\n", new TextConfig());
         private static Dictionary<TextOrigin, Vector2> OriginAsVector = new Dictionary<TextOrigin, Vector2>()
@@ -33,18 +59,17 @@ namespace Claw.Graphics.Systems
             { TextOrigin.BottomRight, Vector2.One }
         };
         private static Random random = new Random();
-
-        public Vector2 Position;
         /// <summary>
         /// Configurações usadas no caso das do bloco serem nulas.
         /// </summary>
         public TextConfig DefaultConfig = new TextConfig(0, Color.Black, Vector2.One, TextOrigin.TopLeft, TextEffect.None, null, Flip.None);
+		#endregion
 
-        #region Texto
-        /// <summary>
-        /// Até que caractere ele vai desenhar (negativo para desenhar tudo).
-        /// </summary>
-        public int MaxChar = -1;
+		#region Texto
+		/// <summary>
+		/// Até que caractere ele vai desenhar (negativo para desenhar tudo).
+		/// </summary>
+		public int MaxChar = -1;
         /// <summary>
         /// Máximo de caracteres das linhas para o <see cref="TextWrap"/>.
         /// </summary>
@@ -101,12 +126,16 @@ namespace Claw.Graphics.Systems
         public Vector2 PulsateLimit = new Vector2(.5f, 1), ScreamOffset = new Vector2(2), MovingSpeed = new Vector2(.05f), MovingAmplitude = new Vector2(4);
         private float theta = 0;
         private float rotationEffect = 0, scaleEffect = 1;
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Gera os blocos de texto para renderização.
-        /// </summary>
-        private void BuildText()
+		public TextRenderer(bool instantlyAdd = true) : base(instantlyAdd) { }
+
+		public override void Initialize() { }
+
+		/// <summary>
+		/// Gera os blocos de texto para renderização.
+		/// </summary>
+		private void BuildText()
         {
             textBlocks.Clear();
 
@@ -267,7 +296,7 @@ namespace Claw.Graphics.Systems
             return true;
         }
 
-        public override void Step()
+        public void Step()
         {
             float delta = UseScaledTime ? Time.DeltaTime : Time.UnscaledDeltaTime;
 
@@ -287,7 +316,7 @@ namespace Claw.Graphics.Systems
                 BuildText();
             }
         }
-        public override void Render()
+        public void Render()
         {
             if (FilteredText.Length == 0) return;
 
@@ -361,9 +390,10 @@ namespace Claw.Graphics.Systems
                                     case TextEffect.MovingVertical: charPos += new Vector2(0, (float)Math.Sin(theta * Math.PI * MovingSpeed.Y) * measure.Y / MovingAmplitude.Y); break;
                                 }
 
-                                charPos = Vector2.Rotate(charPos, center, charAngle) + addToPos + Position;
+                                charPos = Vector2.Rotate(charPos, center, charAngle) + addToPos;
+                                charPos = Vector2.Rotate(charPos * Transform.Scale + Transform.Position, Transform.Position, Transform.Rotation);
 
-                                Draw.Sprite(font.Sprite, charPos, glyph.Area, color, charAngle, Vector2.Zero, charScale, 0);
+								Draw.Sprite(font.Sprite, charPos, glyph.Area, color, charAngle + Transform.Rotation, Vector2.Zero, charScale * Transform.Scale, 0);
                                 
                                 charHeight = Math.Max(charHeight, charMeasure.Y * charScale.Y);
 

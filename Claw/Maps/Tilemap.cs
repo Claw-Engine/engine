@@ -98,11 +98,11 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, float opacity, Color color)
+        public int AddLayer(int RenderOrder, string name, float opacity, Color color)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-            var layer = new TileLayer(layers.Count, name, this, Size) { DrawOrder = drawOrder, Color = color, Opacity = opacity };
+            var layer = new TileLayer(layers.Count, name, this, Size) { RenderOrder = RenderOrder, Color = color, Opacity = opacity };
 
             layerIndexes.Add(layer.Name, layers.Count);
             layers.Add(layer);
@@ -112,11 +112,11 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova e já insere os tiles dela.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, bool visible, float opacity, Color color, int[] data)
+        public int AddLayer(int RenderOrder, string name, bool visible, float opacity, Color color, int[] data)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-            var layer = new TileLayer(layers.Count, name, this) { DrawOrder = drawOrder, Visible = visible, Color = color, Opacity = opacity };
+            var layer = new TileLayer(layers.Count, name, this) { RenderOrder = RenderOrder, Enabled = visible, Color = color, Opacity = opacity };
             layer.data = data.ToList();
 
             layerIndexes.Add(layer.Name, layers.Count);

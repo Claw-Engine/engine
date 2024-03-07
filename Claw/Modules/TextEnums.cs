@@ -1,4 +1,4 @@
-﻿namespace Claw.Graphics.Systems
+﻿namespace Claw.Modules
 {
     /// <summary>
     /// Define os tipo de origem possíveis para o <see cref="TextRenderer"/>.

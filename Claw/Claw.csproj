@@ -43,7 +43,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animator.cs" />
+    <Compile Include="Graphics\Animation.cs" />
+    <Compile Include="Graphics\Animator.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Audio\SoundEffect.cs" />
     <Compile Include="Audio\Channels.cs" />
@@ -55,9 +56,9 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameModules.cs" />
+    <Compile Include="Graphics\Frame.cs" />
+    <Compile Include="Graphics\IAnimatable.cs" />
     <Compile Include="ModuleCollection.cs" />
-    <Compile Include="GameObject.cs" />
     <Compile Include="Graphics\Blend.cs" />
     <Compile Include="Graphics\BlendFactory.cs" />
     <Compile Include="Graphics\BlendMode.cs" />
@@ -68,17 +69,18 @@
     <Compile Include="Graphics\Flip.cs" />
     <Compile Include="Graphics\FollowMode.cs" />
     <Compile Include="Graphics\NineSlice.cs" />
-    <Compile Include="Graphics\Systems\Parallax.cs" />
+    <Compile Include="Modules\GameObject.cs" />
+    <Compile Include="Modules\Parallax.cs" />
     <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\RenderTarget.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\SpriteFont.cs" />
-    <Compile Include="Graphics\Systems\TextConfig.cs" />
-    <Compile Include="Graphics\Systems\TextEnums.cs" />
-    <Compile Include="Graphics\Systems\TextRenderer.cs" />
+    <Compile Include="Modules\TextConfig.cs" />
+    <Compile Include="Modules\TextEnums.cs" />
+    <Compile Include="Modules\TextRenderer.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\TextureAtlas.cs" />
-    <Compile Include="GameModuleTypes.cs" />
+    <Compile Include="Modules\ModuleTypes.cs" />
     <Compile Include="Graphics\UI\Button.cs" />
     <Compile Include="Graphics\UI\Container.cs" />
     <Compile Include="Graphics\UI\Display.cs" />
@@ -112,6 +114,9 @@
     <Compile Include="Maps\Tilemap.cs" />
     <Compile Include="Maps\TilePalette.cs" />
     <Compile Include="Mathf.cs" />
+    <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\SpriteRenderer.cs" />
+    <Compile Include="Modules\Transform.cs" />
     <Compile Include="Save\SaveAttributes.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEmitter.cs" />
@@ -147,9 +152,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(ExportDir)$(ConfigurationName)\" mkdir "$(ExportDir)$(ConfigurationName)\" /Y

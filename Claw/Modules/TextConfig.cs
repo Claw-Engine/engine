@@ -1,4 +1,7 @@
-﻿namespace Claw.Graphics.Systems
+﻿using System;
+using Claw.Graphics;
+
+namespace Claw.Modules
 {
     /// <summary>
     /// Define as configurações para a renderização do <see cref="TextRenderer"/>.

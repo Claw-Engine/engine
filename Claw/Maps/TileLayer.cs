@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Claw.Physics;
+using Claw.Modules;
 
 namespace Claw.Maps
 {
     /// <summary>
     /// Representa uma camada dentro do <see cref="Tilemap"/>.
     /// </summary>
-    public sealed class TileLayer : IGameModule, IDrawable
+    public sealed class TileLayer : BaseModule, IRender
     {
         public float Opacity = 1;
         public string Name
@@ -31,31 +31,19 @@ namespace Claw.Maps
         internal List<int> data = new List<int>();
         private string name = string.Empty;
 
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
+        public event Action<IRender> RenderOrderChanged;
 
-        public int DrawOrder
+        public int RenderOrder
         {
-            get => _drawOrder;
+            get => _RenderOrder;
             set
             {
-				_drawOrder = value;
+				_RenderOrder = value;
 
-                DrawOrderChanged?.Invoke(this, EventArgs.Empty);
+                RenderOrderChanged?.Invoke(this);
             }
         }
-        public bool Visible
-        {
-            get => _visible;
-            set
-            {
-				_visible = value;
-
-                VisibleChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-        private int _drawOrder;
-        private bool _visible = true;
+        private int _RenderOrder;
 
         /// <summary>
         /// Retorna/muda um tile da layer.
@@ -85,23 +73,21 @@ namespace Claw.Maps
             }
         }
 
-        internal TileLayer(int index, string name, Tilemap map)
+        internal TileLayer(int index, string name, Tilemap map, Vector2 size) : base(Game.Instance.Tilemap == map)
         {
-            this.index = index;
-            Name = name;
-            this.map = map;
-        }
-        internal TileLayer(int index, string name, Tilemap map, Vector2 size) : this(index, name, map)
-        {
-            if (Game.Instance.Tilemap == map) Game.Instance.Modules.Add(this);
-
             for (int x = 0; x < size.X; x++)
             {
                 for (int y = 0; y < size.Y; y++) data.Add(0);
             }
         }
+		internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero)
+		{
+			this.index = index;
+			Name = name;
+			this.map = map;
+		}
 
-        public void Initialize() { }
+		public override void Initialize() { }
 
         /// <summary>
         /// Retorna todos os tiles da layer.

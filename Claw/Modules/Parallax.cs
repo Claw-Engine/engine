@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Claw.Graphics;
 
-namespace Claw.Graphics.Systems
+namespace Claw.Modules
 {
     /// <summary>
     /// Representa uma sequência de backgrounds para efeito de parallax.
     /// </summary>
-    public sealed class Parallax : IGameModule, IDrawable
+    public sealed class Parallax : BaseModule, IRender
     {
         /// <summary>
         /// Define os eixos em que o background poderá se repetir durante o parallax.
@@ -15,37 +16,25 @@ namespace Claw.Graphics.Systems
 
         public bool UseDeltaTime = true, UseScaledDeltaTime = true;
         public Color Color = Color.White;
-        public Vector2 Position = Vector2.Zero;
         public List<Background> Backgrounds = new List<Background>();
         
-        public int DrawOrder
+        public int RenderOrder
         {
-            get => _drawOrder;
+            get => _RenderOrder;
             set
             {
-                if (_drawOrder != value) DrawOrderChanged?.Invoke(this, EventArgs.Empty);
+                if (_RenderOrder != value) RenderOrderChanged?.Invoke(this);
 
-				_drawOrder = value;
+				_RenderOrder = value;
             }
         }
-        public bool Visible
-        {
-            get => _visible;
-            set
-            {
-                if (_visible != value) VisibleChanged?.Invoke(this, EventArgs.Empty);
+        private int _RenderOrder;
 
-				_visible = value;
-            }
-        }
-        private int _drawOrder;
-        private bool _visible = true;
+        public event Action<IRender> RenderOrderChanged;
 
-        public event EventHandler<EventArgs> VisibleChanged, DrawOrderChanged;
+		public Parallax(bool instantlyAdd = true) : base(instantlyAdd) { }
 
-        public Parallax() { }
-        
-        public void Initialize() { }
+		public override void Initialize() { }
 
         /// <summary>
         /// Muda a velocidade de todos os backgrounds.
@@ -92,7 +81,7 @@ namespace Claw.Graphics.Systems
         /// </summary>
         private void DrawBackground(Parallax parallax, CameraState camera)
         {
-            Vector2 basePos = (parallax.Position + camera.Position + camera.Origin) / camera.Zoom;
+            Vector2 basePos = (parallax.Transform.Position + camera.Position + camera.Origin) / camera.Zoom;
 
             if (offset != Vector2.Zero)
             {

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using Claw.Modules;
 using Claw.Physics;
 
 namespace Claw
@@ -13,13 +16,13 @@ namespace Claw
         public bool CanRotate = true, CanScale = true;
         public bool Enabled
         {
-            get => _enabled && GameObject.Enabled;
+            get => _enabled && Module.Enabled;
             set => _enabled = value;
         }
         private bool _enabled = true;
 
         public Vector2 Offset = Vector2.Zero;
-        public readonly GameObject GameObject;
+        public readonly BaseModule Module;
         public Line[] Lines = new Line[0];
         public Line[] LinesInWorld
         {
@@ -29,7 +32,7 @@ namespace Claw
 
                 for (int i = 0; i < lines.Length; i++) lines[i] = LineToWorld(this.Lines[i], this);
 
-                return lines; ;
+                return lines;
             }
         }
         
@@ -89,17 +92,17 @@ namespace Claw
                     return new Vector2(l + xx * .5f, t + yy * .5f);
                 }
 
-                return GameObject.Position;
+                return Module.Transform.Position;
             }
         }
 
-        public Polygon(GameObject gameObject)
+        public Polygon(BaseModule module)
         {
-            GameObject = gameObject;
+            Module = module;
 
-            GameObject.Colliders.Add(this);
+            Module.Polygons.Add(this);
         }
-        public Polygon(GameObject gameObject, params Line[] lines) : this(gameObject) => Lines = lines;
+        public Polygon(BaseModule module, params Line[] lines) : this(module) => Lines = lines;
         ~Polygon() => Dispose();
 
         public void Dispose() => Lines = null;
@@ -110,13 +113,13 @@ namespace Claw
 
             if (polygon.CanRotate)
             {
-                if (polygon.CanScale) result = Line.Rotate(line * polygon.GameObject.Scale + polygon.GameObject.Position + polygon.Offset, polygon.GameObject.Position, polygon.GameObject.Rotation);
-                else result = Line.Rotate(line + polygon.GameObject.Position + polygon.Offset, polygon.GameObject.Position, polygon.GameObject.Rotation);
+                if (polygon.CanScale) result = Line.Rotate(line * polygon.Module.Transform.Scale + polygon.Module.Transform.Position + polygon.Offset, polygon.Module.Transform.Position, polygon.Module.Transform.Rotation);
+                else result = Line.Rotate(line + polygon.Module.Transform.Position + polygon.Offset, polygon.Module.Transform.Position, polygon.Module.Transform.Rotation);
             }
             else
             {
-                if (polygon.CanScale) result = line * polygon.GameObject.Scale + polygon.GameObject.Position + polygon.Offset;
-                else result = line + polygon.GameObject.Position + polygon.Offset;
+                if (polygon.CanScale) result = line * polygon.Module.Transform.Scale + polygon.Module.Transform.Position + polygon.Offset;
+                else result = line + polygon.Module.Transform.Position + polygon.Offset;
             }
 
             return result;
@@ -125,11 +128,11 @@ namespace Claw
         /// <summary>
          /// Cria um colisor quadrado.
          /// </summary>
-        public static Polygon Box(GameObject gameObject, Rectangle rectangle) => new Polygon(gameObject, Line.BoxGenerator(rectangle));
+        public static Polygon Box(BaseModule module, Rectangle rectangle) => new Polygon(module, Line.BoxGenerator(rectangle));
         /// <summary>
         /// Cria um colisor circular.
         /// </summary>
-        public static Polygon Circle(GameObject gameObject, float radius, Vector2 center, int segments = 16) => new Polygon(gameObject, Line.CircleGenerator(radius, center, segments));
+        public static Polygon Circle(BaseModule module, float radius, Vector2 center, int segments = 16) => new Polygon(module, Line.CircleGenerator(radius, center, segments));
 
         /// <summary>
         /// Checa se um polígono está colidindo com outro (formado apenas por linhas).
@@ -171,16 +174,16 @@ namespace Claw
                 }
             }
 
-            return new CollisionResult(result, point, result ? polygon.GameObject : null, result ? polygon : null);
+            return new CollisionResult(result, point, result ? polygon.Module : null, result ? polygon : null);
         }
         /// <summary>
         /// Checa se um ponto está colidindo com um <see cref="Polygon"/>.
         /// </summary>
-        public static CollisionResult Intersect(Vector2 point, string tag, float distance = 0, bool first = false) => Intersect(point, TagManager.GetObjects(tag, true), distance, first);
+        public static CollisionResult Intersect(Vector2 point, string tag, float maxDistance = 0, bool first = false) => Intersect(point, TagManager.GetModules(tag, true), maxDistance, first);
         /// <summary>
         /// Checa se um ponto está colidindo com um <see cref="Polygon"/>.
         /// </summary>
-        public static CollisionResult Intersect<T>(Vector2 point, float distance = 0, bool first = false) where T : GameObject => Intersect(point, SceneManager.FindObjectsOfType<T>(), distance, first);
+        public static CollisionResult Intersect<T>(Vector2 point, float maxDistance = 0, bool first = false) where T : GameObject => Intersect(point, SceneManager.FindModulesOfType<T>(), maxDistance, first);
 
         /// <summary>
         /// Checa se dois polígonos estão colidindo.
@@ -204,11 +207,11 @@ namespace Claw
         /// <summary>
         /// Checa se dois polígonos estão colidindo.
         /// </summary>
-        public static CollisionResult Intersect(Polygon polygon, string tag, float distance = 0, bool first = false, bool invert = false) => Intersect(polygon, TagManager.GetObjects(tag, true), distance, first, invert);
+        public static CollisionResult Intersect(Polygon polygon, string tag, float maxDistance = 0, bool first = false, bool invert = false) => Intersect(polygon, TagManager.GetModules(tag, true), maxDistance, first, invert);
         /// <summary>
         /// Checa se dois polígonos estão colidindo.
         /// </summary>
-        public static CollisionResult Intersect<T>(Polygon polygon, float distance = 0, bool first = false, bool invert = false) where T : GameObject => Intersect(polygon, SceneManager.FindObjectsOfType<T>(), distance, first, invert);
+        public static CollisionResult Intersect<T>(Polygon polygon, float maxDistance = 0, bool first = false, bool invert = false) where T : GameObject => Intersect(polygon, SceneManager.FindModulesOfType<T>(), maxDistance, first, invert);
 
         /// <summary>
         /// Checa se uma linha está colidindo com um <see cref="Polygon"/>.
@@ -229,23 +232,23 @@ namespace Claw
         /// <summary>
         /// Checa se uma linha está colidindo com um <see cref="Polygon"/>.
         /// </summary>
-        public static CollisionResult IntersectRay(Line ray, string tag, float distance = 0, bool first = false, float cellSize = 1) => IntersectRay(ray, TagManager.GetObjects(tag, true), distance, first, cellSize);
+        public static CollisionResult IntersectRay(Line ray, string tag, float maxDistance = 0, bool first = false, float cellSize = 1) => IntersectRay(ray, TagManager.GetModules(tag, true), maxDistance, first, cellSize);
         /// <summary>
         /// Checa se uma linha está colidindo com um <see cref="Polygon"/>.
         /// </summary>
-        public static CollisionResult IntersectRay<T>(Line ray, float distance = 0, bool first = false, float cellSize = 1) where T : GameObject => IntersectRay(ray, SceneManager.FindObjectsOfType<T>(), distance, first, cellSize);
+        public static CollisionResult IntersectRay<T>(Line ray, float maxDistance = 0, bool first = false, float cellSize = 1) where T : GameObject => IntersectRay(ray, SceneManager.FindModulesOfType<T>(), maxDistance, first, cellSize);
 
         /// <summary>
         /// Retorna uma lista de colisões com o ponto especificado.
         /// </summary>
-        public static CollisionResult[] IntersectList(Vector2 point, Func<GameObject, bool> predicate)
+        public static CollisionResult[] IntersectList(Vector2 point, Func<BaseModule, bool> predicate)
         {
-            GameObject[] GameObjects = Game.Instance.Modules.GameObjects.Where(predicate).ToArray();
+            BaseModule[] modules = Game.Instance.Modules.Where(predicate).ToArray();
             List<CollisionResult> results = new List<CollisionResult>();
 
-            foreach (GameObject GameObject in GameObjects)
+            foreach (BaseModule module in modules)
             {
-                List<Polygon> polygons = GameObject.Colliders;
+                List<Polygon> polygons = module.Polygons;
 
                 if (polygons != null)
                 {
@@ -263,18 +266,18 @@ namespace Claw
         /// <summary>
         /// Retorna uma lista de colisões com o polígono especificado.
         /// </summary>
-        public static CollisionResult[] IntersectList(Polygon polygon, Func<GameObject, bool> predicate)
+        public static CollisionResult[] IntersectList(Polygon polygon, Func<BaseModule, bool> predicate)
         {
             if (polygon.Enabled)
             {
-                GameObject[] GameObjects = Game.Instance.Modules.GameObjects.Where(predicate).ToArray();
+                BaseModule[] modules = Game.Instance.Modules.Where(predicate).ToArray();
                 List<CollisionResult> results = new List<CollisionResult>();
 
-                foreach (GameObject GameObject in GameObjects)
+                foreach (BaseModule module in modules)
                 {
-                    if (GameObject != polygon.GameObject && GameObject.Enabled)
+                    if (module != polygon.Module && module.Enabled)
                     {
-                        var polygons = GameObject.Colliders;
+                        var polygons = module.Polygons;
 
                         foreach (Polygon other in polygons)
                         {
@@ -294,28 +297,23 @@ namespace Claw
         /// <summary>
         /// Checa se um ponto está colidindo com um dos <see cref="Polygon"/>s de uma lista.
         /// </summary>
-        public static CollisionResult IntersectWith(Vector2 point, IEnumerable<GameObject> gameObjects, float distance = 0, bool first = false) => Intersect(point, gameObjects, distance, first);
+        public static CollisionResult IntersectWith(Vector2 point, IEnumerable<BaseModule> modules, float maxDistance = 0, bool first = false) => Intersect(point, modules, maxDistance, first);
         /// <summary>
         /// Checa se um <see cref="Polygon"/> está colidindo com um dos <see cref="Polygon"/>s de uma lista.
         /// </summary>
-        public static CollisionResult IntersectWith(Polygon polygon, IEnumerable<GameObject> gameObjects, float distance = 0, bool first = false, bool invert = false) => Intersect(polygon, gameObjects, distance, first, invert);
+        public static CollisionResult IntersectWith(Polygon polygon, IEnumerable<BaseModule> modules, float maxDistance = 0, bool first = false, bool invert = false) => Intersect(polygon, modules, maxDistance, first, invert);
 
-        private static CollisionResult Intersect(Vector2 point, IEnumerable<GameObject> gameObjects, float distance = 0, bool first = false)
+        private static CollisionResult Intersect(Vector2 point, IEnumerable<BaseModule> modules, float maxDistance = 0, bool first = false)
         {
-            IEnumerable<GameObject> GameObjects = gameObjects;
+            modules = modules.OrderBy(m => Vector2.Distance(point, m.Transform.Position)).ToArray();
             
-            if (distance == 0) GameObjects = GameObjects.OrderBy(gO => Vector2.Distance(point, gO.Position)).ToArray();
-            else GameObjects = GameObjects.Where(gO => Vector2.Distance(point, gO.Position) <= distance).OrderBy(gO => Vector2.Distance(point, gO.Position)).ToArray();
+            if (maxDistance != 0) modules = modules.Where(m => Vector2.Distance(point, m.Transform.Position) <= maxDistance);
 
-            if (first && gameObjects.Count() > 0)
-            {
-                var f = gameObjects.FirstOrDefault();
-                gameObjects = new GameObject[] { f };
-            }
+            if (first && modules.Count() > 0) modules = new BaseModule[] { modules.FirstOrDefault() };
 
-            foreach (GameObject GameObject in gameObjects)
+			foreach (BaseModule module in modules)
             {
-                List<Polygon> polygons = GameObject.Colliders;
+                List<Polygon> polygons = module.Polygons;
 
                 foreach (Polygon other in polygons)
                 {
@@ -327,25 +325,21 @@ namespace Claw
 
             return new CollisionResult(false, null, null, null);
         }
-        private static CollisionResult Intersect(Polygon polygon, IEnumerable<GameObject> gameObjects, float distance = 0, bool first = false, bool invert = false)
+        private static CollisionResult Intersect(Polygon polygon, IEnumerable<BaseModule> modules, float maxDistance = 0, bool first = false, bool invert = false)
         {
             if (polygon.Enabled)
             {
-                if (distance == 0) gameObjects = gameObjects.OrderBy(gO => Vector2.Distance(polygon.GameObject.Position, gO.Position)).ToArray();
-                else gameObjects = gameObjects.Where(gO => Vector2.Distance(polygon.GameObject.Position, gO.Position) <= distance).
-                        OrderBy(gO => Vector2.Distance(polygon.GameObject.Position, gO.Position)).ToArray();
+				modules = modules.OrderBy(m => Vector2.Distance(polygon.Module.Transform.Position, m.Transform.Position));
+                
+                if (maxDistance != 0) modules = modules.Where(m => Vector2.Distance(polygon.Module.Transform.Position, m.Transform.Position) <= maxDistance);
 
-                if (first && gameObjects.Count() > 0)
-                {
-                    var f = gameObjects.FirstOrDefault();
-                    gameObjects = new GameObject[] { f };
-                }
+                if (first && modules.Count() > 0) modules = new BaseModule[] { modules.FirstOrDefault() };
 
-                foreach (GameObject GameObject in gameObjects)
+				foreach (BaseModule module in modules)
                 {
-                    if (GameObject != polygon.GameObject)
+                    if (module != polygon.Module)
                     {
-                        List<Polygon> polygons = GameObject.Colliders;
+                        List<Polygon> polygons = module.Polygons;
 
                         foreach (Polygon other in polygons)
                         {
@@ -354,7 +348,7 @@ namespace Claw
                             if (invert)
                             {
                                 intersects = Intersect(other, polygon);
-                                intersects = new CollisionResult(intersects.Intersect, intersects.CollisionPoint, GameObject, other);
+                                intersects = new CollisionResult(intersects.Intersect, intersects.CollisionPoint, module, other);
                             }
                             else intersects = Intersect(polygon, other);
 
@@ -366,22 +360,17 @@ namespace Claw
 
             return new CollisionResult(false, null, null, null);
         }
-        private static CollisionResult IntersectRay(Line ray, IEnumerable<GameObject> gameObjects, float distance = 0, bool first = false, float cellSize = 1)
-        {
-            IEnumerable<GameObject> GameObjects = gameObjects;
+        private static CollisionResult IntersectRay(Line ray, IEnumerable<BaseModule> modules, float maxDistance = 0, bool first = false, float cellSize = 1)
+		{
+			modules = modules.OrderBy(m => Vector2.Distance(ray.End, m.Transform.Position));
 
-            if (distance == 0) GameObjects = GameObjects.OrderBy(gO => Vector2.Distance(ray.End, gO.Position)).ToArray();
-            else GameObjects = GameObjects.Where(gO => Vector2.Distance(ray.Start, gO.Position) <= distance || Vector2.Distance(ray.End, gO.Position) <= distance).OrderBy(gO => Vector2.Distance(ray.End, gO.Position)).ToArray();
+			if (maxDistance != 0) modules = modules.Where(m => Vector2.Distance(ray.Start, m.Transform.Position) <= maxDistance || Vector2.Distance(ray.End, m.Transform.Position) <= maxDistance);
 
-            if (first && GameObjects.Count() > 0)
+			if (first && modules.Count() > 0) modules = new BaseModule[] { modules.FirstOrDefault() };
+
+			foreach (BaseModule module in modules)
             {
-                var f = GameObjects.FirstOrDefault();
-                GameObjects = new GameObject[] { f };
-            }
-
-            foreach (GameObject GameObject in GameObjects)
-            {
-                foreach (Polygon polygon in GameObject.Colliders)
+                foreach (Polygon polygon in module.Polygons)
                 {
                     if (polygon.Enabled)
                     {
@@ -402,14 +391,14 @@ namespace Claw
     {
         public bool Intersect { get; private set; }
         public Vector2? CollisionPoint { get; private set; }
-        public GameObject GameObject { get; private set; }
+        public BaseModule Module { get; private set; }
         public Polygon Polygon { get; private set; }
 
-        public CollisionResult(bool intersect, Vector2? collisionPoint, GameObject gameObject, Polygon polygon)
+        public CollisionResult(bool intersect, Vector2? collisionPoint, BaseModule module, Polygon polygon)
         {
             Intersect = intersect;
             CollisionPoint = collisionPoint;
-            GameObject = gameObject;
+            Module = module;
             Polygon = polygon;
         }
 
@@ -420,33 +409,33 @@ namespace Claw
             var result = (CollisionResult)obj;
 
             return Intersect == result.Intersect && EqualityComparer<Vector2?>.Default.Equals(CollisionPoint, result.CollisionPoint) &&
-                   EqualityComparer<GameObject>.Default.Equals(GameObject, result.GameObject) && EqualityComparer<Polygon>.Default.Equals(Polygon, result.Polygon);
+                   EqualityComparer<BaseModule>.Default.Equals(Module, result.Module) && EqualityComparer<Polygon>.Default.Equals(Polygon, result.Polygon);
         }
         public override int GetHashCode()
         {
             var hashCode = -741360006;
             hashCode = hashCode * -1521134295 + Intersect.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2?>.Default.GetHashCode(CollisionPoint);
-            hashCode = hashCode * -1521134295 + EqualityComparer<GameObject>.Default.GetHashCode(GameObject);
+            hashCode = hashCode * -1521134295 + EqualityComparer<BaseModule>.Default.GetHashCode(Module);
             hashCode = hashCode * -1521134295 + EqualityComparer<Polygon>.Default.GetHashCode(Polygon);
 
             return hashCode;
         }
 
-        public static bool operator ==(CollisionResult a, CollisionResult b) => a.Intersect == b.Intersect && a.CollisionPoint == b.CollisionPoint && a.GameObject == b.GameObject && a.Polygon == b.Polygon;
-        public static bool operator !=(CollisionResult a, CollisionResult b) => a.Intersect != b.Intersect && a.CollisionPoint != b.CollisionPoint && a.GameObject != b.GameObject && a.Polygon != b.Polygon;
+        public static bool operator ==(CollisionResult a, CollisionResult b) => a.Intersect == b.Intersect && a.CollisionPoint == b.CollisionPoint && a.Module == b.Module && a.Polygon == b.Polygon;
+        public static bool operator !=(CollisionResult a, CollisionResult b) => a.Intersect != b.Intersect && a.CollisionPoint != b.CollisionPoint && a.Module != b.Module && a.Polygon != b.Polygon;
         public static bool operator ==(CollisionResult a, bool b) => a.Intersect == b;
         public static bool operator !=(CollisionResult a, bool b) => a.Intersect != b;
         public static bool operator ==(CollisionResult a, Vector2 b) => a.CollisionPoint == b;
         public static bool operator !=(CollisionResult a, Vector2 b) => a.CollisionPoint != b;
-        public static bool operator ==(CollisionResult a, GameObject b) => a.GameObject == b;
-        public static bool operator !=(CollisionResult a, GameObject b) => a.GameObject != b;
+        public static bool operator ==(CollisionResult a, BaseModule b) => a.Module == b;
+        public static bool operator !=(CollisionResult a, BaseModule b) => a.Module != b;
         public static bool operator ==(CollisionResult a, Polygon b) => a.Polygon == b;
         public static bool operator !=(CollisionResult a, Polygon b) => a.Polygon != b;
 
         public static implicit operator bool(CollisionResult a) => a.Intersect;
         public static implicit operator Vector2?(CollisionResult a) => a.CollisionPoint;
-        public static implicit operator GameObject(CollisionResult a) => a.GameObject;
+        public static implicit operator BaseModule(CollisionResult a) => a.Module;
         public static implicit operator Polygon(CollisionResult a) => a.Polygon;
     }
 }
