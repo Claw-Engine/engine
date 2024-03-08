@@ -367,7 +367,7 @@ namespace Claw.Modules
                                 basePos.X += font.Spacing.X * scale.X;
                                 break;
                             default:
-                                SpriteFont.Glyph glyph = font.Glyphs[glyphChar];
+                                Glyph glyph = font.Glyphs[glyphChar];
                                 Vector2 charMeasure = font.MeasureChar(glyphChar);
 
                                 float charAngle = rotation;

@@ -153,7 +153,7 @@ namespace Claw.Graphics
                             break;
                         default:
                             charHeight = Math.Max(charHeight, font.Glyphs[glyphChar].Area.Height);
-                            SpriteFont.Glyph glyph = font.Glyphs[glyphChar];
+                            Glyph glyph = font.Glyphs[glyphChar];
 
                             if (i > 0) basePos.X += glyph.KerningPair.Get(text[i - 1], 0);
                             
