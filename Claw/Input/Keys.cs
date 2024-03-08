@@ -3,7 +3,7 @@
     /// <summary>
     /// Define as teclas do teclado.
     /// </summary>
-    public enum Keys
+    public enum Keys : byte
     {
         None = 0,
 

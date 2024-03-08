@@ -30,16 +30,12 @@ namespace Claw.Input
         /// Retorna uma lista com todas as teclas que estão pressionadas.
         /// </summary>
         /// <returns></returns>
-        public List<Keys> GetDownKeys()
+        public void FillDownKeys(List<Keys> down)
         {
-            List<Keys> down = new List<Keys>();
-
-            foreach (int i in keysValues)
+            foreach (byte i in keysValues)
             {
                 if (keysState[i] == 1) down.Add((Keys)i);
             }
-
-            return down;
         }
     }
 }

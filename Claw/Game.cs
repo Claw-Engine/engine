@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Claw.Graphics;
 using Claw.Graphics.UI;
 using Claw.Audio;
@@ -91,6 +92,8 @@ namespace Claw
 						Audio = new AudioManager();
 						Renderer.ClearColor = Color.CornflowerBlue;
 						_modules = new ModuleCollection();
+
+                        Input.Input.TurnOffTextInput();
 					}
 				}
 			}
@@ -201,6 +204,12 @@ namespace Claw
 						Input.TouchInput.MotionFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure,
                             new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y), new Vector2(sdlEvent.tfinger.dx, sdlEvent.tfinger.dy));
 						break;
+					case SDL.SDL_EventType.SDL_TEXTINPUT:
+                        unsafe
+                        {
+                            Input.Input.TriggerText(Encoding.UTF8.GetString(sdlEvent.text.text, 32)[0]);
+						}
+                        break;
                 }
 
                 SDL.SDL_PumpEvents();
