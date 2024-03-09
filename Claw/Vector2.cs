@@ -48,7 +48,7 @@ namespace Claw
         }
 
         /// <summary>
-        /// Transforma este <see cref="Vector2"/> em um vetor de unidade com a mesma direção.
+        /// Transforma este <see cref="Vector2"/> em um vetor de magnitude 1 com a mesma direção.
         /// </summary>
         public void Normalize()
         {
@@ -111,10 +111,10 @@ namespace Claw
         /// </summary>
         public static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
 
-        /// <summary>
-        /// Transforma um <see cref="Vector2"/> em um vetor de unidade com a mesma direção.
-        /// </summary>
-        public static Vector2 Normalize(Vector2 value)
+		/// <summary>
+		/// Transforma um <see cref="Vector2"/> em um vetor de magnitude 1 com a mesma direção.
+		/// </summary>
+		public static Vector2 Normalize(Vector2 value)
         {
             value.Normalize();
 

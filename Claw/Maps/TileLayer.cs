@@ -46,7 +46,7 @@ namespace Claw.Maps
         private int _renderOrder;
 
         /// <summary>
-        /// Retorna/muda um tile da layer.
+        /// Retorna/altera um tile da layer.
         /// </summary>
         public int this[Vector2 cell]
         {
@@ -59,7 +59,7 @@ namespace Claw.Maps
             }
         }
         /// <summary>
-        /// Retorna/muda um tile da layer.
+        /// Retorna/altera um tile da layer.
         /// </summary>
         public int this[int x, int y]
         {

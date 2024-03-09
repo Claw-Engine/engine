@@ -359,15 +359,20 @@ namespace Claw.Graphics
 		/// </summary>
 		public static void DebugCollider(float lineWidth, RigidBody body, Color color, int segments = 16)
 		{
-			if (body.Shape is CircleShape circle)
+            for (int i = 0; i < body.ShapeCount; i++)
             {
-				Circle(lineWidth, circle.radiusInWorld, circle.centerInWorld, color, segments);
-                Rectangle(lineWidth, new Claw.Rectangle(circle.centerInWorld - new Vector2(circle.radiusInWorld), new Vector2(circle.radiusInWorld * 2)), color);
-            }
-            else if (body.Shape is PolygonShape polygon)
-            {
-                Polygon(lineWidth, color, polygon.verticesInWorld);
-				Rectangle(lineWidth, polygon.BoundingBox, color);
+                IShape shape = body[i];
+
+				if (shape is CircleShape circle)
+				{
+					Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
+					Rectangle(lineWidth, circle.BoundingBox, color);
+				}
+				else if (shape is PolygonShape polygon)
+				{
+					Polygon(lineWidth, color, polygon.verticesInWorld);
+					Rectangle(lineWidth, polygon.BoundingBox, color);
+				}
 			}
 		}
 		#endregion

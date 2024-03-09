@@ -117,11 +117,12 @@
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\SpriteRenderer.cs" />
     <Compile Include="Modules\Transform.cs" />
+    <Compile Include="Physics\CollisionChecker.cs" />
     <Compile Include="Physics\PolygonShape.cs" />
     <Compile Include="Physics\BodyType.cs" />
     <Compile Include="Physics\CircleShape.cs" />
     <Compile Include="Physics\IShape.cs" />
-    <Compile Include="Physics\Physics.cs" />
+    <Compile Include="Physics\PhysicsManager.cs" />
     <Compile Include="Physics\RigidBody.cs" />
     <Compile Include="Save\SaveAttributes.cs" />
     <Compile Include="Particles\Particle.cs" />

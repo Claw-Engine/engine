@@ -7,24 +7,41 @@ namespace Claw.Physics
 	/// </summary>
 	public sealed class CircleShape : IShape
 	{
-		public float Area { get; }
-		public float Radius { get; }
-		public Vector2 Offset { get; }
-		internal float radiusInWorld;
-		internal Vector2 centerInWorld;
-
-		public CircleShape(float radius, Vector2 offset)
+		public float Area { get; private set; }
+		public float Radius
 		{
-			Area = radius * radius * Mathf.PI;
+			get => _radius;
+			set
+			{
+				_radius = value;
+				Area = _radius * _radius * Mathf.PI;
+				Body.needUpdate = true;
+			}
+		}
+		public Vector2 Offset { get; set; }
+		public RigidBody Body { get; }
+		private float _radius;
+		internal float radiusInWorld;
+
+		public Vector2 Center { get; private set; }
+		public Rectangle BoundingBox => _boundingBox;
+		private Rectangle _boundingBox;
+
+		internal CircleShape(RigidBody body, float radius, Vector2 offset)
+		{
+			Body = body;
 			Radius = radius;
 			Offset = offset;
 		}
-		public CircleShape(float radius) : this(radius, Vector2.Zero) { }
 
-		public void Update(RigidBody body)
+		public void Update()
 		{
-			radiusInWorld = Radius * Math.Max(body.Transform.Scale.X, body.Transform.Scale.Y);
-			centerInWorld = body.Transform.Position + Offset * body.Transform.Scale;
+			radiusInWorld = Radius * Math.Max(Body.Transform.Scale.X, Body.Transform.Scale.Y);
+			Center = Body.Transform.Position + Offset * Body.Transform.Scale;
+			_boundingBox.X = Center.X - radiusInWorld;
+			_boundingBox.Y = Center.Y - radiusInWorld;
+			_boundingBox.Width = radiusInWorld * 2;
+			_boundingBox.Height = _boundingBox.Width;
 		}
 	}
 }

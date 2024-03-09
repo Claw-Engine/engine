@@ -4,6 +4,7 @@ using Claw.Graphics;
 using Claw.Graphics.UI;
 using Claw.Audio;
 using Claw.Maps;
+using Claw.Physics;
 
 namespace Claw
 {
@@ -17,6 +18,21 @@ namespace Claw
         public Window Window { get; private set; }
         public Renderer Renderer { get; private set; }
         public AudioManager Audio { get; private set; }
+        public PhysicsManager Physics
+        {
+            get => _physics;
+            set
+            {
+                if (_physics != value)
+                {
+					if (_physics != null) _physics.RemoveFrom(Modules);
+
+					if (value != null) value.AddTo(Modules);
+
+					_physics = value;
+				}
+            }
+        }
         public UI UI;
 		public Tilemap Tilemap
 		{
@@ -35,6 +51,7 @@ namespace Claw
 		}
 		public ModuleCollection Modules => _modules;
         private bool isRunning;
+        private PhysicsManager _physics;
 		private Tilemap _tilemap;
 		private ModuleCollection _modules;
 
@@ -106,7 +123,6 @@ namespace Claw
 
             if (isRunning)
             {
-                Physics.Physics.Initialize();
                 Input.Input.SetControllers();
                 Initialize();
 
@@ -147,7 +163,7 @@ namespace Claw
                 if (!ConsoleOnly) Input.Input.Update();
                 
                 Time.Update(frameTime);
-                Physics.Physics.Step();
+                Physics?.Step();
                 Step();
 
                 if (!ConsoleOnly)

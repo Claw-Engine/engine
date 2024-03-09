@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace Claw.Physics
 {
@@ -10,59 +9,71 @@ namespace Claw.Physics
 	{
 		public int VerticeCount => vertices.Length;
 		/// <summary>
-		/// Retorna o vértice específico.
+		/// Retorna/altera o vértice específico.
 		/// </summary>
-		public Vector2 this[int index, bool inWorld = false]
+		public Vector2 this[int index]
 		{
-			get
+			get => vertices[index];
+			set
 			{
-				if (inWorld) return verticesInWorld[index];
-				
-				return vertices[index];
+				vertices[index] = value;
+				Area = CalculateArea(vertices);
+				Body.needUpdate = true;
 			}
 		}
 
-		public float Area { get; }
-		public Vector2 Offset { get; }
+		public float Area { get; private set; }
+		public Vector2 Offset { get; set; }
+		public RigidBody Body { get; }
 		private Vector2[] vertices;
 		internal Vector2[] verticesInWorld;
 
-		public float Top { get; private set; }
-		public float Bottom { get; private set; }
-		public float Left { get; private set; }
-		public float Right { get; private set; }
-		public Vector2 Center { get; private set; }
-		public Vector2 ArithmeticMean => _arithmeticMean;
+		public Vector2 Center => _center;
 		public Rectangle BoundingBox => _boundingBox;
-		private Vector2 _arithmeticMean;
+		private Vector2 _center;
 		private Rectangle _boundingBox;
 
-		private PolygonShape(float area, Vector2 offset, params Vector2[] vertices)
+		internal PolygonShape(RigidBody body, float area, Vector2 offset, params Vector2[] vertices)
 		{
+			Body = body;
 			Area = area;
 			Offset = offset;
 			this.vertices = vertices;
 			verticesInWorld = new Vector2[vertices.Length];
 		}
 
-		public static PolygonShape CreateBox(Vector2 size, Vector2 offset)
+		public void Update()
 		{
-			Vector2 start = size * -.5f + offset;
+			float top = Body.Transform.Position.Y;
+			float bottom = Body.Transform.Position.Y;
+			float left = Body.Transform.Position.X;
+			float right = Body.Transform.Position.X;
+			_center = Vector2.Zero;
 
-			PolygonShape result = new PolygonShape(size.X * size.Y, offset, new Vector2[4]
+			for (int i = 0; i < vertices.Length; i++)
 			{
-				start,
-				new Vector2(start.X + size.X, start.Y),
-				new Vector2(start.X + size.X, start.Y + size.Y),
-				new Vector2(start.X, start.Y + size.Y),
-			});
+				verticesInWorld[i] = Vector2.Rotate((vertices[i] + Offset) * Body.Transform.Scale + Body.Transform.Position, Body.Transform.Position, Body.Transform.Rotation);
+				_center.X += verticesInWorld[i].X;
+				_center.Y += verticesInWorld[i].Y;
 
-			return result;
+				if (top > verticesInWorld[i].Y) top = verticesInWorld[i].Y;
+
+				if (bottom < verticesInWorld[i].Y) bottom = verticesInWorld[i].Y;
+
+				if (left > verticesInWorld[i].X) left = verticesInWorld[i].X;
+
+				if (right < verticesInWorld[i].X) right = verticesInWorld[i].X;
+			}
+
+			_boundingBox.X = left;
+			_boundingBox.Y = top;
+			_boundingBox.Width = right - left;
+			_boundingBox.Height = bottom - top;
+			_center /= vertices.Length;
 		}
-		public static PolygonShape CreatePolygon(Vector2 offset, params Vector2[] vertices)
-		{
-			if (vertices == null) return null;
 
+		internal static float CalculateArea(Vector2[] vertices)
+		{
 			double area = 0;
 			int j = vertices.Length - 1;
 
@@ -72,50 +83,7 @@ namespace Claw.Physics
 				j = i;
 			}
 
-			return new PolygonShape((float)(area * .5f), offset, vertices);
-		}
-
-		public void Update(RigidBody body)
-		{
-			Center = body.Transform.Position;
-			Top = body.Transform.Position.Y;
-			Bottom = body.Transform.Position.Y;
-			Left = body.Transform.Position.X;
-			Right = body.Transform.Position.X;
-			_arithmeticMean = Vector2.Zero;
-
-			if (vertices == null)
-			{
-				_boundingBox.X = body.Transform.Position.X;
-				_boundingBox.Y = body.Transform.Position.Y;
-				_boundingBox.Width = 0;
-				_boundingBox.Height = 0;
-
-				return;
-			}
-
-			for (int i = 0; i < vertices.Length; i++)
-			{
-				verticesInWorld[i] = Vector2.Rotate((vertices[i] + Offset) * body.Transform.Scale + body.Transform.Position, body.Transform.Position, body.Transform.Rotation);
-				_arithmeticMean.X += verticesInWorld[i].X;
-				_arithmeticMean.Y += verticesInWorld[i].Y;
-
-				if (Top > verticesInWorld[i].Y) Top = verticesInWorld[i].Y;
-
-				if (Bottom < verticesInWorld[i].Y) Bottom = verticesInWorld[i].Y;
-
-				if (Left > verticesInWorld[i].X) Left = verticesInWorld[i].X;
-
-				if (Right < verticesInWorld[i].X) Right = verticesInWorld[i].X;
-			}
-
-			Center = new Vector2(Left + Math.Abs(Right - Left) * .5f, Top + Math.Abs(Bottom - Top) * .5f);
-
-			_boundingBox.X = Left;
-			_boundingBox.Y = Top;
-			_boundingBox.Width = Right - Left;
-			_boundingBox.Height = Bottom - Top;
-			_arithmeticMean /= vertices.Length;
+			return (float)(area * .5d);
 		}
 	}
 }
