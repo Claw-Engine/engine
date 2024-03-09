@@ -27,7 +27,7 @@ namespace Claw
         /// <summary>
         /// Adiciona uma tag em um módulo.
         /// </summary>
-        public static void AddObject(string tag, BaseModule module)
+        public static void AddModule(string tag, BaseModule module)
         {
             if (!tags.ContainsKey(tag)) tags.Add(tag, new List<BaseModule>());
 
@@ -36,7 +36,7 @@ namespace Claw
         /// <summary>
         /// Remove uma tag de um módulo.
         /// </summary>
-        public static void RemoveObject(string tag, BaseModule module)
+        public static void RemoveModule(string tag, BaseModule module)
         {
             if (tags.ContainsKey(tag) && tags[tag].Contains(module)) tags[tag].Remove(module);
         }

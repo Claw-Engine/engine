@@ -11,15 +11,15 @@ namespace Claw.Physics
 		#region Módulo
 		public int StepOrder
 		{
-			get => _StepOrder;
+			get => _stepOrder;
 			set
 			{
-				if (_StepOrder != value) StepOrderChanged?.Invoke(this);
+				if (_stepOrder != value) StepOrderChanged?.Invoke(this);
 
-				_StepOrder = value;
+				_stepOrder = value;
 			}
 		}
-		private int _StepOrder;
+		private int _stepOrder;
 
 		public event Action<IStep> StepOrderChanged;
 		#endregion

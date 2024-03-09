@@ -9,25 +9,25 @@ namespace Claw.Modules
 	{
 		public int StepOrder
 		{
-			get => _StepOrder;
+			get => _stepOrder;
 			set
 			{
-				if (_StepOrder != value) StepOrderChanged?.Invoke(this);
+				if (_stepOrder != value) StepOrderChanged?.Invoke(this);
 
-				_StepOrder = value;
+				_stepOrder = value;
 			}
 		}
 		public int RenderOrder
 		{
-			get => _RenderOrder;
+			get => _renderOrder;
 			set
 			{
-				if (_RenderOrder != value) RenderOrderChanged?.Invoke(this);
+				if (_renderOrder != value) RenderOrderChanged?.Invoke(this);
 
-				_RenderOrder = value;
+				_renderOrder = value;
 			}
 		}
-		private int _StepOrder, _RenderOrder;
+		private int _stepOrder, _renderOrder;
 
 		public event Action<IStep> StepOrderChanged;
 		public event Action<IRender> RenderOrderChanged;

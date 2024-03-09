@@ -10,18 +10,18 @@ namespace Claw.Modules
 	{
 		public int RenderOrder
 		{
-			get => _RenderOrder;
+			get => _renderOrder;
 			set
 			{
-				if (_RenderOrder != value)
+				if (_renderOrder != value)
 				{
-					_RenderOrder = value;
+					_renderOrder = value;
 
 					RenderOrderChanged?.Invoke(this);
 				}
 			}
 		}
-		private int _RenderOrder;
+		private int _renderOrder;
 		public event Action<IRender> RenderOrderChanged;
 
 		public float Opacity = 1;

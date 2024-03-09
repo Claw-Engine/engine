@@ -26,7 +26,6 @@ namespace Claw.Modules
 		public string Name = string.Empty;
 		public Game Game => Game.Instance;
 		public readonly Transform Transform;
-		public List<Polygon> Polygons = new List<Polygon>();
 		private bool _enabled = true;
 		internal List<string> tags = new List<string>();
 
@@ -45,14 +44,6 @@ namespace Claw.Modules
 		public abstract void Initialize();
 
 		/// <summary>
-		/// Realiza o método <see cref="Polygon.Update"/> para todos os elementos em <see cref="Polygons"/>.
-		/// </summary>
-		public void UpdatePolygons()
-		{
-			for (int i = 0; i < Polygons.Count; i++) Polygons[i].Update();
-		}
-
-		/// <summary>
 		/// Adiciona uma tag no módulo.
 		/// </summary>
 		/// <param name="tag">Case insensitive.</param>
@@ -62,7 +53,7 @@ namespace Claw.Modules
 
 			tag = tag.ToLower();
 
-			TagManager.AddObject(tag, this);
+			TagManager.AddModule(tag, this);
 
 			if (!tags.Contains(tag)) tags.Add(tag);
 		}
@@ -76,7 +67,7 @@ namespace Claw.Modules
 
 			tag = tag.ToLower();
 
-			TagManager.RemoveObject(tag, this);
+			TagManager.RemoveModule(tag, this);
 
 			if (tags.Contains(tag)) tags.Remove(tag);
 		}
@@ -103,7 +94,7 @@ namespace Claw.Modules
 
 			Game.Modules.Remove(this);
 
-			for (int i = 0; i < tags.Count; i++) TagManager.RemoveObject(tags[i], this);
+			for (int i = 0; i < tags.Count; i++) TagManager.RemoveModule(tags[i], this);
 
 			tags.Clear();
 

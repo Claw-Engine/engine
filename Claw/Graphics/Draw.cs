@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Claw.Extensions;
+using Claw.Physics;
 
 namespace Claw.Graphics
 {
@@ -352,20 +354,28 @@ namespace Claw.Graphics
         /// </summary>
         public static void BezierCurve(float lineWidth, int segments, Color color, Vector2 point0, Vector2 point1) => BezierCurve(lineWidth, segments, color, point0, point0, point1, point1);
 
-        /// <summary>
-        /// Desenha um colisor e um quadrado com a área que ele ocupa.
-        /// </summary>
-        public static void DebugCollider(float lineWidth, Polygon polygon, Color color)
-        {
-            Rectangle(lineWidth, polygon.BoundingBox, color);
-            Polygon(lineWidth, color, polygon.LinesInWorld);
-        }
-        #endregion
+		/// <summary>
+		/// Desenha o colisor de um corpo e um quadrado com a área que ele ocupa.
+		/// </summary>
+		public static void DebugCollider(float lineWidth, RigidBody body, Color color, int segments = 16)
+		{
+			if (body.Shape is CircleShape circle)
+            {
+				Circle(lineWidth, circle.radiusInWorld, circle.centerInWorld, color, segments);
+                Rectangle(lineWidth, new Claw.Rectangle(circle.centerInWorld - new Vector2(circle.radiusInWorld), new Vector2(circle.radiusInWorld * 2)), color);
+            }
+            else if (body.Shape is PolygonShape polygon)
+            {
+                Polygon(lineWidth, color, polygon.verticesInWorld);
+				Rectangle(lineWidth, polygon.BoundingBox, color);
+			}
+		}
+		#endregion
 
-        /// <summary>
-        /// Se for diferente de nulo, o <see cref="Draw"/> forçará todas as texturas a terem esse <see cref="BlendMode"/>.
-        /// </summary>
-        public static void ForceBlendMode(BlendMode? blendMode) => forcedBlendMode = blendMode;
+		/// <summary>
+		/// Se for diferente de nulo, o <see cref="Draw"/> forçará todas as texturas a terem esse <see cref="BlendMode"/>.
+		/// </summary>
+		public static void ForceBlendMode(BlendMode? blendMode) => forcedBlendMode = blendMode;
 
         /// <summary>
         /// Retorna a câmera atual.

@@ -88,7 +88,7 @@ namespace Claw.Utils
             for (int i = 0; i < modules.Count; i++) action(modules[i]);
         }
 
-        private void ModuleAdded(object sender, BaseModule module)
+        private void ModuleAdded(BaseModule module)
         {
             if (module is TFilter myType)
             {
@@ -102,7 +102,7 @@ namespace Claw.Utils
             
             QuickSort();
         }
-        private void ModuleRemoved(object sender, BaseModule module)
+        private void ModuleRemoved(BaseModule module)
         {
             if (module is TFilter myType)
             {

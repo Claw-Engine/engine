@@ -35,15 +35,15 @@ namespace Claw.Maps
 
         public int RenderOrder
         {
-            get => _RenderOrder;
+            get => _renderOrder;
             set
             {
-				_RenderOrder = value;
+				_renderOrder = value;
 
                 RenderOrderChanged?.Invoke(this);
             }
         }
-        private int _RenderOrder;
+        private int _renderOrder;
 
         /// <summary>
         /// Retorna/muda um tile da layer.

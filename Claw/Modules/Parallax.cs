@@ -20,15 +20,15 @@ namespace Claw.Modules
         
         public int RenderOrder
         {
-            get => _RenderOrder;
+            get => _renderOrder;
             set
             {
-                if (_RenderOrder != value) RenderOrderChanged?.Invoke(this);
+                if (_renderOrder != value) RenderOrderChanged?.Invoke(this);
 
-				_RenderOrder = value;
+				_renderOrder = value;
             }
         }
-        private int _RenderOrder;
+        private int _renderOrder;
 
         public event Action<IRender> RenderOrderChanged;
 

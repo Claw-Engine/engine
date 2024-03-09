@@ -52,9 +52,9 @@ namespace Claw
         /// </summary>
         public void Normalize()
         {
-            float val = 1.0f / (float)Math.Sqrt((X * X) + (Y * Y));
-            X *= val;
-            Y *= val;
+            float value = 1.0f / (float)Math.Sqrt((X * X) + (Y * Y));
+            X *= value;
+            Y *= value;
         }
 
         /// <summary>
@@ -93,8 +93,23 @@ namespace Claw
         {
             float v1 = a.X - b.X, v2 = a.Y - b.Y;
 
-            return (float)Math.Sqrt((v1 * v1) + (v2 * v2));
+            return (float)Math.Sqrt(v1 * v1 + v2 * v2);
         }
+
+        /// <summary>
+        /// Retorna a distância entre um vetor e o ponto 0,0.
+        /// </summary>
+        public static float Length(Vector2 value) => (float)Math.Sqrt(value.X * value.X + value.Y * value.Y);
+
+        /// <summary>
+        /// Retorna o produto escalar entre dois vetores.
+        /// </summary>
+        public static float Dot(Vector2 a, Vector2 b) => a.X * b.X + a.Y * b.Y;
+
+        /// <summary>
+        /// Retorna o produto vetorial/cruzado entre dois vetores.
+        /// </summary>
+        public static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
 
         /// <summary>
         /// Transforma um <see cref="Vector2"/> em um vetor de unidade com a mesma direção.

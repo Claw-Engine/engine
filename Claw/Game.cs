@@ -106,6 +106,7 @@ namespace Claw
 
             if (isRunning)
             {
+                Physics.Physics.Initialize();
                 Input.Input.SetControllers();
                 Initialize();
 
@@ -146,6 +147,7 @@ namespace Claw
                 if (!ConsoleOnly) Input.Input.Update();
                 
                 Time.Update(frameTime);
+                Physics.Physics.Step();
                 Step();
 
                 if (!ConsoleOnly)

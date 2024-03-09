@@ -11,7 +11,7 @@ namespace Claw
 	/// </summary>
 	public sealed class ModuleCollection : Collection<BaseModule>
     {
-		public event EventHandler<BaseModule> ModuleAdded, ModuleRemoved;
+		public event Action<BaseModule> ModuleAdded, ModuleRemoved;
 
         /// <summary>
         /// Cria um <see cref="SortedModules{IStep}"/> configurado.
@@ -92,7 +92,7 @@ namespace Claw
             base.ClearItems();
         }
 
-        private void OnModuleAdded(BaseModule module) => ModuleAdded?.Invoke(this, module);
-        private void OnModuleRemoved(BaseModule module) => ModuleRemoved?.Invoke(this, module);
+        private void OnModuleAdded(BaseModule module) => ModuleAdded?.Invoke(module);
+        private void OnModuleRemoved(BaseModule module) => ModuleRemoved?.Invoke(module);
     }
 }
