@@ -148,6 +148,16 @@ namespace Claw.Physics
 		/// </summary>
 		public void Impulse(Vector2 impulse) => this.impulse += impulse;
 
+		/// <summary>
+		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> ou <see cref="BodyType.Static"/> entram em um <see cref="BodyType.Trigger"/>.
+		/// </summary>
+		public virtual void Triggering(CollisionResult collision) { }
+		/// <summary>
+		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> colidem com corpos que NÃO sejam <see cref="BodyType.Trigger"/>.
+		/// </summary>
+		/// <returns>Se verdadeiro, o sistema deve responder à colisão.</returns>
+		public virtual bool Colliding(CollisionResult collisionResult) => true;
+
 		public override void Initialize() { }
 		public virtual void Step()
 		{

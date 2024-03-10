@@ -69,6 +69,33 @@ namespace Claw.Physics
 			return false;
 		}
 
+		/// <summary>
+		/// Checa se dois corpos estão se sobrepondo.
+		/// </summary>
+		public static CollisionResult Intersects(RigidBody a, RigidBody b)
+		{
+			bool intersects = Intersects(a, b, out float depth, out Vector2 direction, out IShape aShape, out IShape bShape);
+
+			if (!intersects)
+			{
+				depth = 0;
+				direction = Vector2.Zero;
+				aShape = null;
+				bShape = null;
+			}
+
+			return new CollisionResult(intersects, depth, direction, aShape, bShape);
+		}
+		/// <summary>
+		/// Checa se dois colisores estão se sobrepondo.
+		/// </summary>
+		public static CollisionResult Intersect(IShape a, IShape b)
+		{
+			bool intersects = Intersects(a, b, out float depth, out Vector2 direction);
+
+			return new CollisionResult(intersects, depth, direction, a, b);
+		}
+
 		private static bool Intersects(float aRadius, Vector2 aCenter, float bRadius, Vector2 bCenter, out float depth, out Vector2 direction)
 		{
 			float radii = aRadius + bRadius;

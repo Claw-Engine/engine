@@ -14,7 +14,7 @@
 		/// </summary>
 		Static,
 		/// <summary>
-		/// Detecta a colisão com outros corpos, mas os outros corpos não o detectam.
+		/// Os outros corpos detectam a colisão com ele, mas não reagem.
 		/// </summary>
 		Trigger
 	}

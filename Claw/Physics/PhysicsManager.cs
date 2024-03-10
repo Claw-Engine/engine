@@ -84,29 +84,36 @@ namespace Claw.Physics
 		{
 			switch (b.Body.Type)
 			{
-				case BodyType.Trigger: break;
+				case BodyType.Trigger: a.Body.Triggering(new CollisionResult(true, depth, direction, a, b)); break;
 				case BodyType.Static:
 					if (a.Body.Type == BodyType.Static) break;
 					goto case BodyType.Normal;
 				case BodyType.Normal:
-					Vector2 relativeVelocity = a.Body.Velocity - b.Body.Velocity;
+					bool resolve = true;
 
-					if (Vector2.Dot(relativeVelocity, direction) <= 0)
+					if (a.Body.Type == BodyType.Normal) resolve = a.Body.Colliding(new CollisionResult(true, depth, direction, a, b));
+
+					if (resolve)
 					{
-						float j = -(1 + Math.Min(a.Body.Bounciness, b.Body.Bounciness)) * Vector2.Dot(relativeVelocity, direction);
-						j /= a.Body.inverseMass + b.Body.inverseMass;
+						Vector2 relativeVelocity = a.Body.Velocity - b.Body.Velocity;
 
-						Vector2 impulse = j * direction;
-						a.Body.Velocity += impulse * a.Body.inverseMass;
-						b.Body.Velocity -= impulse * b.Body.inverseMass;
-					}
+						if (Vector2.Dot(relativeVelocity, direction) <= 0)
+						{
+							float j = -(1 + Math.Min(a.Body.Bounciness, b.Body.Bounciness)) * Vector2.Dot(relativeVelocity, direction);
+							j /= a.Body.inverseMass + b.Body.inverseMass;
 
-					if (b.Body.Type == BodyType.Static) a.Body.Transform.Position += depth * direction;
-					else if (a.Body.Type == BodyType.Static) b.Body.Transform.Position -= depth * direction;
-					else
-					{
-						a.Body.Transform.Position += depth * .5f * direction;
-						b.Body.Transform.Position -= depth * .5f * direction;
+							Vector2 impulse = j * direction;
+							a.Body.Velocity += impulse * a.Body.inverseMass;
+							b.Body.Velocity -= impulse * b.Body.inverseMass;
+						}
+
+						if (b.Body.Type == BodyType.Static) a.Body.Transform.Position += depth * direction;
+						else if (a.Body.Type == BodyType.Static) b.Body.Transform.Position -= depth * direction;
+						else
+						{
+							a.Body.Transform.Position += depth * .5f * direction;
+							b.Body.Transform.Position -= depth * .5f * direction;
+						}
 					}
 					break;
 			}
