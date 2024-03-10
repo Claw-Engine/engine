@@ -11,9 +11,9 @@ namespace Claw.Physics
 	public sealed class PhysicsManager
 	{
 		/// <summary>
-		/// Quantas vezes o processo de física pode rodar por frame (10 por padrão).
+		/// Quantas vezes o processo de resolução de colisão pode rodar por frame (5 por padrão).
 		/// </summary>
-		public static int MaxIterations = 10;
+		public static int MaxIterations = 5;
 		/// <summary>
 		/// Unidade de medida, em pixels (16 por padrão).
 		/// </summary>
