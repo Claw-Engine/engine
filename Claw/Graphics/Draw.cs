@@ -355,9 +355,9 @@ namespace Claw.Graphics
         public static void BezierCurve(float lineWidth, int segments, Color color, Vector2 point0, Vector2 point1) => BezierCurve(lineWidth, segments, color, point0, point0, point1, point1);
 
 		/// <summary>
-		/// Desenha o colisor de um corpo e um quadrado com a área que ele ocupa.
+		/// Desenha os colisores de um corpo e a área que eles ocupam.
 		/// </summary>
-		public static void DebugCollider(float lineWidth, RigidBody body, Color color, int segments = 16)
+		public static void DebugBody(float lineWidth, RigidBody body, Color color, int segments = 16)
 		{
             for (int i = 0; i < body.ShapeCount; i++)
             {
@@ -365,13 +365,13 @@ namespace Claw.Graphics
 
 				if (shape is CircleShape circle)
 				{
+					Rectangle(lineWidth, circle.BoundingBox, color * .5f);
 					Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
-					Rectangle(lineWidth, circle.BoundingBox, color);
 				}
 				else if (shape is PolygonShape polygon)
 				{
+					Rectangle(lineWidth, polygon.BoundingBox, color * .5f);
 					Polygon(lineWidth, color, polygon.verticesInWorld);
-					Rectangle(lineWidth, polygon.BoundingBox, color);
 				}
 			}
 		}

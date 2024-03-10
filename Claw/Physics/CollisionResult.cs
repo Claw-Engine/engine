@@ -70,6 +70,15 @@ namespace Claw.Physics
 			Shape = null;
 			OtherShape = null;
 		}
+		/// <summary>
+		/// Troca <see cref="Shape"/> por <see cref="OtherShape"/> e vice-versa.
+		/// </summary>
+		internal void RevertShapes()
+		{
+			IShape temp = Shape;
+			Shape = OtherShape;
+			OtherShape = temp;
+		}
 
 		public static implicit operator bool(CollisionResult value) => value.Intersects;
 	}

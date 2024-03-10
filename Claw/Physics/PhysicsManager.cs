@@ -91,7 +91,11 @@ namespace Claw.Physics
 
 			if (a.Type == BodyType.Trigger)
 			{
-				b.Triggering(result);
+				if (b.Type != BodyType.Trigger)
+				{
+					result.RevertShapes();
+					b.Triggering(result);
+				}
 
 				return;
 			}
@@ -106,7 +110,12 @@ namespace Claw.Physics
 					bool resolve = true;
 
 					if (a.Type == BodyType.Normal) resolve = a.Colliding(result);
-					else if (b.Type == BodyType.Normal) b.Colliding(result);
+					else if (b.Type == BodyType.Normal)
+					{
+						result.RevertShapes();
+
+						resolve = b.Colliding(result);
+					}
 
 					if (resolve)
 					{
