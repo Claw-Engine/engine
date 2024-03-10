@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Claw.Physics
 {
@@ -7,96 +8,77 @@ namespace Claw.Physics
 	/// </summary>
 	public static class CollisionChecker
 	{
+		private const float CompareTolerance = .001f;
+
 		/// <summary>
 		/// Checa se dois corpos estão se sobrepondo.
 		/// </summary>
 		/// <param name="depth">A profundidade da sobreposição.</param>
 		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
-		public static bool Intersects(RigidBody a, RigidBody b, out float depth, out Vector2 direction, out IShape aShape, out IShape bShape)
+		public static CollisionResult Intersects(RigidBody a, RigidBody b)
 		{
-			for (int aIndex = 0; aIndex < a.ShapeCount; aIndex++)
-			{
-				for (int bIndex = 0; bIndex < b.ShapeCount; bIndex++)
-				{
-					aShape = a[aIndex];
-					bShape = b[bIndex];
+			CollisionResult result = new CollisionResult();
 
-					if (Intersects(aShape, bShape, out depth, out direction)) return true;
-				}
-			}
+			Intersects(a, b, result);
 
-			depth = 0;
-			direction = Vector2.Zero;
-			aShape = null;
-			bShape = null;
-
-			return false;
+			return result;
 		}
 		/// <summary>
 		/// Checa se dois colisores estão se sobrepondo.
 		/// </summary>
 		/// <param name="depth">A profundidade da sobreposição.</param>
 		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
-		public static bool Intersects(IShape a, IShape b, out float depth, out Vector2 direction)
+		public static CollisionResult Intersects(IShape a, IShape b)
 		{
+			CollisionResult result = new CollisionResult();
+
+			Intersects(a, b, result);
+
+			return result;
+		}
+		internal static void Intersects(RigidBody a, RigidBody b, CollisionResult result)
+		{
+			for (int aIndex = 0; aIndex < a.ShapeCount; aIndex++)
+			{
+				for (int bIndex = 0; bIndex < b.ShapeCount; bIndex++)
+				{
+					result.Reset();
+					Intersects(a[aIndex], b[bIndex], result);
+
+					if (result) return;
+				}
+			}
+		}
+		internal static void Intersects(IShape a, IShape b, CollisionResult result)
+		{
+			result.Shape = a;
+			result.OtherShape = b;
+
+			if (!a.BoundingBox.Intersects(b.BoundingBox) && !b.BoundingBox.Intersects(a.BoundingBox)) return;
+
 			if (a is CircleShape aCircle)
 			{
-				if (b is CircleShape bCircle) return Intersects(aCircle.radiusInWorld, aCircle.Center, bCircle.radiusInWorld, bCircle.Center, out depth, out direction);
+				if (b is CircleShape bCircle) Intersects(aCircle.radiusInWorld, aCircle.Center, bCircle.radiusInWorld, bCircle.Center, result);
 				else if (b is PolygonShape bPolygon)
 				{
-					bool result = Intersects(aCircle.radiusInWorld, aCircle.Center, bPolygon.Center, bPolygon.verticesInWorld, out depth, out direction);
-					direction = -direction;
+					Intersects(aCircle.radiusInWorld, aCircle.Center, bPolygon.Center, bPolygon.verticesInWorld, result);
 
-					return result;
+					result.Direction = -result.Direction;
 				}
 			}
 			else if (a is PolygonShape aPolygon)
 			{
 				if (b is PolygonShape bPolygon)
 				{
-					bool result = Intersects(aPolygon.verticesInWorld, bPolygon.verticesInWorld, out depth, out direction);
-					
-					if (result && Vector2.Dot(aPolygon.Center - bPolygon.Center, direction) < 0) direction = -direction;
+					Intersects(aPolygon.verticesInWorld, bPolygon.verticesInWorld, result);
 
-					return result;
+					if (result && Vector2.Dot(aPolygon.Center - bPolygon.Center, result.Direction) < 0) result.Direction = -result.Direction;
 				}
-				else if (b is CircleShape bCircle) return Intersects(bCircle.radiusInWorld, bCircle.Center, aPolygon.Center, aPolygon.verticesInWorld, out depth, out direction);
+				else if (b is CircleShape bCircle) Intersects(bCircle.radiusInWorld, bCircle.Center, aPolygon.Center, aPolygon.verticesInWorld, result);
 			}
-
-			depth = 0;
-			direction = Vector2.Zero;
-
-			return false;
 		}
 
-		/// <summary>
-		/// Checa se dois corpos estão se sobrepondo.
-		/// </summary>
-		public static CollisionResult Intersects(RigidBody a, RigidBody b)
-		{
-			bool intersects = Intersects(a, b, out float depth, out Vector2 direction, out IShape aShape, out IShape bShape);
-
-			if (!intersects)
-			{
-				depth = 0;
-				direction = Vector2.Zero;
-				aShape = null;
-				bShape = null;
-			}
-
-			return new CollisionResult(intersects, depth, direction, aShape, bShape);
-		}
-		/// <summary>
-		/// Checa se dois colisores estão se sobrepondo.
-		/// </summary>
-		public static CollisionResult Intersect(IShape a, IShape b)
-		{
-			bool intersects = Intersects(a, b, out float depth, out Vector2 direction);
-
-			return new CollisionResult(intersects, depth, direction, a, b);
-		}
-
-		private static bool Intersects(float aRadius, Vector2 aCenter, float bRadius, Vector2 bCenter, out float depth, out Vector2 direction)
+		private static void Intersects(float aRadius, Vector2 aCenter, float bRadius, Vector2 bCenter, CollisionResult result)
 		{
 			float radii = aRadius + bRadius;
 			Vector2 difference = aCenter - bCenter;
@@ -104,45 +86,42 @@ namespace Claw.Physics
 
 			if (distance < radii)
 			{
-				depth = radii - distance;
-				direction = Vector2.Normalize(difference);
-
-				return true;
+				result.Depth = radii - distance;
+				result.Direction = Vector2.Normalize(difference);
+				result.CollisionPoints = 1;
+				result.CollisionPoint1 = bCenter + result.Direction * bRadius;
+				result.Intersects = true;
 			}
-
-			depth = 0;
-			direction = Vector2.Zero;
-
-			return false;
 		}
-		private static bool Intersects(Vector2[] aVertices, Vector2[] bVertices, out float depth, out Vector2 direction)
+		private static void Intersects(Vector2[] aVertices, Vector2[] bVertices, CollisionResult result)
 		{
-			depth = float.MaxValue;
-			direction = Vector2.Zero;
-
-			return TestPolygonPolygon(aVertices, aVertices, bVertices, ref depth, ref direction) && TestPolygonPolygon(bVertices, aVertices, bVertices, ref depth, ref direction);
-		}
-		private static bool Intersects(float radius, Vector2 center, Vector2 polygonCenter, Vector2[] vertices, out float depth, out Vector2 direction)
-		{
-			depth = float.MaxValue;
-			direction = Vector2.Zero;
-
+			result.Depth = float.MaxValue;
+			result.Direction = Vector2.Zero;
 			float minDistance = float.MaxValue;
-			Vector2 closestVertice =Vector2.Zero;
+
+			if (TestPolygonPolygon(aVertices, aVertices, bVertices, result, ref minDistance)) result.Intersects = TestPolygonPolygon(bVertices, aVertices, bVertices, result, ref minDistance);
+		
+			if (!result.Intersects)
+			{
+				result.CollisionPoints = 0;
+				result.CollisionPoint1 = null;
+				result.CollisionPoint2 = null;
+			}
+		}
+		private static void Intersects(float radius, Vector2 center, Vector2 polygonCenter, Vector2[] vertices, CollisionResult result)
+		{
+			result.Depth = float.MaxValue;
+			result.Direction = Vector2.Zero;
+
+			float minDistance = float.MaxValue, minEdgeDistance = float.MaxValue;
+			Vector2 closestVertice = Vector2.Zero;
+			Vector2? collisionPoint = null;
 			float axisDepth;
 			float aMin, aMax, bMin, bMax;
 			Vector2 axis;
 
 			for (int i = 0; i < vertices.Length; i++)
 			{
-				float distance = Vector2.Distance(center, vertices[i]);
-
-				if (minDistance > distance)
-				{
-					distance = minDistance;
-					closestVertice = vertices[i];
-				}
-
 				Vector2 vA = vertices[i], vB = vertices[(i + 1) % vertices.Length];
 				Vector2 edge = vB - vA;
 				axis = new Vector2(-edge.Y, edge.X);
@@ -151,40 +130,58 @@ namespace Claw.Physics
 				ProjectCircle(radius, center, axis, out aMin, out aMax);
 				ProjectVertices(vertices, axis, out bMin, out bMax);
 
-				if (aMin >= bMax || bMin >= aMax) return false;
+				if (aMin >= bMax || bMin >= aMax) return;
 
 				axisDepth = Math.Min(aMax - bMin, bMax - aMin);
 
-				if (axisDepth < depth)
+				if (axisDepth < result.Depth)
 				{
-					depth = axisDepth;
-					direction = axis;
+					result.Depth = axisDepth;
+					result.Direction = axis;
+				}
+
+				float distance = Vector2.Distance(center, vA), edgeDistance = GetPoint(center, vA, vB, out Vector2 cp);
+
+				if (minDistance > distance)
+				{
+					minDistance = distance;
+					closestVertice = vA;
+				}
+
+				if (minEdgeDistance > edgeDistance)
+				{
+					minEdgeDistance = edgeDistance;
+					collisionPoint = cp;
 				}
 			}
 
-			axis = closestVertice - center;
+			axis = center - closestVertice;
 
 			axis.Normalize();
 			ProjectCircle(radius, center, axis, out aMin, out aMax);
 			ProjectVertices(vertices, axis, out bMin, out bMax);
 
-			if (aMin >= bMax || bMin >= aMax) return false;
+			if (aMin >= bMax || bMin >= aMax) return;
 
 			axisDepth = Math.Min(aMax - bMin, bMax - aMin);
 
-			if (axisDepth < depth)
+			if (axisDepth < result.Depth)
 			{
-				depth = axisDepth;
-				direction = axis;
+				result.Depth = axisDepth;
+				result.Direction = axis;
 			}
 
-			if (Vector2.Dot(polygonCenter - center, direction) < 0) direction = -direction;
+			if (Vector2.Dot(polygonCenter - center, result.Direction) < 0) result.Direction = -result.Direction;
 
-			return true;
+			result.Intersects = true;
+			result.CollisionPoints = 1;
+			result.CollisionPoint1 = collisionPoint;
 		}
 
-		private static bool TestPolygonPolygon(Vector2[] checkVertices, Vector2[] aVertices, Vector2[] bVertices, ref float depth, ref Vector2 direction)
+		private static bool TestPolygonPolygon(Vector2[] checkVertices, Vector2[] aVertices, Vector2[] bVertices, CollisionResult result, ref float minDistance)
 		{
+			float aMin, aMax, bMin, bMax;
+
 			for (int i = 0; i < checkVertices.Length; i++)
 			{
 				Vector2 vA = checkVertices[i], vB = checkVertices[(i + 1) % checkVertices.Length];
@@ -192,21 +189,60 @@ namespace Claw.Physics
 				Vector2 axis = new Vector2(-edge.Y, edge.X);
 
 				axis.Normalize();
-				ProjectVertices(aVertices, axis, out float aMin, out float aMax);
-				ProjectVertices(bVertices, axis, out float bMin, out float bMax);
+				
+				if (checkVertices == aVertices)
+				{
+					ProjectVertices(aVertices, axis, out aMin, out aMax);
+					ProjectVertices(bVertices, axis, out bMin, out bMax, ref minDistance, vA, result);
+				}
+				else
+				{
+					ProjectVertices(aVertices, axis, out aMin, out aMax, ref minDistance, vA, result);
+					ProjectVertices(bVertices, axis, out bMin, out bMax);
+				}
 				
 				if (aMin >= bMax || bMin >= aMax) return false;
 				
 				float axisDepth = Math.Min(aMax - bMin, bMax - aMin);
 
-				if (axisDepth < depth)
+				if (axisDepth < result.Depth)
 				{
-					depth = axisDepth;
-					direction = axis;
+					result.Depth = axisDepth;
+					result.Direction = axis;
 				}
 			}
 			
 			return true;
+		}
+		private static void ProjectVertices(this Vector2[] vertices, Vector2 axis, out float min, out float max, ref float minDistance, Vector2 center, CollisionResult result)
+		{
+			min = float.MaxValue;
+			max = float.MinValue;
+
+			for (int i = 0; i < vertices.Length; i++)
+			{
+				ProjectPoint(vertices[i], ref axis, ref min, ref max);
+
+				if (result.CollisionPoints < 2)
+				{
+					float distance = GetPoint(center, vertices[i], vertices[(i + 1) % vertices.Length], out Vector2 cp);
+					
+					if (distance.Approximately(minDistance, CompareTolerance))
+					{
+						if (!cp.Approximately(result.CollisionPoint1.Value))
+						{
+							result.CollisionPoint2 = cp;
+							result.CollisionPoints = 2;
+						}
+					}
+					else if (distance < minDistance)
+					{
+						result.CollisionPoint1 = cp;
+						result.CollisionPoints = 1;
+						minDistance = distance;
+					}
+				}
+			}
 		}
 		private static void ProjectVertices(this Vector2[] vertices, Vector2 axis, out float min, out float max)
 		{
@@ -239,5 +275,26 @@ namespace Claw.Physics
 
 			if (projection > max) max = projection;
 		}
+		private static float GetPoint(Vector2 center, Vector2 min, Vector2 max, out Vector2 point)
+		{
+			Vector2 ab = max - min;
+			Vector2 ac = center - min;
+			float projection = Vector2.Dot(ac, ab);
+			float normalized = projection / (ab.X * ab.X + ab.Y * ab.Y);
+
+			if (normalized >= 1) point = max;
+			else if (normalized <= 0) point = min;
+			else point = min + ab * normalized;
+
+			return DistanceSquared(center, point);
+		}
+
+		private static float DistanceSquared(Vector2 a, Vector2 b)
+		{
+			float v1 = a.X - b.X, v2 = a.Y - b.Y;
+
+			return v1 * v1 + v2 * v2;
+		}
+		private static bool Approximately(this Vector2 a, Vector2 b) => a.X.Approximately(b.X, CompareTolerance) && a.Y.Approximately(b.Y, CompareTolerance);
 	}
 }

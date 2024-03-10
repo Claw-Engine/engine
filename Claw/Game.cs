@@ -153,8 +153,7 @@ namespace Claw
         
         private void GameLoop()
         {
-            uint frameStart;
-            int frameTime = 0;
+            uint frameStart, frameTime = 0;
 
             while (isRunning)
             {
@@ -162,7 +161,6 @@ namespace Claw
 
                 if (!ConsoleOnly) Input.Input.Update();
                 
-                Time.Update(frameTime);
                 Physics?.Step();
                 Step();
 
@@ -175,11 +173,16 @@ namespace Claw
 					Renderer.Present();
 				}
 
-                frameTime = (int)(SDL.SDL_GetTicks() - frameStart);
+                frameTime = (uint)(SDL.SDL_GetTicks() - frameStart);
 
-                if (Time.FrameDelay > frameTime) SDL.SDL_Delay((uint)(Time.FrameDelay - frameTime));
+                if (Time.FrameDelay > frameTime)
+                {
+					SDL.SDL_Delay((uint)(Time.FrameDelay - frameTime));
+					Time.Update(Time.FrameDelay);
+				}
+                else Time.Update(frameTime);
 
-                HandleEvents();
+				HandleEvents();
             }
 
             Clear();

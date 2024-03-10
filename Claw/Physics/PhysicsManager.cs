@@ -24,11 +24,14 @@ namespace Claw.Physics
 		public static Vector2 Gravity = new Vector2(0, 9.8f);
 
 		public int BodyCount => bodies?.Count ?? 0;
+		private CollisionResult result;
 		private List<RigidBody> bodies;
 
 		#region Filtro
 		internal void AddTo(ModuleCollection collection)
 		{
+			if (result == null) result = new CollisionResult();
+
 			bodies = new List<RigidBody>();
 			Game.Instance.Modules.ModuleAdded += ModuleAdded;
 			Game.Instance.Modules.ModuleRemoved += ModuleRemoved;
@@ -64,17 +67,17 @@ namespace Claw.Physics
 
 				bodies[i].UpdateShapes();
 
-				if (bodies[i].Type == BodyType.Trigger) continue;
-
 				for (int j = i - 1; j >= 0; j--)
 				{
 					if (!bodies[j].Enabled) continue;
 
 					bodies[j].UpdateShapes();
+					result.Reset();
+					CollisionChecker.Intersects(bodies[i], bodies[j], result);
 
-					if (CollisionChecker.Intersects(bodies[i], bodies[j], out float depth, out Vector2 direction, out IShape a, out IShape b))
+					if (result.Intersects)
 					{
-						ResolveCollision(a, b, depth, direction);
+						ResolveCollision();
 
 						bodies[i].UpdateShapes();
 						bodies[j].UpdateShapes();
@@ -82,40 +85,49 @@ namespace Claw.Physics
 				}
 			}
 		}
-		private void ResolveCollision(IShape a, IShape b, float depth, Vector2 direction)
+		private void ResolveCollision()
 		{
-			switch (b.Body.Type)
+			RigidBody a = result.Shape.Body, b = result.OtherShape.Body;
+
+			if (a.Type == BodyType.Trigger)
 			{
-				case BodyType.Trigger: a.Body.Triggering(new CollisionResult(true, depth, direction, a, b)); break;
+				b.Triggering(result);
+
+				return;
+			}
+
+			switch (b.Type)
+			{
+				case BodyType.Trigger: a.Triggering(result); break;
 				case BodyType.Static:
-					if (a.Body.Type == BodyType.Static) break;
+					if (a.Type == BodyType.Static) break;
 					goto default;
 				default:
 					bool resolve = true;
 
-					if (a.Body.Type == BodyType.Normal) resolve = a.Body.Colliding(new CollisionResult(true, depth, direction, a, b));
-					else if (b.Body.Type == BodyType.Normal) resolve = b.Body.Colliding(new CollisionResult(true, depth, direction, b, a));
+					if (a.Type == BodyType.Normal) resolve = a.Colliding(result);
+					else if (b.Type == BodyType.Normal) b.Colliding(result);
 
 					if (resolve)
 					{
-						Vector2 relativeVelocity = a.Body.Velocity - b.Body.Velocity;
+						Vector2 relativeVelocity = a.Velocity - b.Velocity;
 
-						if (Vector2.Dot(relativeVelocity, direction) <= 0)
+						if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
 						{
-							float j = -(1 + Math.Min(a.Body.Bounciness, b.Body.Bounciness)) * Vector2.Dot(relativeVelocity, direction);
-							j /= a.Body.inverseMass + b.Body.inverseMass;
+							float j = -(1 + Math.Min(a.Bounciness, b.Bounciness)) * Vector2.Dot(relativeVelocity, result.Direction);
+							j /= a.inverseMass + b.inverseMass;
 
-							Vector2 impulse = j * direction;
-							a.Body.Velocity += impulse * a.Body.inverseMass;
-							b.Body.Velocity -= impulse * b.Body.inverseMass;
+							Vector2 impulse = j * result.Direction;
+							a.Velocity += impulse * a.inverseMass;
+							b.Velocity -= impulse * b.inverseMass;
 						}
 
-						if (b.Body.Type == BodyType.Static) a.Body.Transform.Position += depth * direction;
-						else if (a.Body.Type == BodyType.Static) b.Body.Transform.Position -= depth * direction;
+						if (b.Type == BodyType.Static) a.Transform.Position += result.Depth * result.Direction;
+						else if (a.Type == BodyType.Static) b.Transform.Position -= result.Depth * result.Direction;
 						else
 						{
-							a.Body.Transform.Position += depth * .5f * direction;
-							b.Body.Transform.Position -= depth * .5f * direction;
+							a.Transform.Position += result.Depth * .5f * result.Direction;
+							b.Transform.Position -= result.Depth * .5f * result.Direction;
 						}
 					}
 					break;

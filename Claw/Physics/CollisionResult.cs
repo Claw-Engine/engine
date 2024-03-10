@@ -9,6 +9,10 @@ namespace Claw.Physics
 	{
 		public bool Intersects;
 		/// <summary>
+		/// Número de pontos em que houve a colisão.
+		/// </summary>
+		public int CollisionPoints;
+		/// <summary>
 		/// Profundidade da sobreposição.
 		/// </summary>
 		public float Depth;
@@ -16,8 +20,16 @@ namespace Claw.Physics
 		/// Direção da sobreposição.
 		/// </summary>
 		public Vector2 Direction;
+		/// <summary>
+		/// Ponto em que houve a colisão.
+		/// </summary>
+		public Vector2? CollisionPoint1, CollisionPoint2;
 		public IShape Shape, OtherShape;
 
+		/// <summary>
+		/// Cria um <see cref="CollisionResult"/> em que não houve colisão.
+		/// </summary>
+		public CollisionResult() => Intersects = false;
 		/// <param name="depth">A profundidade da sobreposição.</param>
 		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
 		public CollisionResult(bool intersects, float depth, Vector2 direction, IShape shape, IShape otherShape)
@@ -27,6 +39,36 @@ namespace Claw.Physics
 			Direction = direction;
 			Shape = shape;
 			OtherShape = otherShape;
+		}
+		/// <param name="depth">A profundidade da sobreposição.</param>
+		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
+		public CollisionResult(bool intersects, int collisionPoints, float depth, Vector2 direction, Vector2? collisionPoint1, Vector2? collisionPoint2,
+			IShape shape, IShape otherShape) : this(intersects, depth, direction, shape, otherShape)
+		{
+			CollisionPoints = collisionPoints;
+			CollisionPoint1 = collisionPoint1;
+			CollisionPoint2 = collisionPoint2;
+		}
+
+		/// <summary>
+		/// Clona este resultado.
+		/// </summary>
+		/// <remarks>
+		/// Internamente, o PhysicsManager usa sempre o mesmo <see cref="CollisionResult"/>.
+		/// </remarks>
+		public CollisionResult Clone() => new CollisionResult(Intersects, CollisionPoints, Depth, Direction, CollisionPoint1, CollisionPoint2, Shape, OtherShape);
+		/// <summary>
+		/// Reseta as propriedades do resultado.
+		/// </summary>
+		internal void Reset()
+		{
+			Intersects = false;
+			CollisionPoints = 0;
+			Depth = 0;
+			CollisionPoint1 = null;
+			CollisionPoint2 = null;
+			Shape = null;
+			OtherShape = null;
 		}
 
 		public static implicit operator bool(CollisionResult value) => value.Intersects;
