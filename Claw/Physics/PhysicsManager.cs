@@ -52,7 +52,9 @@ namespace Claw.Physics
 
 		internal void Step()
 		{
-			Iteration();
+			int iterations = (int)Math.Min((Time.UnscaledDeltaTime * 1000) / Time.FrameDelay * MaxIterations, MaxIterations);
+
+			for (int i = 0; i < iterations; i++) Iteration();
 		}
 		private void Iteration()
 		{
@@ -87,11 +89,12 @@ namespace Claw.Physics
 				case BodyType.Trigger: a.Body.Triggering(new CollisionResult(true, depth, direction, a, b)); break;
 				case BodyType.Static:
 					if (a.Body.Type == BodyType.Static) break;
-					goto case BodyType.Normal;
-				case BodyType.Normal:
+					goto default;
+				default:
 					bool resolve = true;
 
 					if (a.Body.Type == BodyType.Normal) resolve = a.Body.Colliding(new CollisionResult(true, depth, direction, a, b));
+					else if (b.Body.Type == BodyType.Normal) resolve = b.Body.Colliding(new CollisionResult(true, depth, direction, b, a));
 
 					if (resolve)
 					{

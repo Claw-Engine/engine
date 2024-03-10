@@ -128,6 +128,7 @@ namespace Claw.Physics
 					previousPosition = Transform.Position;
 					previousScale = Transform.Scale;
 					needUpdate = false;
+					Mass = 0;
 
 					for (int i = 0; i < shapes.Count; i++)
 					{
@@ -163,7 +164,7 @@ namespace Claw.Physics
 		{
 			if (Mass > 0)
 			{
-				Velocity += (impulse * PhysicsManager.Unit / Mass) * Time.DeltaTime;
+				Velocity += (impulse / Mass * PhysicsManager.Unit);
 
 				if (UseGravity) Velocity += PhysicsManager.Gravity * Time.DeltaTime;
 			}
