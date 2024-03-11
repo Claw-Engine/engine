@@ -295,6 +295,6 @@ namespace Claw.Physics
 
 			return v1 * v1 + v2 * v2;
 		}
-		private static bool Approximately(this Vector2 a, Vector2 b) => DistanceSquared(a, b) <= CompareTolerance * CompareTolerance;
+		internal static bool Approximately(this Vector2 a, Vector2 b) => DistanceSquared(a, b) <= CompareTolerance * CompareTolerance;
 	}
 }

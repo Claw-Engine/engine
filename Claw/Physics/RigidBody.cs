@@ -31,36 +31,24 @@ namespace Claw.Physics
 		private List<IShape> shapes = new List<IShape>();
 
 		public bool UseGravity = true, UseRotation = true;
-		public float Density
-		{
-			get => _density;
-			set => _density = Math.Max(value, .5f);
-		}
 		public float Mass { get; private set; }
-		public float Bounciness
-		{
-			get => _bounciness;
-			set => _bounciness = Mathf.Clamp(value, 0, 1);
-		}
-		public Vector2 Velocity;
+		public float RotateSpeed;
+		public Vector2 MoveSpeed;
 		public BodyType Type = BodyType.Normal;
-		private float _density, _bounciness;
-		private Vector2 impulse;
-		internal bool needUpdate = true;
-		internal float inverseMass;
+		public Material Material;
+		private int previousCount;
+		internal bool needUpdate;
+		internal float inverseMass, inverseInertia;
 
 		private float previousRotation;
 		private Vector2 previousPosition, previousScale;
 
-		public RigidBody(bool instantlyAdd = true) : base(instantlyAdd) { }
-		public RigidBody(float density, float bounciness, BodyType type, bool instantlyAdd = true) : base(instantlyAdd)
+		public RigidBody(bool instantlyAdd = true) : base(instantlyAdd) => Material = Material.Default;
+		public RigidBody(BodyType type, Material material, bool instantlyAdd = true) : base(instantlyAdd)
 		{
-			Density = density;
-			Bounciness = bounciness;
 			Type = type;
+			Material = material;
 		}
-		public RigidBody(float density, BodyType type, bool instantlyAdd = true) : this(density, 0, type, instantlyAdd) { }
-		public RigidBody(BodyType type, bool instantlyAdd = true) : this(.5f, 0, type, instantlyAdd) { }
 
 		/// <summary>
 		/// Adiciona um <see cref="CircleShape"/> ao <see cref="Shapes"/>.
@@ -122,23 +110,42 @@ namespace Claw.Physics
 		{
 			if (shapes.Count > 0)
 			{
-				if (previousRotation != Transform.Rotation || previousPosition != Transform.Position || previousScale != Transform.Scale || needUpdate)
+				if (previousCount != shapes.Count || previousRotation != Transform.Rotation || previousPosition != Transform.Position || previousScale != Transform.Scale || needUpdate)
 				{
+					previousCount = shapes.Count;
 					previousRotation = Transform.Rotation;
 					previousPosition = Transform.Position;
 					previousScale = Transform.Scale;
 					needUpdate = false;
+					PhysicsManager.needStep = true;
 					Mass = 0;
+					inverseMass = 0;
+					inverseInertia = 0;
+					Vector2 min = shapes[0].BoundingBox.Location, max = min + shapes[0].BoundingBox.Size;
 
 					for (int i = 0; i < shapes.Count; i++)
 					{
 						shapes[i].Update();
 
-						Mass += shapes[i].Area * Density;
+						Mass += shapes[i].Area * Material.Density;
+						
+						if (i > 0)
+						{
+							min.X = Math.Min(min.X, shapes[i].BoundingBox.X);
+							min.Y = Math.Min(min.Y, shapes[i].BoundingBox.Y);
+							max.X = Math.Max(max.X, shapes[i].BoundingBox.X + shapes[i].BoundingBox.Width);
+							max.Y = Math.Max(max.Y, shapes[i].BoundingBox.Y + shapes[i].BoundingBox.Height);
+						}
 					}
 
-					if (Type == BodyType.Static) inverseMass = 0;
-					else inverseMass = 1 / Mass;
+					float radius = Math.Max(max.X - min.X, max.Y - min.Y) * .5f;
+
+					if (Type != BodyType.Static)
+					{
+						inverseMass = 1 / Mass;
+
+						if (UseRotation) inverseInertia = 1f / (1f / 12 * Mass * radius * radius);
+					}
 				}
 			}
 			else Mass = 0;
@@ -147,7 +154,10 @@ namespace Claw.Physics
 		/// <summary>
 		/// Aplica uma força à velocidade do <see cref="RigidBody"/>.
 		/// </summary>
-		public void Impulse(Vector2 impulse) => this.impulse += impulse;
+		public void Impulse(Vector2 impulse)
+		{
+			if (Mass > 0) MoveSpeed += (impulse / Mass * PhysicsManager.Unit);
+		}
 
 		/// <summary>
 		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> ou <see cref="BodyType.Static"/> entram em um <see cref="BodyType.Trigger"/>.
@@ -162,15 +172,10 @@ namespace Claw.Physics
 		public override void Initialize() { }
 		public virtual void Step()
 		{
-			if (Mass > 0)
-			{
-				Velocity += (impulse / Mass * PhysicsManager.Unit);
+			if (UseGravity) MoveSpeed += PhysicsManager.Gravity * Time.DeltaTime;
 
-				if (UseGravity) Velocity += PhysicsManager.Gravity * Time.DeltaTime;
-			}
-			
-			Transform.Position += Velocity * PhysicsManager.Unit * Time.DeltaTime;
-			impulse = Vector2.Zero;
+			Transform.Position += MoveSpeed * PhysicsManager.Unit * Time.DeltaTime;
+			Transform.Rotation += RotateSpeed * PhysicsManager.Unit * Time.DeltaTime;
 
 			UpdateShapes();
 		}

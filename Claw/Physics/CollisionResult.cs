@@ -27,6 +27,19 @@ namespace Claw.Physics
 		public IShape Shape, OtherShape;
 
 		/// <summary>
+		/// Se o <paramref name="index"/> for igual a zero, retorna <see cref="CollisionPoint1"/>. Senão, retorna <see cref="CollisionPoint2"/>.
+		/// </summary>
+		public Vector2 this[int index]
+		{
+			get
+			{
+				if (index == 0) return CollisionPoint1.Value;
+
+				return CollisionPoint2.Value;
+			}
+		}
+
+		/// <summary>
 		/// Cria um <see cref="CollisionResult"/> em que não houve colisão.
 		/// </summary>
 		public CollisionResult() => Intersects = false;
@@ -69,15 +82,6 @@ namespace Claw.Physics
 			CollisionPoint2 = null;
 			Shape = null;
 			OtherShape = null;
-		}
-		/// <summary>
-		/// Troca <see cref="Shape"/> por <see cref="OtherShape"/> e vice-versa.
-		/// </summary>
-		internal void RevertShapes()
-		{
-			IShape temp = Shape;
-			Shape = OtherShape;
-			OtherShape = temp;
 		}
 
 		public static implicit operator bool(CollisionResult value) => value.Intersects;

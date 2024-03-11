@@ -22,6 +22,7 @@ namespace Claw.Physics
 		/// Gravidade geral dos corpos ({ X: 0, Y: 9.8 } por padrão).
 		/// </summary>
 		public static Vector2 Gravity = new Vector2(0, 9.8f);
+		internal static bool needStep = true;
 
 		public int BodyCount => bodies?.Count ?? 0;
 		private CollisionResult result;
@@ -45,22 +46,36 @@ namespace Claw.Physics
 
 		private void ModuleAdded(BaseModule module)
 		{
-			if (module is RigidBody body) bodies.Add(body);
+			if (module is RigidBody body)
+			{
+				needStep = true;
+
+				bodies.Add(body);
+			}
 		}
 		private void ModuleRemoved(BaseModule module)
 		{
-			if (module is RigidBody body) bodies.Remove(body);
+			if (module is RigidBody body)
+			{
+				needStep = true;
+
+				bodies.Remove(body);
+			}
 		}
 		#endregion
 
 		internal void Step()
 		{
+			if (!needStep) return;
+
 			int iterations = (int)Math.Min((Time.UnscaledDeltaTime * 1000) / Time.FrameDelay * MaxIterations, MaxIterations);
 
 			for (int i = 0; i < iterations; i++) Iteration();
 		}
 		private void Iteration()
 		{
+			needStep = false;
+
 			for (int i = bodies.Count - 1; i >= 0; i--)
 			{
 				if (!bodies[i].Enabled) continue;
@@ -77,25 +92,20 @@ namespace Claw.Physics
 
 					if (result.Intersects)
 					{
-						ResolveCollision();
-
+						OnCollision();
 						bodies[i].UpdateShapes();
 						bodies[j].UpdateShapes();
 					}
 				}
 			}
 		}
-		private void ResolveCollision()
+		private void OnCollision()
 		{
 			RigidBody a = result.Shape.Body, b = result.OtherShape.Body;
 
 			if (a.Type == BodyType.Trigger)
 			{
-				if (b.Type != BodyType.Trigger)
-				{
-					result.RevertShapes();
-					b.Triggering(result);
-				}
+				if (b.Type != BodyType.Trigger) b.Triggering(result);
 
 				return;
 			}
@@ -110,26 +120,11 @@ namespace Claw.Physics
 					bool resolve = true;
 
 					if (a.Type == BodyType.Normal) resolve = a.Colliding(result);
-					else if (b.Type == BodyType.Normal)
-					{
-						result.RevertShapes();
-
-						resolve = b.Colliding(result);
-					}
+					else if (b.Type == BodyType.Normal) resolve = b.Colliding(result);
 
 					if (resolve)
 					{
-						Vector2 relativeVelocity = a.Velocity - b.Velocity;
-
-						if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
-						{
-							float j = -(1 + Math.Min(a.Bounciness, b.Bounciness)) * Vector2.Dot(relativeVelocity, result.Direction);
-							j /= a.inverseMass + b.inverseMass;
-
-							Vector2 impulse = j * result.Direction;
-							a.Velocity += impulse * a.inverseMass;
-							b.Velocity -= impulse * b.inverseMass;
-						}
+						ResolveImpulse(a, b, result);
 
 						if (b.Type == BodyType.Static) a.Transform.Position += result.Depth * result.Direction;
 						else if (a.Type == BodyType.Static) b.Transform.Position -= result.Depth * result.Direction;
@@ -140,6 +135,25 @@ namespace Claw.Physics
 						}
 					}
 					break;
+			}
+		}
+		private void ResolveImpulse(RigidBody a, RigidBody b, CollisionResult result)
+		{
+			float bounciness = (a.Material.Bounciness + b.Material.Bounciness) * .5f;
+			float staticFriction = (a.Material.StaticFriction + b.Material.StaticFriction) * .5f;
+			float dynamicFriction = (a.Material.DynamicFriction + b.Material.DynamicFriction) * .5f;
+			Vector2 aPos = a.Transform.Position, bPos = b.Transform.Position;
+
+			Vector2 relativeVelocity = a.MoveSpeed - b.MoveSpeed;
+			
+			if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
+			{
+				float j = -(1 + bounciness) * Vector2.Dot(relativeVelocity, result.Direction);
+				j /= a.inverseMass + b.inverseMass;
+
+				Vector2 impulse = j * result.Direction;
+				a.MoveSpeed += impulse * a.inverseMass;
+				b.MoveSpeed -= impulse * b.inverseMass;
 			}
 		}
 	}

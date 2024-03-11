@@ -119,6 +119,7 @@
     <Compile Include="Modules\Transform.cs" />
     <Compile Include="Physics\CollisionChecker.cs" />
     <Compile Include="Physics\CollisionResult.cs" />
+    <Compile Include="Physics\Material.cs" />
     <Compile Include="Physics\PolygonShape.cs" />
     <Compile Include="Physics\BodyType.cs" />
     <Compile Include="Physics\CircleShape.cs" />
