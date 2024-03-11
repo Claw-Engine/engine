@@ -367,11 +367,13 @@ namespace Claw.Graphics
 				{
 					Rectangle(lineWidth, circle.BoundingBox, color * .5f);
 					Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
+                    Line(1, Claw.Line.Rotate(new Line(circle.Center, circle.Center - new Vector2(0, circle.radiusInWorld)), circle.Center, body.Transform.Rotation), color);
 				}
 				else if (shape is PolygonShape polygon)
 				{
 					Rectangle(lineWidth, polygon.BoundingBox, color * .5f);
 					Polygon(lineWidth, color, polygon.verticesInWorld);
+					Line(1, new Line(polygon.Center, polygon.verticesInWorld[0] + (polygon.verticesInWorld[1] - polygon.verticesInWorld[0]) * .5f), color);
 				}
 			}
 		}
