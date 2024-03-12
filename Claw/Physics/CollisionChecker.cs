@@ -23,58 +23,32 @@ namespace Claw.Physics
 
 			return result;
 		}
-		/// <summary>
-		/// Checa se dois colisores estão se sobrepondo.
-		/// </summary>
-		/// <param name="depth">A profundidade da sobreposição.</param>
-		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
-		public static CollisionResult Intersects(IShape a, IShape b)
-		{
-			CollisionResult result = new CollisionResult();
-
-			Intersects(a, b, result);
-
-			return result;
-		}
 		internal static void Intersects(RigidBody a, RigidBody b, CollisionResult result)
 		{
-			for (int aIndex = 0; aIndex < a.ShapeCount; aIndex++)
+			result.Body = a;
+			result.OtherBody = b;
+
+			if (!a.Shape.BoundingBox.Intersects(b.Shape.BoundingBox) && !b.Shape.BoundingBox.Intersects(a.Shape.BoundingBox)) return;
+
+			if (a.Shape is CircleShape aCircle)
 			{
-				for (int bIndex = 0; bIndex < b.ShapeCount; bIndex++)
-				{
-					result.Reset();
-					Intersects(a[aIndex], b[bIndex], result);
-
-					if (result) return;
-				}
-			}
-		}
-		internal static void Intersects(IShape a, IShape b, CollisionResult result)
-		{
-			result.Shape = a;
-			result.OtherShape = b;
-
-			if (!a.BoundingBox.Intersects(b.BoundingBox) && !b.BoundingBox.Intersects(a.BoundingBox)) return;
-
-			if (a is CircleShape aCircle)
-			{
-				if (b is CircleShape bCircle) Intersects(aCircle.radiusInWorld, aCircle.Center, bCircle.radiusInWorld, bCircle.Center, result);
-				else if (b is PolygonShape bPolygon)
+				if (b.Shape is CircleShape bCircle) Intersects(aCircle.radiusInWorld, aCircle.Center, bCircle.radiusInWorld, bCircle.Center, result);
+				else if (b.Shape is PolygonShape bPolygon)
 				{
 					Intersects(aCircle.radiusInWorld, aCircle.Center, bPolygon.Center, bPolygon.verticesInWorld, result);
 
 					result.Direction = -result.Direction;
 				}
 			}
-			else if (a is PolygonShape aPolygon)
+			else if (a.Shape is PolygonShape aPolygon)
 			{
-				if (b is PolygonShape bPolygon)
+				if (b.Shape is PolygonShape bPolygon)
 				{
 					Intersects(aPolygon.verticesInWorld, bPolygon.verticesInWorld, result);
 
 					if (result && Vector2.Dot(aPolygon.Center - bPolygon.Center, result.Direction) < 0) result.Direction = -result.Direction;
 				}
-				else if (b is CircleShape bCircle) Intersects(bCircle.radiusInWorld, bCircle.Center, aPolygon.Center, aPolygon.verticesInWorld, result);
+				else if (b.Shape is CircleShape bCircle) Intersects(bCircle.radiusInWorld, bCircle.Center, aPolygon.Center, aPolygon.verticesInWorld, result);
 			}
 		}
 

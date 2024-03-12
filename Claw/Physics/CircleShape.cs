@@ -8,6 +8,7 @@ namespace Claw.Physics
 	public sealed class CircleShape : IShape
 	{
 		public float Area { get; private set; }
+		public float Inertia { get; private set; }
 		public float Radius
 		{
 			get => _radius;
@@ -15,11 +16,9 @@ namespace Claw.Physics
 			{
 				_radius = value;
 				Area = _radius * _radius * Mathf.PI;
-				Body.needUpdate = true;
 			}
 		}
 		public Vector2 Offset { get; set; }
-		public RigidBody Body { get; }
 		private float _radius;
 		internal float radiusInWorld;
 
@@ -27,17 +26,19 @@ namespace Claw.Physics
 		public Rectangle BoundingBox => _boundingBox;
 		private Rectangle _boundingBox;
 
-		internal CircleShape(RigidBody body, float radius, Vector2 offset)
+		public CircleShape(float radius, Vector2 offset)
 		{
-			Body = body;
 			Radius = radius;
 			Offset = offset;
 		}
 
-		public void Update()
+		public void Update(RigidBody body)
 		{
-			radiusInWorld = Radius * Math.Max(Body.Transform.Scale.X, Body.Transform.Scale.Y);
-			Center = Body.Transform.Position + Offset * Body.Transform.Scale;
+			if (body == null) return;
+
+			radiusInWorld = Radius * Math.Max(body.Transform.Scale.X, body.Transform.Scale.Y);
+			Inertia = (.5f * body.Mass * radiusInWorld * radiusInWorld);
+			Center = body.Transform.Position + Offset * body.Transform.Scale;
 			_boundingBox.X = Center.X - radiusInWorld;
 			_boundingBox.Y = Center.Y - radiusInWorld;
 			_boundingBox.Width = radiusInWorld * 2;

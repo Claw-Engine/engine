@@ -359,22 +359,17 @@ namespace Claw.Graphics
 		/// </summary>
 		public static void DebugBody(float lineWidth, RigidBody body, Color color, int segments = 16)
 		{
-            for (int i = 0; i < body.ShapeCount; i++)
-            {
-                IShape shape = body[i];
-
-				if (shape is CircleShape circle)
-				{
-					Rectangle(lineWidth, circle.BoundingBox, color * .5f);
-					Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
-                    Line(1, Claw.Line.Rotate(new Line(circle.Center, circle.Center - new Vector2(0, circle.radiusInWorld)), circle.Center, body.Transform.Rotation), color);
-				}
-				else if (shape is PolygonShape polygon)
-				{
-					Rectangle(lineWidth, polygon.BoundingBox, color * .5f);
-					Polygon(lineWidth, color, polygon.verticesInWorld);
-					Line(1, new Line(polygon.Center, polygon.verticesInWorld[0] + (polygon.verticesInWorld[1] - polygon.verticesInWorld[0]) * .5f), color);
-				}
+			if (body.Shape is CircleShape circle)
+			{
+				Rectangle(lineWidth, circle.BoundingBox, color * .5f);
+				Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
+				Line(1, Claw.Line.Rotate(new Line(circle.Center, circle.Center - new Vector2(0, circle.radiusInWorld)), circle.Center, body.Transform.Rotation), color);
+			}
+			else if (body.Shape is PolygonShape polygon)
+			{
+				Rectangle(lineWidth, polygon.BoundingBox, color * .5f);
+				Polygon(lineWidth, color, polygon.verticesInWorld);
+				Line(1, new Line(polygon.Center, polygon.verticesInWorld[0] + (polygon.verticesInWorld[1] - polygon.verticesInWorld[0]) * .5f), color);
 			}
 		}
 		#endregion

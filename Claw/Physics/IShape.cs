@@ -8,8 +8,8 @@ namespace Claw.Physics
 	public interface IShape
 	{
 		float Area { get; }
+		float Inertia { get; }
 		Vector2 Offset { get; set; }
-		RigidBody Body { get; }
 		/// <summary>
 		/// Centro do colisor no mundo.
 		/// </summary>
@@ -22,6 +22,6 @@ namespace Claw.Physics
 		/// <summary>
 		/// Atualiza o estado deste colisor.
 		/// </summary>
-		void Update();
+		void Update(RigidBody body);
 	}
 }

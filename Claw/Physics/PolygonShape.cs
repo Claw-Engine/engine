@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Claw.Physics
 {
@@ -18,13 +19,12 @@ namespace Claw.Physics
 			{
 				vertices[index] = value;
 				Area = CalculateArea(vertices);
-				Body.needUpdate = true;
 			}
 		}
 
 		public float Area { get; private set; }
+		public float Inertia { get; private set; }
 		public Vector2 Offset { get; set; }
-		public RigidBody Body { get; }
 		private Vector2[] vertices;
 		internal Vector2[] verticesInWorld;
 
@@ -33,26 +33,52 @@ namespace Claw.Physics
 		private Vector2 _center;
 		private Rectangle _boundingBox;
 
-		internal PolygonShape(RigidBody body, float area, Vector2 offset, params Vector2[] vertices)
+		/// <summary>
+		/// Cria um polígono.
+		/// </summary>
+		public PolygonShape(Vector2 offset, params Vector2[] vertices)
 		{
-			Body = body;
-			Area = area;
+			Area = CalculateArea(vertices);
 			Offset = offset;
 			this.vertices = vertices;
-			verticesInWorld = new Vector2[vertices.Length];
+			this.verticesInWorld = new Vector2[vertices.Length];
+		}
+		/// <summary>
+		/// Cria um polígono retangular.
+		/// </summary>
+		public PolygonShape(Rectangle box)
+		{
+			Vector2 size = box.Size;
+			Vector2 start = size * -.5f;
+			Area = size.X * size.Y;
+			Offset = box.Location;
+
+			vertices = new Vector2[4]
+			{
+				start,
+				new Vector2(start.X + size.X, start.Y),
+				new Vector2(start.X + size.X, start.Y + size.Y),
+				new Vector2(start.X, start.Y + size.Y),
+			};
+			this.verticesInWorld = new Vector2[4];
 		}
 
-		public void Update()
+		public void Update(RigidBody body)
 		{
-			float top = Body.Transform.Position.Y;
-			float bottom = Body.Transform.Position.Y;
-			float left = Body.Transform.Position.X;
-			float right = Body.Transform.Position.X;
+			if (body == null) return;
+
+			float top = body.Transform.Position.Y;
+			float bottom = body.Transform.Position.Y;
+			float left = body.Transform.Position.X;
+			float right = body.Transform.Position.X;
 			_center = Vector2.Zero;
+
+			int previous = vertices.Length - 1;
+			Inertia = 0;
 
 			for (int i = 0; i < vertices.Length; i++)
 			{
-				verticesInWorld[i] = Vector2.Rotate((vertices[i] + Offset) * Body.Transform.Scale + Body.Transform.Position, Body.Transform.Position, Body.Transform.Rotation);
+				verticesInWorld[i] = Vector2.Rotate((vertices[i] + Offset) * body.Transform.Scale + body.Transform.Position, body.Transform.Position, body.Transform.Rotation);
 				_center.X += verticesInWorld[i].X;
 				_center.Y += verticesInWorld[i].Y;
 
@@ -63,6 +89,12 @@ namespace Claw.Physics
 				if (left > verticesInWorld[i].X) left = verticesInWorld[i].X;
 
 				if (right < verticesInWorld[i].X) right = verticesInWorld[i].X;
+
+				Vector2 a = vertices[previous], b = vertices[i];
+				float massTri = body.Material.Density * .5f * Math.Abs(Vector2.Cross(a, b));
+				float inertiaTri = massTri * ((a.X * a.X + a.Y * a.Y) + (b.X * b.X + b.Y * b.Y) + Vector2.Dot(a, b)) / 6;
+				Inertia += inertiaTri;
+				previous = i;
 			}
 
 			_boundingBox.X = left;

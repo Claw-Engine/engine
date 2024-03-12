@@ -24,7 +24,7 @@ namespace Claw.Physics
 		/// Ponto em que houve a colisão.
 		/// </summary>
 		public Vector2? CollisionPoint1, CollisionPoint2;
-		public IShape Shape, OtherShape;
+		public RigidBody Body, OtherBody;
 
 		/// <summary>
 		/// Se o <paramref name="index"/> for igual a zero, retorna <see cref="CollisionPoint1"/>. Senão, retorna <see cref="CollisionPoint2"/>.
@@ -45,18 +45,18 @@ namespace Claw.Physics
 		public CollisionResult() => Intersects = false;
 		/// <param name="depth">A profundidade da sobreposição.</param>
 		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
-		public CollisionResult(bool intersects, float depth, Vector2 direction, IShape shape, IShape otherShape)
+		public CollisionResult(bool intersects, float depth, Vector2 direction, RigidBody body, RigidBody otherBody)
 		{
 			Intersects = intersects;
 			Depth = depth;
 			Direction = direction;
-			Shape = shape;
-			OtherShape = otherShape;
+			Body = body;
+			OtherBody = otherBody;
 		}
 		/// <param name="depth">A profundidade da sobreposição.</param>
 		/// <param name="direction">A direção em que a sobreposição está acontecendo.</param>
 		public CollisionResult(bool intersects, int collisionPoints, float depth, Vector2 direction, Vector2? collisionPoint1, Vector2? collisionPoint2,
-			IShape shape, IShape otherShape) : this(intersects, depth, direction, shape, otherShape)
+			RigidBody body, RigidBody otherBody) : this(intersects, depth, direction, body, otherBody)
 		{
 			CollisionPoints = collisionPoints;
 			CollisionPoint1 = collisionPoint1;
@@ -69,7 +69,24 @@ namespace Claw.Physics
 		/// <remarks>
 		/// Internamente, o PhysicsManager usa sempre o mesmo <see cref="CollisionResult"/>.
 		/// </remarks>
-		public CollisionResult Clone() => new CollisionResult(Intersects, CollisionPoints, Depth, Direction, CollisionPoint1, CollisionPoint2, Shape, OtherShape);
+		public CollisionResult Clone() => new CollisionResult(Intersects, CollisionPoints, Depth, Direction, CollisionPoint1, CollisionPoint2, Body, OtherBody);
+		/// <summary>
+		/// Copia todos os campos de um outro <see cref="CollisionResult"/>.
+		/// </summary>
+		/// <remarks>
+		/// Internamente, o PhysicsManager usa sempre o mesmo <see cref="CollisionResult"/>.
+		/// </remarks>
+		public void Copy(CollisionResult other)
+		{
+			Intersects = other.Intersects;
+			CollisionPoints = other.CollisionPoints;
+			Depth = other.Depth;
+			Direction = other.Direction;
+			CollisionPoint1 = other.CollisionPoint1;
+			CollisionPoint2 = other.CollisionPoint2;
+			Body = other.Body;
+			OtherBody = other.OtherBody;
+		}
 		/// <summary>
 		/// Reseta as propriedades do resultado.
 		/// </summary>
@@ -80,8 +97,8 @@ namespace Claw.Physics
 			Depth = 0;
 			CollisionPoint1 = null;
 			CollisionPoint2 = null;
-			Shape = null;
-			OtherShape = null;
+			Body = null;
+			OtherBody = null;
 		}
 
 		public static implicit operator bool(CollisionResult value) => value.Intersects;

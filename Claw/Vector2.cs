@@ -107,9 +107,13 @@ namespace Claw
         public static float Dot(Vector2 a, Vector2 b) => a.X * b.X + a.Y * b.Y;
 
         /// <summary>
-        /// Retorna o produto vetorial/cruzado entre dois vetores.
+        /// Retorna o produto cruzado entre dois vetores.
         /// </summary>
         public static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
+		/// <summary>
+		/// Retorna o produto cruzado entre um vetor e um escalar.
+		/// </summary>
+		public static Vector2 Cross(Vector2 a, float s) => new Vector2(s * a.Y, -s * a.X);
 
 		/// <summary>
 		/// Transforma um <see cref="Vector2"/> em um vetor de magnitude 1 com a mesma direção.

@@ -1,7 +1,6 @@
-﻿using Claw.Modules;
-using System;
-using System.CodeDom.Compiler;
+﻿using System;
 using System.Collections.Generic;
+using Claw.Modules;
 
 namespace Claw.Physics
 {
@@ -24,6 +23,7 @@ namespace Claw.Physics
 		public static Vector2 Gravity = new Vector2(0, 9.8f);
 		internal static bool needStep = true;
 
+		public bool Enabled = true;
 		public int BodyCount => bodies?.Count ?? 0;
 		private CollisionResult result;
 		private List<RigidBody> bodies;
@@ -66,7 +66,7 @@ namespace Claw.Physics
 
 		internal void Step()
 		{
-			if (!needStep) return;
+			if (!needStep || !Enabled) return;
 
 			int iterations = (int)Math.Min((Time.UnscaledDeltaTime * 1000) / Time.FrameDelay * MaxIterations, MaxIterations);
 
@@ -80,28 +80,28 @@ namespace Claw.Physics
 			{
 				if (!bodies[i].Enabled) continue;
 
-				bodies[i].UpdateShapes();
+				bodies[i].UpdateShape();
 
 				for (int j = i - 1; j >= 0; j--)
 				{
 					if (!bodies[j].Enabled) continue;
 
-					bodies[j].UpdateShapes();
+					bodies[j].UpdateShape();
 					result.Reset();
 					CollisionChecker.Intersects(bodies[i], bodies[j], result);
 
 					if (result.Intersects)
 					{
 						OnCollision();
-						bodies[i].UpdateShapes();
-						bodies[j].UpdateShapes();
+						bodies[i].UpdateShape();
+						bodies[j].UpdateShape();
 					}
 				}
 			}
 		}
 		private void OnCollision()
 		{
-			RigidBody a = result.Shape.Body, b = result.OtherShape.Body;
+			RigidBody a = result.Body, b = result.OtherBody;
 
 			if (a.Type == BodyType.Trigger)
 			{
@@ -142,36 +142,50 @@ namespace Claw.Physics
 			float bounciness = (a.Material.Bounciness + b.Material.Bounciness) * .5f;
 			float staticFriction = (a.Material.StaticFriction + b.Material.StaticFriction) * .5f;
 			float dynamicFriction = (a.Material.DynamicFriction + b.Material.DynamicFriction) * .5f;
-			Vector2 aPos = a.Transform.Position, bPos = b.Transform.Position;
-			float j = 0;
-
-			Vector2 relativeVelocity = a.MoveSpeed - b.MoveSpeed;
+			Vector2 aPos = a.Shape.Center, bPos = b.Shape.Center;
 			
-			if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
+			for (int i = 0; i < result.CollisionPoints; i++)
 			{
-				j = -(1 + bounciness) * Vector2.Dot(relativeVelocity, result.Direction);
-				j /= a.inverseMass + b.inverseMass;
+				float j = 0;
+				Vector2 closest = result[i];
+				Vector2 ra = closest - aPos, rb = closest - bPos;
+				Vector2 raPerp = new Vector2(-ra.Y, ra.X), rbPerp = new Vector2(-rb.Y, rb.X);
 
-				Vector2 impulse = j * result.Direction;
-				a.MoveSpeed += impulse * a.inverseMass;
-				b.MoveSpeed -= impulse * b.inverseMass;
-			}
+				Vector2 relativeVelocity = a.MoveSpeed + (raPerp * a.RotateSpeed) - b.MoveSpeed + (rbPerp * -b.RotateSpeed);
 
-			relativeVelocity = a.MoveSpeed - b.MoveSpeed;
-			Vector2 tangent = relativeVelocity - Vector2.Dot(relativeVelocity, result.Direction) * result.Direction;
+				if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
+				{
+					float raPerpDot = Vector2.Dot(raPerp, result.Direction), rbPerpDot = Vector2.Dot(rbPerp, result.Direction);
+					j = -(1 + bounciness) * Vector2.Dot(relativeVelocity, result.Direction);
+					j /= a.inverseMass + b.inverseMass + (raPerpDot * raPerpDot * a.inverseInertia) + (rbPerpDot * rbPerpDot * b.inverseInertia);
 
-			if (!tangent.Approximately(Vector2.Zero))
-			{
-				tangent.Normalize();
+					Vector2 impulse = j * result.Direction;
+					a.MoveSpeed += impulse * a.inverseMass;
+					b.MoveSpeed -= impulse * b.inverseMass;
+					a.RotateSpeed += Vector2.Cross(ra, impulse) * a.inverseInertia;
+					b.RotateSpeed -= Vector2.Cross(rb, impulse) * b.inverseInertia;
+				}
 
-				float jt = -Vector2.Dot(relativeVelocity, tangent) / (a.inverseMass + b.inverseMass);
-				Vector2 frictionImpulse;
+				relativeVelocity = a.MoveSpeed + (raPerp * a.RotateSpeed) - b.MoveSpeed + (rbPerp * -b.RotateSpeed);
+				Vector2 tangent = relativeVelocity - Vector2.Dot(relativeVelocity, result.Direction) * result.Direction;
 
-				if (Math.Abs(jt) <= j * staticFriction) frictionImpulse = jt * tangent;
-				else frictionImpulse = -j * tangent * dynamicFriction;
+				if (!tangent.Approximately(Vector2.Zero))
+				{
+					tangent.Normalize();
 
-				a.MoveSpeed += frictionImpulse * a.inverseMass;
-				b.MoveSpeed -= frictionImpulse * b.inverseMass;
+					float raPerpDot = Vector2.Dot(raPerp, tangent), rbPerpDot = Vector2.Dot(rbPerp, tangent);
+					float jt = -Vector2.Dot(relativeVelocity, tangent);
+					jt /= a.inverseMass + b.inverseMass + (raPerpDot * raPerpDot * a.inverseInertia) + (rbPerpDot * rbPerpDot * b.inverseInertia);
+					Vector2 frictionImpulse;
+
+					if (Math.Abs(jt) <= j * staticFriction) frictionImpulse = jt * tangent;
+					else frictionImpulse = -j * tangent * dynamicFriction;
+
+					a.MoveSpeed += frictionImpulse * a.inverseMass;
+					b.MoveSpeed -= frictionImpulse * b.inverseMass;
+					a.RotateSpeed += Vector2.Cross(ra, frictionImpulse) * a.inverseInertia;
+					b.RotateSpeed -= Vector2.Cross(rb, frictionImpulse) * b.inverseInertia;
+				}
 			}
 		}
 	}

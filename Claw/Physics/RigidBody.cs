@@ -23,13 +23,6 @@ namespace Claw.Physics
 
 		public event Action<IStep> StepOrderChanged;
 
-		public int ShapeCount => shapes.Count;
-		/// <summary>
-		/// Retorna o colisor específico.
-		/// </summary>
-		public IShape this[int index] => shapes[index];
-		private List<IShape> shapes = new List<IShape>();
-
 		public bool UseRotation = true;
 		public float GravityScale = 1;
 		public float Mass { get; private set; }
@@ -37,115 +30,44 @@ namespace Claw.Physics
 		public Vector2 MoveSpeed;
 		public BodyType Type = BodyType.Normal;
 		public Material Material;
-		private int previousCount;
-		internal bool needUpdate;
+		public IShape Shape;
 		internal float inverseMass, inverseInertia;
 
 		private float previousRotation;
 		private Vector2 previousPosition, previousScale;
 
 		public RigidBody(bool instantlyAdd = true) : base(instantlyAdd) => Material = Material.Default;
-		public RigidBody(BodyType type, Material material, bool instantlyAdd = true) : base(instantlyAdd)
+		public RigidBody(BodyType type, Material material, IShape shape, bool instantlyAdd = true) : base(instantlyAdd)
 		{
 			Type = type;
 			Material = material;
+			Shape = shape;
 		}
 
 		/// <summary>
-		/// Adiciona um <see cref="CircleShape"/> ao <see cref="Shapes"/>.
+		/// Atualiza o estado do colisor, caso o Transform tenha sofrido alterações.
 		/// </summary>
-		/// <returns>Este <see cref="RigidBody"/>.</returns>
-		public RigidBody AddCircle(float radius, Vector2 offset)
+		internal void UpdateShape()
 		{
-			if (radius != 0) shapes.Add(new CircleShape(this, radius, offset));
-
-			return this;
-		}
-		/// <summary>
-		/// Adiciona um <see cref="PolygonShape"/> retangular ao <see cref="Shapes"/>.
-		/// </summary>
-		/// <returns>Este <see cref="RigidBody"/>.</returns>
-		public RigidBody AddBox(Rectangle rectangle)
-		{
-			Vector2 size = rectangle.Size;
-
-			if (size != Vector2.Zero)
+			if (Shape != null)
 			{
-				Vector2 start = size * -.5f;
-
-				shapes.Add(new PolygonShape(this, size.X * size.Y, rectangle.Location, new Vector2[4]
+				if (previousRotation != Transform.Rotation || previousPosition != Transform.Position || previousScale != Transform.Scale)
 				{
-					start,
-					new Vector2(start.X + size.X, start.Y),
-					new Vector2(start.X + size.X, start.Y + size.Y),
-					new Vector2(start.X, start.Y + size.Y),
-				}));
-			}
-
-			return this;
-		}
-		/// <summary>
-		/// Adiciona um <see cref="PolygonShape"/> ao <see cref="Shapes"/>.
-		/// </summary>
-		/// <returns>Este <see cref="RigidBody"/>.</returns>
-		public RigidBody AddPolygon(Vector2 offset, params Vector2[] vertices)
-		{
-			if (vertices == null || vertices.Length == 0) shapes.Add(new PolygonShape(this, PolygonShape.CalculateArea(vertices), offset, vertices));
-
-			return this;
-		}
-		/// <summary>
-		/// Remove o colisor específico.
-		/// </summary>
-		/// <returns>Este <see cref="RigidBody"/>.</returns>
-		public RigidBody RemoveShape(int index)
-		{
-			shapes.RemoveAt(index);
-
-			return this;
-		}
-		/// <summary>
-		/// Atualiza o estado de todos os colisores, caso o Transform tenha sofrido alterações.
-		/// </summary>
-		internal void UpdateShapes()
-		{
-			if (shapes.Count > 0)
-			{
-				if (previousCount != shapes.Count || previousRotation != Transform.Rotation || previousPosition != Transform.Position || previousScale != Transform.Scale || needUpdate)
-				{
-					previousCount = shapes.Count;
 					previousRotation = Transform.Rotation;
 					previousPosition = Transform.Position;
 					previousScale = Transform.Scale;
-					needUpdate = false;
 					PhysicsManager.needStep = true;
-					Mass = 0;
+					Mass = Shape.Area * Material.Density;
 					inverseMass = 0;
 					inverseInertia = 0;
-					Vector2 min = shapes[0].BoundingBox.Location, max = min + shapes[0].BoundingBox.Size;
 
-					for (int i = 0; i < shapes.Count; i++)
-					{
-						shapes[i].Update();
-
-						Mass += shapes[i].Area * Material.Density;
-						
-						if (i > 0)
-						{
-							min.X = Math.Min(min.X, shapes[i].BoundingBox.X);
-							min.Y = Math.Min(min.Y, shapes[i].BoundingBox.Y);
-							max.X = Math.Max(max.X, shapes[i].BoundingBox.X + shapes[i].BoundingBox.Width);
-							max.Y = Math.Max(max.Y, shapes[i].BoundingBox.Y + shapes[i].BoundingBox.Height);
-						}
-					}
-
-					float radius = Math.Max(max.X - min.X, max.Y - min.Y) * .5f;
+					Shape.Update(this);
 
 					if (Type != BodyType.Static)
 					{
-						inverseMass = 1 / Mass;
+						if (Mass != 0) inverseMass = 1 / Mass;
 
-						if (UseRotation) inverseInertia = 1f / (1f / 12 * Mass * radius * radius);
+						if (UseRotation && Shape.Inertia != 0) inverseInertia = 1f / Shape.Inertia;
 					}
 				}
 			}
@@ -175,9 +97,9 @@ namespace Claw.Physics
 		{
 			MoveSpeed += PhysicsManager.Gravity * GravityScale * Time.DeltaTime;
 			Transform.Position += MoveSpeed * PhysicsManager.Unit * Time.DeltaTime;
-			Transform.Rotation += RotateSpeed * PhysicsManager.Unit * Time.DeltaTime;
+			Transform.Rotation += Mathf.ToDegrees(RotateSpeed * PhysicsManager.Unit) * Time.DeltaTime;
 
-			UpdateShapes();
+			UpdateShape();
 		}
 	}
 }
