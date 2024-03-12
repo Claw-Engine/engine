@@ -37,7 +37,7 @@ namespace Claw.Physics
 			if (body == null) return;
 
 			radiusInWorld = Radius * Math.Max(body.Transform.Scale.X, body.Transform.Scale.Y);
-			Inertia = (.5f * body.Mass * radiusInWorld * radiusInWorld);
+			Inertia = (.5f * body.Mass * Radius * Radius);
 			Center = body.Transform.Position + Offset * body.Transform.Scale;
 			_boundingBox.X = Center.X - radiusInWorld;
 			_boundingBox.Y = Center.Y - radiusInWorld;

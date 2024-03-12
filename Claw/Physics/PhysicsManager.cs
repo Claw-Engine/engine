@@ -49,6 +49,7 @@ namespace Claw.Physics
 			if (module is RigidBody body)
 			{
 				needStep = true;
+				body.EnabledChanged += EnabledChange;
 
 				bodies.Add(body);
 			}
@@ -58,9 +59,17 @@ namespace Claw.Physics
 			if (module is RigidBody body)
 			{
 				needStep = true;
+				body.EnabledChanged -= EnabledChange;
 
 				bodies.Remove(body);
 			}
+		}
+		private void EnabledChange(BaseModule module)
+		{
+			needStep = true;
+
+			if (module.Enabled) bodies.Add((RigidBody)module);
+			else bodies.Remove((RigidBody)module);
 		}
 		#endregion
 
