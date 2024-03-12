@@ -143,17 +143,35 @@ namespace Claw.Physics
 			float staticFriction = (a.Material.StaticFriction + b.Material.StaticFriction) * .5f;
 			float dynamicFriction = (a.Material.DynamicFriction + b.Material.DynamicFriction) * .5f;
 			Vector2 aPos = a.Transform.Position, bPos = b.Transform.Position;
+			float j = 0;
 
 			Vector2 relativeVelocity = a.MoveSpeed - b.MoveSpeed;
 			
 			if (Vector2.Dot(relativeVelocity, result.Direction) <= 0)
 			{
-				float j = -(1 + bounciness) * Vector2.Dot(relativeVelocity, result.Direction);
+				j = -(1 + bounciness) * Vector2.Dot(relativeVelocity, result.Direction);
 				j /= a.inverseMass + b.inverseMass;
 
 				Vector2 impulse = j * result.Direction;
 				a.MoveSpeed += impulse * a.inverseMass;
 				b.MoveSpeed -= impulse * b.inverseMass;
+			}
+
+			relativeVelocity = a.MoveSpeed - b.MoveSpeed;
+			Vector2 tangent = relativeVelocity - Vector2.Dot(relativeVelocity, result.Direction) * result.Direction;
+
+			if (!tangent.Approximately(Vector2.Zero))
+			{
+				tangent.Normalize();
+
+				float jt = -Vector2.Dot(relativeVelocity, tangent) / (a.inverseMass + b.inverseMass);
+				Vector2 frictionImpulse;
+
+				if (Math.Abs(jt) <= j * staticFriction) frictionImpulse = jt * tangent;
+				else frictionImpulse = -j * tangent * dynamicFriction;
+
+				a.MoveSpeed += frictionImpulse * a.inverseMass;
+				b.MoveSpeed -= frictionImpulse * b.inverseMass;
 			}
 		}
 	}

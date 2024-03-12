@@ -30,7 +30,8 @@ namespace Claw.Physics
 		public IShape this[int index] => shapes[index];
 		private List<IShape> shapes = new List<IShape>();
 
-		public bool UseGravity = true, UseRotation = true;
+		public bool UseRotation = true;
+		public float GravityScale = 1;
 		public float Mass { get; private set; }
 		public float RotateSpeed;
 		public Vector2 MoveSpeed;
@@ -172,8 +173,7 @@ namespace Claw.Physics
 		public override void Initialize() { }
 		public virtual void Step()
 		{
-			if (UseGravity) MoveSpeed += PhysicsManager.Gravity * Time.DeltaTime;
-
+			MoveSpeed += PhysicsManager.Gravity * GravityScale * Time.DeltaTime;
 			Transform.Position += MoveSpeed * PhysicsManager.Unit * Time.DeltaTime;
 			Transform.Rotation += RotateSpeed * PhysicsManager.Unit * Time.DeltaTime;
 
