@@ -8,7 +8,7 @@ namespace Claw.Physics
 	/// </summary>
 	public static class CollisionChecker
 	{
-		private const float CompareTolerance = .0005f;
+		private const float CompareTolerance = .0025f;
 
 		/// <summary>
 		/// Checa se dois corpos estão se sobrepondo.
@@ -269,6 +269,6 @@ namespace Claw.Physics
 
 			return v1 * v1 + v2 * v2;
 		}
-		internal static bool Approximately(this Vector2 a, Vector2 b) => DistanceSquared(a, b) <= CompareTolerance * CompareTolerance;
+		internal static bool Approximately(this Vector2 a, Vector2 b) => DistanceSquared(a, b) <= CompareTolerance;
 	}
 }

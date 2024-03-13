@@ -1,5 +1,4 @@
-﻿using Claw.Graphics;
-using System;
+﻿using System;
 
 namespace Claw.Physics
 {
