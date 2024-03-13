@@ -1,12 +1,42 @@
-﻿using System;
+﻿using Claw.Graphics;
+using System;
 
 namespace Claw.Physics
 {
     /// <summary>
     /// Calculador de raycast.
     /// </summary>
-    public static class RayCaster
+    public sealed class RayCaster
     {
+        public bool Hit { get; private set; }
+        public Vector2? HitPoint { get; private set; }
+        public event Func<Vector2, bool> OnMove;
+        private float distance, maxDistance;
+        private Vector2 cellSize, check, direction, step, stepSize, rayLength;
+        private Line ray;
+
+		public RayCaster(Line ray, float maxDistance, Func<Vector2, bool> onMove, Vector2 cellSize)
+		{
+            this.maxDistance = maxDistance;
+            OnMove = onMove;
+            this.cellSize = cellSize;
+
+			this.ray = ray / cellSize;
+			check = new Vector2((int)ray.Start.X, (int)ray.Start.Y);
+			direction = Vector2.LengthDir(1, Vector2.GetAngle(ray.Start, ray.End));
+
+			step = SignOne(direction);
+            stepSize = Vector2.Abs(1 / direction);
+			rayLength = Vector2.Zero;
+
+			if (direction.X >= 0) rayLength.X = (check.X + 1 - ray.Start.X) * stepSize.X;
+			else rayLength.X = (ray.Start.X - check.X) * stepSize.X;
+
+			if (direction.Y >= 0) rayLength.Y = (check.Y + 1 - ray.Start.Y) * stepSize.Y;
+			else rayLength.Y = (ray.Start.Y - check.Y) * stepSize.Y;
+		}
+        public RayCaster(Line ray, Func<Vector2, bool> onMove, Vector2 cellSize) : this(ray, Vector2.Distance(ray.Start, ray.End), onMove, cellSize) { }
+
         /// <summary>
         /// Realiza a movimentação do raio de um ponto ao outro.
         /// </summary>
@@ -25,46 +55,45 @@ namespace Claw.Physics
         /// </param>
         public static void Cast(Line ray, float maxDistance, Func<Vector2, bool> onMove, out Vector2? hitPoint, Vector2 cellSize)
         {
-            Vector2 grid = cellSize;
-            ray = ray / grid;
-            Vector2 check = new Vector2((int)ray.Start.X, (int)ray.Start.Y);
+            RayCaster caster = new RayCaster(ray, maxDistance, onMove, cellSize);
 
-            Vector2 dir = Vector2.LengthDir(1, Vector2.GetAngle(ray.Start, ray.End));
-            Vector2 delta = ray.End - ray.Start;
+            while (!caster.Hit && caster.distance < caster.maxDistance) caster.Move();
 
-            Vector2 step = new Vector2(dir.X < 0 ? -1 : 1, dir.Y < 0 ? -1 : 1);
-            Vector2 stepSize = new Vector2(Math.Abs(1 / dir.X), Math.Abs(1 / dir.Y));
-            Vector2 rayLength = Vector2.Zero;
-
-            if (dir.X >= 0) rayLength.X = (check.X + 1 - ray.Start.X) * stepSize.X;
-            else rayLength.X = (ray.Start.X - check.X) * stepSize.X;
-
-            if (dir.Y >= 0) rayLength.Y = (check.Y + 1 - ray.Start.Y) * stepSize.Y;
-            else rayLength.Y = (ray.Start.Y - check.Y) * stepSize.Y;
-
-            bool hit = false;
-            float distance = 0;
-
-            while (!hit && distance < maxDistance)
-            {
-                if (rayLength.X < rayLength.Y)
-                {
-                    distance = rayLength.X;
-                    check.X += step.X;
-                    rayLength.X += stepSize.X;
-                }
-                else
-                {
-                    distance = rayLength.Y;
-                    check.Y += step.Y;
-                    rayLength.Y += stepSize.Y;
-                }
-
-                hit = onMove?.Invoke(check) ?? false;
-            }
-
-            if (hit) hitPoint = (ray.Start + dir * distance) * grid;
-            else hitPoint = null;
+            hitPoint = caster.HitPoint;
         }
+
+        /// <summary>
+        /// Move o raio.
+        /// </summary>
+        public void Move()
+        {
+            if (Hit && distance >= maxDistance) return;
+
+			if (rayLength.X < rayLength.Y)
+			{
+				distance = rayLength.X;
+				check.X += step.X;
+				rayLength.X += stepSize.X;
+			}
+			else
+			{
+				distance = rayLength.Y;
+				check.Y += step.Y;
+				rayLength.Y += stepSize.Y;
+			}
+
+			Hit = OnMove?.Invoke(check) ?? false;
+
+			if (Hit) HitPoint = (ray.Start + direction * distance) * cellSize;
+			else HitPoint = null;
+		}
+
+        private static float SignOne(float value)
+        {
+            if (value < 0) return -1;
+
+            return 1;
+        }
+        private static Vector2 SignOne(Vector2 value) => new Vector2(SignOne(value.X), SignOne(value.Y));
     }
 }

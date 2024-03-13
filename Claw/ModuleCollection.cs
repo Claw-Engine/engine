@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using Claw.Modules;
 using Claw.Utils;
 
@@ -53,6 +54,8 @@ namespace Claw
 
             if (module != null)
             {
+                module.Exists = true;
+
 				OnModuleAdded(module);
 				module.Initialize();
             }
@@ -63,6 +66,7 @@ namespace Claw
         protected override void RemoveItem(int index)
         {
 			BaseModule module = this[index];
+            module.Exists = false;
 
             base.RemoveItem(index);
 
@@ -77,9 +81,19 @@ namespace Claw
 
 			if (oldModule != null)
 			{
+                oldModule.Exists = false;
+
 				OnModuleRemoved(oldModule);
-				base.SetItem(index, oldModule);
-				oldModule.Initialize();
+			}
+
+			base.SetItem(index, newModule);
+			
+            if (newModule != null)
+            {
+                newModule.Exists = true;
+
+				OnModuleAdded(newModule);
+				newModule.Initialize();
 			}
 		}
 		/// <summary>
@@ -87,7 +101,13 @@ namespace Claw
 		/// </summary>
 		protected override void ClearItems()
         {
-            for (int i = 0; i < Count; i++) OnModuleRemoved(base[i]);
+            for (int i = 0; i < Count; i++)
+			{
+				BaseModule module = this[i];
+                module.Exists = false;
+
+				OnModuleRemoved(module);
+			}
 
             base.ClearItems();
         }

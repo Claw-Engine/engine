@@ -21,7 +21,7 @@ namespace Claw.Modules
 				}
 			}
 		}
-		public bool Exists => Game.Modules.IndexOf(this) >= 0;
+		public bool Exists { get; internal set; } = false;
 		public bool DontDestroy = false;
 		public string Name = string.Empty;
 		public Game Game => Game.Instance;
