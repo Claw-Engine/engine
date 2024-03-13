@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Claw.Modules;
 
 namespace Claw.Physics
@@ -21,25 +23,26 @@ namespace Claw.Physics
 		/// Gravidade geral dos corpos ({ X: 0, Y: 9.8 } por padrão).
 		/// </summary>
 		public static Vector2 Gravity = new Vector2(0, 9.8f);
-		internal static bool needStep = true;
 
 		public bool Enabled = true;
 		public int BodyCount => bodies?.Count ?? 0;
+		public readonly int GridSize;
 		private CollisionResult result;
 		private List<RigidBody> bodies;
+		private Dictionary<Vector2, Phygrid> grids;
+		internal bool needStep = true;
 
 		#region Filtro
 		internal void AddTo(ModuleCollection collection)
 		{
-			if (result == null) result = new CollisionResult();
-
-			bodies = new List<RigidBody>();
 			Game.Instance.Modules.ModuleAdded += ModuleAdded;
 			Game.Instance.Modules.ModuleRemoved += ModuleRemoved;
 		}
 		internal void RemoveFrom(ModuleCollection collection)
 		{
-			bodies = null;
+			bodies.Clear();
+			grids.Clear();
+
 			collection.ModuleAdded -= ModuleAdded;
 			collection.ModuleRemoved -= ModuleRemoved;
 		}
@@ -49,7 +52,6 @@ namespace Claw.Physics
 			if (module is RigidBody body)
 			{
 				needStep = true;
-				body.EnabledChanged += EnabledChange;
 
 				bodies.Add(body);
 			}
@@ -59,19 +61,67 @@ namespace Claw.Physics
 			if (module is RigidBody body)
 			{
 				needStep = true;
-				body.EnabledChanged -= EnabledChange;
 
+				for (int i = body.grids.Count - 1; i >= 0; i--) body.grids[i].bodies.Remove(body);
+
+				body.grids.Clear();
 				bodies.Remove(body);
 			}
 		}
-		private void EnabledChange(BaseModule module)
+		internal void UpdateGrid(RigidBody body)
 		{
-			needStep = true;
+			Vector2 start = body.Shape.BoundingBox.Location, size = body.Shape.BoundingBox.Size;
+			Vector2 topLeft = Mathf.ToGrid(start, GridSize), topRight = Mathf.ToGrid(start + new Vector2(size.X - 1, 0), GridSize),
+				bottomLeft = Mathf.ToGrid(start + new Vector2(0, size.Y - 1), GridSize), bottomRight = Mathf.ToGrid(start + new Vector2(size.X - 1, size.Y - 1), GridSize);
 
-			if (module.Enabled) bodies.Add((RigidBody)module);
-			else bodies.Remove((RigidBody)module);
+			if (topLeft != body.previousTopLeft || topRight != body.previousTopRight || bottomLeft != body.previousBottomLeft || bottomRight != body.previousBottomRight)
+			{
+				body.previousTopLeft = topLeft;
+				body.previousTopRight = topRight;
+				body.previousBottomLeft = bottomLeft;
+				body.previousBottomRight = bottomRight;
+
+				RemoveFromGrid(body);
+				UpdateGrid(body, topLeft);
+
+				if (topRight != topLeft) UpdateGrid(body, topRight);
+
+				if (bottomLeft != topLeft && bottomLeft != topRight) UpdateGrid(body, bottomLeft);
+
+				if (bottomRight != topLeft && bottomRight != topRight && bottomRight != bottomLeft) UpdateGrid(body, bottomRight);
+			}
+		}
+		private void UpdateGrid(RigidBody body, Vector2 gridIndex)
+		{
+			if (grids.TryGetValue(gridIndex, out Phygrid grid))
+			{
+				grid.bodies.Add(body);
+				body.grids.Add(grid);
+			}
+			else
+			{
+				grid = new Phygrid() { index = gridIndex };
+
+				grid.bodies.Add(body);
+				body.grids.Add(grid);
+				grids.Add(gridIndex, grid);
+			}
+		}
+		internal void RemoveFromGrid(RigidBody body)
+		{
+			for (int i = 0; i < body.grids.Count; i++) body.grids[i].bodies.Remove(body);
+
+			body.grids.Clear();
 		}
 		#endregion
+
+		public PhysicsManager(int gridSize)
+		{
+			GridSize = gridSize > 0 ? gridSize : 400;
+			result = new CollisionResult();
+			bodies = new List<RigidBody>();
+			grids = new Dictionary<Vector2, Phygrid>();
+		}
 
 		internal void Step()
 		{
@@ -87,24 +137,26 @@ namespace Claw.Physics
 
 			for (int i = bodies.Count - 1; i >= 0; i--)
 			{
-				if (!bodies[i].Enabled) continue;
-
-				bodies[i].UpdateShape();
-
-				for (int j = i - 1; j >= 0; j--)
+				if (bodies[i].Enabled && bodies[i].Type == BodyType.Normal)
 				{
-					if (!bodies[j].Enabled) continue;
+					bodies[i].UpdateBody();
 
-					bodies[j].UpdateShape();
+					for (int grid = bodies[i].grids.Count - 1; grid >= 0; grid--) BodyAgainstGrid(bodies[i], bodies[i].grids[grid]);
+				}
+			}
+		}
+		private void BodyAgainstGrid(RigidBody body, Phygrid grid)
+		{
+			for (int i = grid.bodies.Count - 1; i >= 0; i--)
+			{
+				RigidBody other = grid.bodies[i];
+
+				if (other.Enabled && body != other)
+				{
 					result.Reset();
-					CollisionChecker.Intersects(bodies[i], bodies[j], result);
+					CollisionChecker.Intersects(body, other, result);
 
-					if (result.Intersects)
-					{
-						OnCollision();
-						bodies[i].UpdateShape();
-						bodies[j].UpdateShape();
-					}
+					if (result.Intersects) OnCollision();
 				}
 			}
 		}
@@ -112,31 +164,17 @@ namespace Claw.Physics
 		{
 			RigidBody a = result.Body, b = result.OtherBody;
 
-			if (a.Type == BodyType.Trigger)
-			{
-				if (b.Type != BodyType.Trigger) b.Triggering(result);
-
-				return;
-			}
-
 			switch (b.Type)
 			{
 				case BodyType.Trigger: a.Triggering(result); break;
-				case BodyType.Static:
-					if (a.Type == BodyType.Static) break;
-					goto default;
 				default:
-					bool resolve = true;
-
-					if (a.Type == BodyType.Normal) resolve = a.Colliding(result);
-					else if (b.Type == BodyType.Normal) resolve = b.Colliding(result);
+					bool resolve = a.Colliding(result);
 
 					if (resolve)
 					{
 						ResolveImpulse(a, b, result);
 
 						if (b.Type == BodyType.Static) a.Transform.Position += result.Depth * result.Direction;
-						else if (a.Type == BodyType.Static) b.Transform.Position -= result.Depth * result.Direction;
 						else
 						{
 							a.Transform.Position += result.Depth * .5f * result.Direction;
@@ -197,5 +235,10 @@ namespace Claw.Physics
 				}
 			}
 		}
+	}
+	internal class Phygrid
+	{
+		public Vector2 index;
+		public List<RigidBody> bodies = new List<RigidBody>();
 	}
 }

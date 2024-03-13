@@ -32,9 +32,11 @@ namespace Claw.Physics
 		public Material Material;
 		public IShape Shape;
 		internal float inverseMass, inverseInertia;
+		internal List<Phygrid> grids = new List<Phygrid>(4);
 
-		private float previousRotation;
-		private Vector2 previousPosition, previousScale;
+		private float? previousRotation;
+		private Vector2? previousPosition, previousScale;
+		internal Vector2? previousTopLeft, previousTopRight, previousBottomLeft, previousBottomRight;
 
 		public RigidBody(bool instantlyAdd = true) : base(instantlyAdd) => Material = Material.Default;
 		public RigidBody(BodyType type, Material material, IShape shape, bool instantlyAdd = true) : base(instantlyAdd)
@@ -44,10 +46,7 @@ namespace Claw.Physics
 			Shape = shape;
 		}
 
-		/// <summary>
-		/// Atualiza o estado do colisor, caso o Transform tenha sofrido alterações.
-		/// </summary>
-		internal void UpdateShape()
+		internal void UpdateBody()
 		{
 			if (Shape != null)
 			{
@@ -56,8 +55,7 @@ namespace Claw.Physics
 					previousRotation = Transform.Rotation;
 					previousPosition = Transform.Position;
 					previousScale = Transform.Scale;
-					PhysicsManager.needStep = true;
-					Mass = Shape.Area * Material.Density;
+					Mass = Shape.Area * Material.Density / Math.Max(Transform.Scale.X, Transform.Scale.Y);
 					inverseMass = 0;
 					inverseInertia = 0;
 
@@ -67,11 +65,23 @@ namespace Claw.Physics
 					{
 						if (Mass != 0) inverseMass = 1 / Mass;
 
-						if (UseRotation && Shape.Inertia != 0) inverseInertia = 1f / Shape.Inertia;
+						if (UseRotation && Shape.Inertia != 0) inverseInertia = 1f / Shape.Inertia / Math.Max(Transform.Scale.X, Transform.Scale.Y);
+					}
+
+					if (Game.Physics != null)
+					{
+						Game.Physics.needStep = true;
+
+						Game.Physics.UpdateGrid(this);
 					}
 				}
 			}
-			else Mass = 0;
+			else
+			{
+				Mass = 0;
+
+				Game.Physics?.RemoveFromGrid(this);
+			}
 		}
 
 		/// <summary>
@@ -79,7 +89,7 @@ namespace Claw.Physics
 		/// </summary>
 		public void Impulse(Vector2 impulse)
 		{
-			if (Mass > 0) MoveSpeed += (impulse / Mass * PhysicsManager.Unit);
+			if (Mass > 0) MoveSpeed += impulse / (Mass * Math.Max(Transform.Scale.X, Transform.Scale.Y)) * PhysicsManager.Unit;
 		}
 
 		/// <summary>
@@ -99,7 +109,7 @@ namespace Claw.Physics
 			Transform.Position += MoveSpeed * PhysicsManager.Unit * Time.DeltaTime;
 			Transform.Rotation += Mathf.ToDegrees(RotateSpeed * PhysicsManager.Unit) * Time.DeltaTime;
 
-			UpdateShape();
+			UpdateBody();
 		}
 	}
 }

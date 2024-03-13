@@ -8,6 +8,7 @@ namespace Claw.Physics
     public sealed class RayCaster
     {
         public bool Hit { get; private set; }
+        public bool Ended { get; private set; }
         public Vector2? HitPoint { get; private set; }
         public event Func<Vector2, bool> OnMove;
         private float distance, maxDistance;
@@ -56,7 +57,7 @@ namespace Claw.Physics
         {
             RayCaster caster = new RayCaster(ray, maxDistance, onMove, cellSize);
 
-            while (!caster.Hit && caster.distance < caster.maxDistance) caster.Move();
+            while (!caster.Ended) caster.Move();
 
             hitPoint = caster.HitPoint;
         }
@@ -66,7 +67,7 @@ namespace Claw.Physics
         /// </summary>
         public void Move()
         {
-            if (Hit && distance >= maxDistance) return;
+            if (Ended) return;
 
 			if (rayLength.X < rayLength.Y)
 			{
@@ -85,6 +86,8 @@ namespace Claw.Physics
 
 			if (Hit) HitPoint = (ray.Start + direction * distance) * cellSize;
 			else HitPoint = null;
+
+            Ended = Hit || distance >= maxDistance;
 		}
 
         private static float SignOne(float value)

@@ -24,8 +24,8 @@ namespace Claw.Maps
         public override Vector2 PositionToCell(Vector2 position)
         {
             Vector2 offset = new Vector2(GridSize.X * .5f, GridSize.Y * VerticalOffset);
-            Vector2 guess1 = Mathf.GetGridPosition(position, GridSize * GuessGridMultiplier);
-            Vector2 guess2 = Mathf.GetGridPosition(position - offset, GridSize * GuessGridMultiplier) + offset;
+            Vector2 guess1 = Mathf.ToGrid(position, GridSize * GuessGridMultiplier);
+            Vector2 guess2 = Mathf.ToGrid(position - offset, GridSize * GuessGridMultiplier) + offset;
             Vector2 result = guess1;
 
             if (Vector2.Distance(position, guess2 + GridSize * .5f) <= Vector2.Distance(position, guess1 + GridSize * .5f))
@@ -35,7 +35,7 @@ namespace Claw.Maps
             }
             else if (result.Y != 0) result.Y = (Mathf.ToGrid(result.Y, (int)(GridSize.Y * VerticalOffset)) / (GridSize.Y * VerticalOffset)) * GridSize.Y;
             
-            return Mathf.GetGridPosition(result, GridSize) / GridSize;
+            return Mathf.ToGrid(result, GridSize) / GridSize;
         }
         public override Vector2 PositionToGrid(Vector2 position)
         {

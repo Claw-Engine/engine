@@ -243,7 +243,7 @@ namespace Claw.Physics
             if (CornerTolerance > 0 && (platType == PlatTypes.Block || platType == PlatTypes.DontPassDown) && speed.Y < 0)
             {
                 Rectangle area = Bounds;
-                Vector2 tilePos = Mathf.GetGridPosition(collisionPoint, Grid);
+                Vector2 tilePos = Mathf.ToGrid(collisionPoint, Grid);
                 float playerSide = collisionPoint.X > area.Center.X ? area.Right : area.Left;
                 float tileSide = playerSide == area.Right ? tilePos.X : tilePos.X + Grid.X;
                 float dist = Math.Abs(playerSide - tileSide);

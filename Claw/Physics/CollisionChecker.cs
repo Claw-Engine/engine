@@ -11,6 +11,41 @@ namespace Claw.Physics
 		private const float CompareTolerance = .0025f;
 
 		/// <summary>
+		/// Checa se um corpo contém um ponto.
+		/// </summary>
+		public static bool Contains(RigidBody body, Vector2 point)
+		{
+			if (body == null || body.Shape == null) return false;
+
+			if (body.Shape is CircleShape circle)
+			{
+				Vector2 difference = point - circle.Center;
+
+				return difference.X * difference.X + difference.Y * difference.Y < circle.radiusInWorld * circle.radiusInWorld;
+			}
+			else if (body.Shape is PolygonShape polygon)
+			{
+				bool result = false;
+
+				for (int i = 0; i < polygon.VerticeCount; i++)
+				{
+					Vector2 start = polygon.verticesInWorld[i], end = polygon.verticesInWorld[(i + 1) % polygon.VerticeCount];
+
+					if (point.Y > Math.Min(start.Y, end.Y) && point.Y <= Math.Max(start.Y, end.Y) && point.X <= Math.Max(start.X, end.X) && start.Y != end.Y)
+					{
+						float xInter = (point.Y - start.Y) * (end.X - start.X) / (end.Y - start.Y) + start.X;
+
+						if (start.X == end.X || point.X <= xInter) result = !result;
+					}
+				}
+
+				return result;
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Checa se dois corpos estão se sobrepondo.
 		/// </summary>
 		/// <param name="depth">A profundidade da sobreposição.</param>
