@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Claw.Modules;
 
 namespace Claw.Physics
@@ -70,6 +68,13 @@ namespace Claw.Physics
 		}
 		internal void UpdateGrid(RigidBody body)
 		{
+			if (GridSize <= 0)
+			{
+				if (body.grids.Count == 0) UpdateGrid(body, Vector2.Zero);
+
+				return;
+			}
+
 			Vector2 start = body.Shape.BoundingBox.Location, size = body.Shape.BoundingBox.Size;
 			Vector2 topLeft = Mathf.ToGrid(start, GridSize), topRight = Mathf.ToGrid(start + new Vector2(size.X - 1, 0), GridSize),
 				bottomLeft = Mathf.ToGrid(start + new Vector2(0, size.Y - 1), GridSize), bottomRight = Mathf.ToGrid(start + new Vector2(size.X - 1, size.Y - 1), GridSize);
@@ -100,7 +105,7 @@ namespace Claw.Physics
 			}
 			else
 			{
-				grid = new Phygrid() { index = gridIndex };
+				grid = new Phygrid();
 
 				grid.bodies.Add(body);
 				body.grids.Add(grid);
@@ -117,11 +122,58 @@ namespace Claw.Physics
 
 		public PhysicsManager(int gridSize)
 		{
-			GridSize = gridSize > 0 ? gridSize : 400;
+			GridSize = gridSize;
 			result = new CollisionResult();
 			bodies = new List<RigidBody>();
 			grids = new Dictionary<Vector2, Phygrid>();
 		}
+
+		/// <summary>
+		/// Lança um <see cref="RayCaster"/> em busca de um <see cref="RigidBody"/> (<see cref="BodyType.Normal"/> ou <see cref="BodyType.Static"/>).
+		/// </summary>
+		public void RayCast(Line ray, float maxDistance, Action<RayCaster, RigidBody> onEnd)
+		{
+			RigidBody body = null;
+			Phygrid phygrid = null;
+			Vector2? previousGrid = null;
+
+			RayCaster caster = new RayCaster(ray, maxDistance, (point) =>
+			{
+				Vector2 grid = Mathf.ToGrid(point, GridSize);
+
+				if (previousGrid != grid)
+				{
+					previousGrid = grid;
+
+					if (!grids.TryGetValue(grid, out phygrid)) phygrid = null;
+				}
+
+				if (phygrid != null)
+				{
+					for (int i = 0; i < phygrid.bodies.Count; i++)
+					{
+						bool hit = CollisionChecker.Contains(phygrid.bodies[i], point);
+
+						if (hit)
+						{
+							body = phygrid.bodies[i];
+
+							return true;
+						}
+					}
+				}
+
+				return false;
+			}, Vector2.One);
+
+			while (!caster.Ended) caster.Move();
+
+			onEnd?.Invoke(caster, body);
+		}
+		/// <summary>
+		/// Lança um <see cref="RayCaster"/> em busca de um <see cref="RigidBody"/> (<see cref="BodyType.Normal"/> ou <see cref="BodyType.Static"/>).
+		/// </summary>
+		public void RayCast(Line ray, Action<RayCaster, RigidBody> onEnd) => RayCast(ray, Vector2.Distance(ray.Start, ray.End), onEnd);
 
 		internal void Step()
 		{
@@ -172,7 +224,7 @@ namespace Claw.Physics
 
 					if (resolve)
 					{
-						ResolveImpulse(a, b, result);
+						ResolveImpulse(a, b);
 
 						if (b.Type == BodyType.Static) a.Transform.Position += result.Depth * result.Direction;
 						else
@@ -184,7 +236,7 @@ namespace Claw.Physics
 					break;
 			}
 		}
-		private void ResolveImpulse(RigidBody a, RigidBody b, CollisionResult result)
+		private void ResolveImpulse(RigidBody a, RigidBody b)
 		{
 			float bounciness = (a.Material.Bounciness + b.Material.Bounciness) * .5f;
 			float staticFriction = (a.Material.StaticFriction + b.Material.StaticFriction) * .5f;
@@ -238,7 +290,6 @@ namespace Claw.Physics
 	}
 	internal class Phygrid
 	{
-		public Vector2 index;
 		public List<RigidBody> bodies = new List<RigidBody>();
 	}
 }

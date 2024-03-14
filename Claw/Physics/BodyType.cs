@@ -14,7 +14,7 @@
 		/// </summary>
 		Static,
 		/// <summary>
-		/// Os outros corpos detectam a colisão com ele, mas não reagem.
+		/// Os corpos do tipo <see cref="BodyType.Normal"/> detectam a colisão com ele, mas não reagem.
 		/// </summary>
 		Trigger
 	}
