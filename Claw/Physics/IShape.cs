@@ -5,7 +5,9 @@ namespace Claw.Physics
 	/// <summary>
 	/// Interface para colisores baseados em física.
 	/// </summary>
-	/// <remarks>A herança dessa interface é apenas para uso interno.</remarks>
+	/// <remarks>
+	/// A herança dessa interface é apenas para uso interno.
+	/// </remarks>
 	public interface IShape
 	{
 		float Area { get; }

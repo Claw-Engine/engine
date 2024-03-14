@@ -218,9 +218,12 @@ namespace Claw.Physics
 
 			switch (b.Type)
 			{
-				case BodyType.Trigger: a.Triggering(result); break;
+				case BodyType.Trigger:
+					a.Triggering(result);
+					b.Triggering(result);
+					break;
 				default:
-					bool resolve = a.Colliding(result);
+					bool resolve = a.Colliding(result) && b.Colliding(result);
 
 					if (resolve)
 					{

@@ -93,21 +93,29 @@ namespace Claw.Physics
 		}
 
 		/// <summary>
-		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> ou <see cref="BodyType.Static"/> entram em um <see cref="BodyType.Trigger"/>.
+		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> entram em um <see cref="BodyType.Trigger"/>.
 		/// </summary>
+		/// <remarks>
+		/// Este evento é executado nos dois corpos.
+		/// </remarks>
 		public virtual void Triggering(CollisionResult collision) { }
 		/// <summary>
-		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> colidem com corpos que NÃO sejam <see cref="BodyType.Trigger"/>.
+		/// Evento executado quando corpos do tipo <see cref="BodyType.Normal"/> colidem com <see cref="BodyType.Static"/>.
 		/// </summary>
+		/// <remarks>
+		/// Este evento é executado nos dois corpos.
+		/// </remarks>
 		/// <returns>Se verdadeiro, o sistema deve responder à colisão.</returns>
-		public virtual bool Colliding(CollisionResult collisionResult) => true;
+		public virtual bool Colliding(CollisionResult collision) => true;
 
 		public override void Initialize() { }
 		public virtual void Step()
 		{
 			MoveSpeed += PhysicsManager.Gravity * GravityScale * Time.DeltaTime;
+
 			Transform.Position += MoveSpeed * PhysicsManager.Unit * Time.DeltaTime;
-			Transform.Rotation += Mathf.ToDegrees(RotateSpeed * PhysicsManager.Unit) * Time.DeltaTime;
+
+			if (UseRotation) Transform.Rotation += Mathf.ToDegrees(RotateSpeed * PhysicsManager.Unit) * Time.DeltaTime;
 
 			UpdateBody();
 		}

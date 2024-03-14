@@ -16,6 +16,15 @@ namespace Claw.Modules
 
 				return _rotation;
 			}
+			set
+			{
+				if (Parent != null) _rotation = Parent.Rotation - value;
+				else _rotation = value;
+			}
+		}
+		public float RelativeRotation
+		{
+			get => _rotation;
 			set => _rotation = value;
 		}
 		public Vector2 Position
@@ -26,6 +35,15 @@ namespace Claw.Modules
 
 				return _position;
 			}
+			set
+			{
+				if (Parent != null) _position = Vector2.Rotate((value - Parent.Position) / Parent.Scale, Vector2.Zero, -Parent.Rotation);
+				else _position = value;
+			}
+		}
+		public Vector2 RelativePosition
+		{
+			get => _position;
 			set => _position = value;
 		}
 		public Vector2 Scale
@@ -36,8 +54,18 @@ namespace Claw.Modules
 
 				return _scale;
 			}
+			set
+			{
+				if (Parent != null) _scale = value / Parent.Scale;
+				else _scale = value;
+			}
+		}
+		public Vector2 RelativeScale
+		{
+			get => _scale;
 			set => _scale = value;
 		}
+
 		public Vector2 Facing => Vector2.FindFacing(Rotation);
 		public readonly BaseModule Module;
 		private float _rotation = 0;
