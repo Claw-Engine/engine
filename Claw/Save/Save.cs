@@ -160,7 +160,10 @@ namespace Claw.Save
 		/// </param>
 		/// <returns>O texto após a operação.</returns>
 		public delegate string SaveCrypt(string input, bool encrypt);
-        private static string DefaultCrypt(string input, bool encrypt)
+        /// <summary>
+        /// Função padrão usada em <see cref="CryptFunction"/>.
+        /// </summary>
+        public static string DefaultCrypt(string input, bool encrypt)
         {
 			if (encrypt) return StringCrypt.StringToBinary(StringCrypt.StringToHex(StringCrypt.Crypt(input, encrypt, 10)));
 
