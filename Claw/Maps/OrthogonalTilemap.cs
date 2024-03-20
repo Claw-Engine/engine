@@ -13,16 +13,16 @@ namespace Claw.Maps
         public OrthogonalTilemap() { }
         public OrthogonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 
-        public override Vector2 PositionToCell(Vector2 position) => Mathf.GetGridPosition(position, GridSize) / GridSize;
-        public override Vector2 PositionToGrid(Vector2 position) => Mathf.GetGridPosition(position, GridSize) + GridSize * .5f;
+        public override Vector2 PositionToCell(Vector2 position) => Mathf.ToGrid(position, GridSize) / GridSize;
+        public override Vector2 PositionToGrid(Vector2 position) => Mathf.ToGrid(position, GridSize) + GridSize * .5f;
 
         public override void Render(TileLayer layer)
         {
             if (tileSets.Count > 0 && GridSize != Vector2.Zero && Size != Vector2.Zero)
             {
                 CameraState camera = Draw.GetCamera()?.State ?? CameraState.Neutral;
-                Vector2 start = Mathf.GetGridPosition(camera.TopLeft, GridSize) / GridSize - new Vector2(OutOfView);
-                Vector2 end = Mathf.GetGridPosition(camera.BottomRight, GridSize) / GridSize + new Vector2(OutOfView * 2);
+                Vector2 start = Mathf.ToGrid(camera.TopLeft, GridSize) / GridSize - new Vector2(OutOfView);
+                Vector2 end = Mathf.ToGrid(camera.BottomRight, GridSize) / GridSize + new Vector2(OutOfView * 2);
 
                 start = Vector2.Clamp(start, Vector2.Zero, Size);
                 end = Vector2.Clamp(end, Vector2.Zero, Size);

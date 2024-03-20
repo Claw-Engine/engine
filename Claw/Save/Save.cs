@@ -10,8 +10,9 @@ namespace Claw.Save
     /// Funções prontas para lidar com um save.
     /// </summary>
     public static class Save
-    {
-        private const int Amount = 10;
+	{
+		public static SaveCrypt CryptFunction = DefaultCrypt;
+
         private static bool useCrypt = true, changed = false;
         private static string path = string.Empty;
         private static Sections save;
@@ -33,7 +34,7 @@ namespace Claw.Save
 
             if (content.Length > 0)
             {
-                if (useCrypt) content = StringCrypt.AllCrypt(content, false, Amount);
+                if (useCrypt) content = CryptFunction(content, false);
 
                 save = SaveConvert.Deserialize(content);
             }
@@ -139,7 +140,7 @@ namespace Claw.Save
             {
                 string content = SaveConvert.Serialize(save);
 
-                if (useCrypt) content = StringCrypt.AllCrypt(content, true, Amount);
+                if (useCrypt) content = CryptFunction(content, true);
 
                 if (path.Length > 0) File.WriteAllText(path, content);
             }
@@ -148,5 +149,25 @@ namespace Claw.Save
             references = null;
             path = string.Empty;
         }
-    }
+
+		/// <summary>
+		/// Descreve a base para a <see cref="CryptFunction"/>.
+		/// </summary>
+		/// <param name="input">O texto texto inicial.</param>
+		/// <param name="encrypt">
+		/// <para>Se verdadeiro, o <paramref name="input"/> deverá ser criptografado.</para>
+		/// <para>Se falso, o <see cref="Input"/> deverá ser descriptografado.</para>
+		/// </param>
+		/// <returns>O texto após a operação.</returns>
+		public delegate string SaveCrypt(string input, bool encrypt);
+        /// <summary>
+        /// Função padrão usada em <see cref="CryptFunction"/>.
+        /// </summary>
+        public static string DefaultCrypt(string input, bool encrypt)
+        {
+			if (encrypt) return StringCrypt.StringToBinary(StringCrypt.StringToHex(StringCrypt.Crypt(input, encrypt, 10)));
+
+			return StringCrypt.Crypt(StringCrypt.HexToString(StringCrypt.BinaryToString(input)), encrypt, 10);
+		}
+	}
 }

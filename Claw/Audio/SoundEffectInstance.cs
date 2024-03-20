@@ -9,24 +9,32 @@ namespace Claw.Audio
     public sealed class SoundEffectInstance
     {
         public bool IsLooped = false;
-        /// <summary>
-        /// Volume do áudio (entre 0 e 1).
-        /// </summary>
-        public float Volume
-        {
-            get => volume;
-            set => volume = Mathf.Clamp(value, 0, 1);
-        }
-        /// <summary>
-        /// Duração do áudio, em segundos.
-        /// </summary>
-        public float Duration => audio.Duration;
+		/// <summary>
+		/// Volume do áudio no lado esquerdo (entre 0 e 1).
+		/// </summary>
+		public float LeftVolume
+		{
+			get => _leftVolume;
+			set => _leftVolume = Mathf.Clamp(value, 0, 1);
+		}
+		/// <summary>
+		/// Volume do áudio no lado direito (entre 0 e 1).
+		/// </summary>
+		public float RightVolume
+		{
+			get => _rightVolume;
+			set => _rightVolume = Mathf.Clamp(value, 0, 1);
+		}
+		/// <summary>
+		/// Duração do áudio, em segundos.
+		/// </summary>
+		public float Duration => audio.Duration;
         /// <summary>
         /// Momento em que o áudio está, em segundos.
         /// </summary>
         public float Current => AudioManager.CalculateDuration(audio.Length, audio.Channels);
         public readonly SoundEffectGroup Group;
-        private float volume = 1;
+        private float _leftVolume = 1, _rightVolume = 1;
         internal long offset = 0;
         internal SoundEffect audio;
 
@@ -34,6 +42,17 @@ namespace Claw.Audio
         {
             this.audio = audio;
             Group = group;
+        }
+
+        /// <summary>
+        /// Altera o <see cref="LeftVolume"/> e <see cref="RightVolume"/> para um mesmo volume.
+        /// </summary>
+        public SoundEffectInstance SetVolume(float volume)
+        {
+            LeftVolume = volume;
+            RightVolume = volume;
+
+            return this;
         }
 
         /// <summary>

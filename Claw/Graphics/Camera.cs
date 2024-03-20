@@ -11,25 +11,25 @@ namespace Claw.Graphics
         public Vector2 Position, Origin, Border, MinPosition, MaxPosition;
         public Rectangle Viewport
         {
-            get => viewport;
+            get => _viewport;
             set
             {
-                if (value != viewport)
+                if (value != _viewport)
                 {
-                    viewport = value;
+                    _viewport = value;
 
                     if (Draw.GetCamera() == this) Game.Instance.Renderer.SetViewport(this);
                 }
             }
         }
         public readonly CameraState State;
-        private Rectangle viewport;
+        private Rectangle _viewport;
 
         public Camera() : this(new Rectangle()) { }
         /// <param name="viewport">Viewport da câmera. Se estiver vazio, ocupará a tela inteira.</param>
         public Camera(Rectangle viewport)
         {
-            this.viewport = viewport;
+            this._viewport = viewport;
             State = new CameraState(this);
         }
         /// <param name="viewport">Viewport da câmera. Se estiver vazio, ocupará a tela inteira.</param>

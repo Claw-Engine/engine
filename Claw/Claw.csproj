@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <ExportDir>$(SolutionDir)..\Claw Release\Claw\</ExportDir>
+    <ExportDir>$(SolutionDir)Build\</ExportDir>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{673096A4-9F32-4D37-83B2-AD0DAA73CA45}</ProjectGuid>
@@ -43,7 +43,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animator.cs" />
+    <Compile Include="Graphics\Animation.cs" />
+    <Compile Include="Graphics\Animator.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Audio\SoundEffect.cs" />
     <Compile Include="Audio\Channels.cs" />
@@ -55,9 +56,9 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameComponents.cs" />
-    <Compile Include="GameComponentCollection.cs" />
-    <Compile Include="GameObject.cs" />
+    <Compile Include="Graphics\Frame.cs" />
+    <Compile Include="Graphics\IAnimatable.cs" />
+    <Compile Include="ModuleCollection.cs" />
     <Compile Include="Graphics\Blend.cs" />
     <Compile Include="Graphics\BlendFactory.cs" />
     <Compile Include="Graphics\BlendMode.cs" />
@@ -68,17 +69,18 @@
     <Compile Include="Graphics\Flip.cs" />
     <Compile Include="Graphics\FollowMode.cs" />
     <Compile Include="Graphics\NineSlice.cs" />
-    <Compile Include="Graphics\Systems\Parallax.cs" />
+    <Compile Include="Modules\GameObject.cs" />
+    <Compile Include="Modules\Parallax.cs" />
     <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\RenderTarget.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\SpriteFont.cs" />
-    <Compile Include="Graphics\Systems\TextConfig.cs" />
-    <Compile Include="Graphics\Systems\TextEnums.cs" />
-    <Compile Include="Graphics\Systems\TextRenderer.cs" />
+    <Compile Include="Modules\TextConfig.cs" />
+    <Compile Include="Modules\TextEnums.cs" />
+    <Compile Include="Modules\TextRenderer.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\TextureAtlas.cs" />
-    <Compile Include="GameComponentTypes.cs" />
+    <Compile Include="Modules\ModuleTypes.cs" />
     <Compile Include="Graphics\UI\Button.cs" />
     <Compile Include="Graphics\UI\Container.cs" />
     <Compile Include="Graphics\UI\Display.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Input\Systems\InputTags.cs" />
     <Compile Include="Input\Systems\TaggedInput.cs" />
     <Compile Include="Input\Systems\TaggedPlayer.cs" />
+    <Compile Include="Input\TouchInput.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Maps\HexagonalTilemap.cs" />
     <Compile Include="Maps\StaggeredTilemap.cs" />
@@ -111,6 +114,18 @@
     <Compile Include="Maps\Tilemap.cs" />
     <Compile Include="Maps\TilePalette.cs" />
     <Compile Include="Mathf.cs" />
+    <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\SpriteRenderer.cs" />
+    <Compile Include="Modules\Transform.cs" />
+    <Compile Include="Physics\CollisionChecker.cs" />
+    <Compile Include="Physics\CollisionResult.cs" />
+    <Compile Include="Physics\Material.cs" />
+    <Compile Include="Physics\PolygonShape.cs" />
+    <Compile Include="Physics\BodyType.cs" />
+    <Compile Include="Physics\CircleShape.cs" />
+    <Compile Include="Physics\IShape.cs" />
+    <Compile Include="Physics\PhysicsManager.cs" />
+    <Compile Include="Physics\RigidBody.cs" />
     <Compile Include="Save\SaveAttributes.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEmitter.cs" />
@@ -118,7 +133,6 @@
     <Compile Include="Particles\ParticleValue.cs" />
     <Compile Include="Physics\PlatBody.cs" />
     <Compile Include="Physics\RayCaster.cs" />
-    <Compile Include="Polygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quaternion.cs" />
     <Compile Include="Rectangle.cs" />
@@ -130,20 +144,12 @@
     <Compile Include="Save\Shortcuts.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Cursor.cs" />
-    <Compile Include="Tiled\Config.cs" />
     <Compile Include="Utils\InternalUtils.cs" />
     <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />
     <Compile Include="TagManager.cs" />
-    <Compile Include="Tiled\Chunk.cs" />
-    <Compile Include="Tiled\Layer.cs" />
-    <Compile Include="Tiled\Map.cs" />
-    <Compile Include="Tiled\Object.cs" />
-    <Compile Include="Tiled\Property.cs" />
-    <Compile Include="Tiled\Tiled.cs" />
-    <Compile Include="Tiled\Tileset.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Utils\ComponentSortingFilteringCollection.cs" />
+    <Compile Include="Utils\SortedModules.cs" />
     <Compile Include="Utils\StringCrypt.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector2.cs" />
@@ -154,17 +160,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (
-if not exist "$(ExportDir)" mkdir "$(ExportDir)" /Y
-xcopy "$(TargetDir)$(TargetFileName)" "$(ExportDir)" /Y
-xcopy "$(TargetDir)$(AssemblyName).xml" "$(ExportDir)" /Y
-xcopy "$(TargetDir)SDL2.dll" "$(ExportDir)" /Y
-)</PostBuildEvent>
+    <PostBuildEvent>if not exist "$(ExportDir)$(ConfigurationName)\" mkdir "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)$(TargetFileName)" "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)$(AssemblyName).xml" "$(ExportDir)$(ConfigurationName)\" /Y
+xcopy "$(TargetDir)SDL2.dll" "$(ExportDir)$(ConfigurationName)\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

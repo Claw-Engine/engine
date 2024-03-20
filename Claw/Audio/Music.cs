@@ -14,8 +14,8 @@ namespace Claw.Audio
         /// </summary>
         public float Volume
         {
-            get => volume;
-            set => volume = Mathf.Clamp(value, 0, 1);
+            get => _volume;
+            set => _volume = Mathf.Clamp(value, 0, 1);
         }
         /// <summary>
         /// Duração deste áudio, em segundos.
@@ -27,7 +27,7 @@ namespace Claw.Audio
         public float Current => AudioManager.CalculateDuration((file.BaseStream.Position - AudioStart) / 4, Channels);
         public readonly long Length;
         private const int AudioStart = 9; // BYTE, INT64
-        private float volume = 1;
+        private float _volume = 1;
         private BinaryReader file;
 
         internal Music(Channels channels, BinaryReader file)

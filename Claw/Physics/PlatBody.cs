@@ -1,13 +1,31 @@
 ﻿using System;
+using Claw.Modules;
 
 namespace Claw.Physics
 {
     /// <summary>
     /// Uma classe com física básica de plataforma.
     /// </summary>
-    public class PlatBody : GameObject
+    public class PlatBody : BaseModule, IStep
     {
-        public static float CoyoteTime = .1f, CornerTolerance = 4;
+		#region Módulo
+		public int StepOrder
+		{
+			get => _stepOrder;
+			set
+			{
+				if (_stepOrder != value) StepOrderChanged?.Invoke(this);
+
+				_stepOrder = value;
+			}
+		}
+		private int _stepOrder;
+
+		public event Action<IStep> StepOrderChanged;
+		#endregion
+
+		#region Propriedades e configurações de física
+		public static float CoyoteTime = .1f, CornerTolerance = 4;
         public static string TileCollisionLayer = "col";
 
         private float previousBottom, coyoteCounter = 0;
@@ -30,12 +48,17 @@ namespace Claw.Physics
 
         private Vector2 Grid => Game.Tilemap.GridSize;
 
-        public virtual Rectangle Bounds => new Rectangle(Position, Grid);
+        public virtual Rectangle Bounds => new Rectangle(Transform.Position, Grid);
+		#endregion
 
-        /// <summary>
-        /// Retorna a velocidade do <see cref="PlatBody"/>.
-        /// </summary>
-        public Vector2 GetSpeed() => speed;
+        public PlatBody(bool instantlyAdd = true) : base(instantlyAdd) { }
+
+		public override void Initialize() { }
+
+		/// <summary>
+		/// Retorna a velocidade do <see cref="PlatBody"/>.
+		/// </summary>
+		public Vector2 GetSpeed() => speed;
         /// <summary>
         /// Acrescenta um valor na velocidade do <see cref="PlatBody"/>.
         /// </summary>
@@ -79,7 +102,7 @@ namespace Claw.Physics
         /// </summary>
         public void Walk(float direction) => Impulse(new Vector2(Math.Sign(direction) * WalkSpeed * Grid.X, 0), true, false);
 
-        public override void Step()
+        public virtual void Step()
         {
             if (ApplyPhysics)
             {
@@ -89,8 +112,6 @@ namespace Claw.Physics
                 HorizontalMovement();
                 VerticalMovement();
             }
-
-            base.Step();
         }
 
         /// <summary>
@@ -123,7 +144,7 @@ namespace Claw.Physics
             HandleX();
             CustomHorizontalHandler();
 
-            Position += new Vector2(speed.X * Time.DeltaTime, 0);
+            Transform.Position += new Vector2(speed.X * Time.DeltaTime, 0);
         }
         private void VerticalMovement()
         {
@@ -139,7 +160,7 @@ namespace Claw.Physics
             HandleY();
             CustomVerticalHandler();
 
-            Position += new Vector2(0, speed.Y * Time.DeltaTime);
+            Transform.Position += new Vector2(0, speed.Y * Time.DeltaTime);
             CanJump = Grounded || coyoteCounter > 0;
         }
 
@@ -148,7 +169,7 @@ namespace Claw.Physics
             if (speed.X != 0)
             {
                 Rectangle area = Bounds;
-                float offset = Position.X - area.Location.X;
+                float offset = Transform.Position.X - area.Location.X;
                 int tile = 0;
                 float checkX = (speed.X < 0 ? area.Left : area.Right) + speed.X * Time.DeltaTime;
 
@@ -163,7 +184,7 @@ namespace Claw.Physics
 
                             if (OnHorizontalCollision(tile, new Vector2(checkX, y)))
                             {
-                                Position = new Vector2((Mathf.ToGrid(checkX, (int)Grid.X) + repos * reposDir) + offset, Position.Y);
+                                Transform.Position = new Vector2((Mathf.ToGrid(checkX, (int)Grid.X) + repos * reposDir) + offset, Transform.Position.Y);
                                 speed.X = 0;
                             }
 
@@ -177,7 +198,7 @@ namespace Claw.Physics
         {
             Grounded = false;
             Rectangle area = Bounds;
-            float offset = Position.Y - area.Location.Y;
+            float offset = Transform.Position.Y - area.Location.Y;
 
             int tile = 0;
             float checkY = (speed.Y < 0 ? area.Top : area.Bottom) + speed.Y * Time.DeltaTime;
@@ -197,7 +218,7 @@ namespace Claw.Physics
 
                         if (OnVerticalCollision(tile, new Vector2(x, checkY)) && CornerCorrection(tile, new Vector2(x, checkY)))
                         {
-                            Position = new Vector2(Position.X, (tilePos + repos * reposDir) + offset);
+                            Transform.Position = new Vector2(Transform.Position.X, (tilePos + repos * reposDir) + offset);
 
                             if (!Grounded && Game.Tilemap[TileCollisionLayer].CheckCollision(new Vector2(x, area.Bottom + 1), out tile))
                             {
@@ -222,7 +243,7 @@ namespace Claw.Physics
             if (CornerTolerance > 0 && (platType == PlatTypes.Block || platType == PlatTypes.DontPassDown) && speed.Y < 0)
             {
                 Rectangle area = Bounds;
-                Vector2 tilePos = Mathf.GetGridPosition(collisionPoint, Grid);
+                Vector2 tilePos = Mathf.ToGrid(collisionPoint, Grid);
                 float playerSide = collisionPoint.X > area.Center.X ? area.Right : area.Left;
                 float tileSide = playerSide == area.Right ? tilePos.X : tilePos.X + Grid.X;
                 float dist = Math.Abs(playerSide - tileSide);
@@ -230,12 +251,12 @@ namespace Claw.Physics
                 if (dist <= CornerTolerance)
                 {
                     float repos = playerSide >= tileSide ? -area.Width : Grid.X;
-                    float offset = Position.X - area.Location.X;
-                    Vector2 targetPos = new Vector2(tilePos.X + repos + offset, Position.Y);
+                    float offset = Transform.Position.X - area.Location.X;
+                    Vector2 targetPos = new Vector2(tilePos.X + repos + offset, Transform.Position.Y);
                     
                     if (!Game.Tilemap[TileCollisionLayer].CheckCollision(new Vector2(targetPos.X, collisionPoint.Y), out int tile) || tile == PlatTypes.DontPassUp)
                     {
-                        Position = targetPos;
+                        Transform.Position = targetPos;
 
                         return false;
                     }

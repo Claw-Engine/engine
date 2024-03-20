@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
 using Claw.Graphics;
 using Claw.Graphics.UI;
 using Claw.Audio;
 using Claw.Maps;
+using Claw.Physics;
 
 namespace Claw
 {
@@ -13,31 +14,48 @@ namespace Claw
     public class Game : IDisposable
     {
         public static Game Instance { get; private set; }
+        public bool ConsoleOnly { get; private set; }
         public Window Window { get; private set; }
         public Renderer Renderer { get; private set; }
         public AudioManager Audio { get; private set; }
-        public Tilemap Tilemap
+        public PhysicsManager Physics
         {
-            get => tilemap;
+            get => _physics;
             set
             {
-                if (value != tilemap)
+                if (_physics != value)
                 {
-                    if (tilemap != null) tilemap.RemoveAll();
+					if (_physics != null) _physics.RemoveFrom(Modules);
 
-                    if (value != null) value.AddAll();
+					if (value != null) value.AddTo(Modules);
 
-                    tilemap = value;
-                }
+					_physics = value;
+				}
             }
         }
         public UI UI;
-        public GameComponentCollection Components => components;
-        private bool isRunning;
-        private Tilemap tilemap;
-        private GameComponentCollection components;
+		public Tilemap Tilemap
+		{
+			get => _tilemap;
+			set
+			{
+				if (value != _tilemap)
+				{
+					if (_tilemap != null) _tilemap.RemoveAll();
 
-        public Game() { }
+					if (value != null) value.AddAll();
+
+					_tilemap = value;
+				}
+			}
+		}
+		public ModuleCollection Modules => _modules;
+        private bool isRunning;
+        private PhysicsManager _physics;
+		private Tilemap _tilemap;
+		private ModuleCollection _modules;
+
+		public Game() { }
         ~Game() => Dispose();
 
         public void Dispose()
@@ -46,14 +64,14 @@ namespace Claw
             Renderer?.Dispose();
             Audio?.Dispose();
 
-            if (components != null)
+            if (_modules != null)
             {
-                for (int i = 0; i < components.Count; i++)
+                for (int i = 0; i < _modules.Count; i++)
                 {
-                    if (components[i] is IDisposable dispose) dispose.Dispose();
+                    if (_modules[i] is IDisposable dispose) dispose.Dispose();
                 }
-                
-                components = null;
+
+				_modules = null;
             }
 
             Window = null;
@@ -62,36 +80,53 @@ namespace Claw
             isRunning = false;
         }
 
-        /// <summary>
-        /// Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="Initialize"/> e o game loop.
-        /// </summary>
-        public void Run()
+		/// <summary>
+		/// Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="Initialize"/> e o game loop.
+		/// </summary>
+		/// <param name="consoleOnly">
+		/// <para>Se verdadeiro, o jogo será aberto apenas pelo console.</para>
+		/// <para>Se falso, o jogo abrirá com <see cref="Claw.Window"/> + <see cref="Claw.Graphics.Renderer"/> + <see cref="Claw.Audio.AudioManager"/>.</para>
+		/// </param>
+		public void Run(bool consoleOnly = false)
         {
             if (isRunning) return;
             else if (Instance != null) throw new Exception("Não é possível rodar duas instâncias de jogo ao mesmo tempo!");
 
-            if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) == 0)
-            {
-                int result = SDL.SDL_CreateWindowAndRenderer(800, 600, 0, out IntPtr window, out IntPtr renderer);
+            ConsoleOnly = consoleOnly;
 
-                if (result == 0)
-                {
-                    isRunning = true;
-                    Instance = this;
-                    Window = new Window(window);
-                    Renderer = new Renderer(renderer);
-                    Audio = new AudioManager();
-                    Renderer.ClearColor = Color.CornflowerBlue;
-                    components = new GameComponentCollection();
-                }
-            }
+			if (!ConsoleOnly)
+            {
+				if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) == 0)
+				{
+					int result = SDL.SDL_CreateWindowAndRenderer(800, 600, 0, out IntPtr window, out IntPtr renderer);
+
+					if (result == 0)
+					{
+						isRunning = true;
+						Instance = this;
+						Window = new Window(window);
+						Renderer = new Renderer(renderer);
+						Audio = new AudioManager();
+						Renderer.ClearColor = Color.CornflowerBlue;
+						_modules = new ModuleCollection();
+
+                        Input.Input.TurnOffTextInput();
+					}
+				}
+			}
+            else if (SDL.SDL_Init(SDL.SDL_INIT_TIMER | SDL.SDL_INIT_EVENTS) == 0)
+            {
+				isRunning = true;
+				Instance = this;
+				_modules = new ModuleCollection();
+			}
 
             if (isRunning)
             {
                 Input.Input.SetControllers();
                 Initialize();
 
-                if (Texture.Pixel == null)
+                if (!ConsoleOnly && Texture.Pixel == null)
                 {
                     Texture.Pixel = new Texture(1, 1, 0xffffffff);
 
@@ -118,28 +153,36 @@ namespace Claw
         
         private void GameLoop()
         {
-            uint frameStart;
-            int frameTime = 0;
+            uint frameStart, frameTime = 0;
 
             while (isRunning)
             {
                 frameStart = SDL.SDL_GetTicks();
 
-                Input.Input.Update();
-                Time.Update(frameTime);
+                if (!ConsoleOnly) Input.Input.Update();
+                
+                Physics?.Step();
                 Step();
 
-                Renderer.Clear();
-                Draw.UpdateCamera();
-                Render();
-                UI?.Render();
-                Renderer.Present();
+                if (!ConsoleOnly)
+                {
+					Renderer.Clear();
+					Draw.UpdateCamera();
+					Render();
+					UI?.Render();
+					Renderer.Present();
+				}
 
-                frameTime = (int)(SDL.SDL_GetTicks() - frameStart);
+                frameTime = (uint)(SDL.SDL_GetTicks() - frameStart);
 
-                if (Time.FrameDelay > frameTime) SDL.SDL_Delay((uint)(Time.FrameDelay - frameTime));
+                if (Time.FrameDelay > frameTime)
+                {
+					SDL.SDL_Delay((uint)(Time.FrameDelay - frameTime));
+					Time.Update(Time.FrameDelay);
+				}
+                else Time.Update(frameTime);
 
-                HandleEvents();
+				HandleEvents();
             }
 
             Clear();
@@ -172,6 +215,22 @@ namespace Claw
                     case SDL.SDL_EventType.SDL_MOUSEMOTION: Input.Input.UpdateMouseMotion(sdlEvent.motion); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEADDED: Input.Input.AddController(sdlEvent.cdevice.which); break;
                     case SDL.SDL_EventType.SDL_CONTROLLERDEVICEREMOVED: Input.Input.RemoveController(sdlEvent.cdevice.which); break;
+                    case SDL.SDL_EventType.SDL_FINGERDOWN:
+                        Input.TouchInput.DownFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure, new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y));
+                        break;
+                    case SDL.SDL_EventType.SDL_FINGERUP: 
+                        Input.TouchInput.UpFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure, new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y));
+                        break;
+                    case SDL.SDL_EventType.SDL_FINGERMOTION:
+						Input.TouchInput.MotionFinger(sdlEvent.tfinger.touchId, sdlEvent.tfinger.fingerId, sdlEvent.tfinger.pressure,
+                            new Vector2(sdlEvent.tfinger.x, sdlEvent.tfinger.y), new Vector2(sdlEvent.tfinger.dx, sdlEvent.tfinger.dy));
+						break;
+					case SDL.SDL_EventType.SDL_TEXTINPUT:
+                        unsafe
+                        {
+                            Input.Input.TriggerText(Encoding.UTF8.GetString(sdlEvent.text.text, 32)[0]);
+						}
+                        break;
                 }
 
                 SDL.SDL_PumpEvents();
@@ -180,9 +239,9 @@ namespace Claw
             if (!scroll) Input.Input.UpdateScroll(new SDL.SDL_MouseWheelEvent());
         }
         private void Clear()
-        {
-            Dispose();
-            SDL.SDL_Quit();
+		{
+			Dispose();
+			SDL.SDL_Quit();
         }
     }
 }

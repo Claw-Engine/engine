@@ -48,13 +48,13 @@ namespace Claw
         }
 
         /// <summary>
-        /// Transforma este <see cref="Vector2"/> em um vetor de unidade com a mesma direção.
+        /// Transforma este <see cref="Vector2"/> em um vetor de magnitude 1 com a mesma direção.
         /// </summary>
         public void Normalize()
         {
-            float val = 1.0f / (float)Math.Sqrt((X * X) + (Y * Y));
-            X *= val;
-            Y *= val;
+            float value = 1.0f / (float)Math.Sqrt((X * X) + (Y * Y));
+            X *= value;
+            Y *= value;
         }
 
         /// <summary>
@@ -93,13 +93,32 @@ namespace Claw
         {
             float v1 = a.X - b.X, v2 = a.Y - b.Y;
 
-            return (float)Math.Sqrt((v1 * v1) + (v2 * v2));
+            return (float)Math.Sqrt(v1 * v1 + v2 * v2);
         }
 
         /// <summary>
-        /// Transforma um <see cref="Vector2"/> em um vetor de unidade com a mesma direção.
+        /// Retorna a distância entre um vetor e o ponto 0,0.
         /// </summary>
-        public static Vector2 Normalize(Vector2 value)
+        public static float Length(Vector2 value) => (float)Math.Sqrt(value.X * value.X + value.Y * value.Y);
+
+        /// <summary>
+        /// Retorna o produto escalar entre dois vetores.
+        /// </summary>
+        public static float Dot(Vector2 a, Vector2 b) => a.X * b.X + a.Y * b.Y;
+
+        /// <summary>
+        /// Retorna o produto cruzado entre dois vetores.
+        /// </summary>
+        public static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
+		/// <summary>
+		/// Retorna o produto cruzado entre um vetor e um escalar.
+		/// </summary>
+		public static Vector2 Cross(Vector2 a, float s) => new Vector2(s * a.Y, -s * a.X);
+
+		/// <summary>
+		/// Transforma um <see cref="Vector2"/> em um vetor de magnitude 1 com a mesma direção.
+		/// </summary>
+		public static Vector2 Normalize(Vector2 value)
         {
             value.Normalize();
 
@@ -151,7 +170,7 @@ namespace Claw
         public static Vector2 Approach(Vector2 value, Vector2 target, Vector2 shift) => new Vector2(Mathf.Approach(value.X, target.X, shift.X), Mathf.Approach(value.Y, target.Y, shift.Y));
 
         /// <summary>
-        /// Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+        /// Retorna o módulo horizontal do vetor determinado pelo comprimento e direção indicados.
         /// </summary>
         /// <param name="angle">Graus.</param>
         public static Vector2 LengthDir(Vector2 distance, float angle)
@@ -161,7 +180,7 @@ namespace Claw
             return new Vector2(distance.X * (float)Math.Cos(angle), distance.Y * (float)Math.Sin(angle));
         }
         /// <summary>
-        /// Retorna o componente horizontal do vetor determinado pelo comprimento e direção indicados.
+        /// Retorna o módulo horizontal do vetor determinado pelo comprimento e direção indicados.
         /// </summary>
         /// <param name="angle">Graus.</param>
         public static Vector2 LengthDir(float distance, float angle) => LengthDir(new Vector2(distance), angle);

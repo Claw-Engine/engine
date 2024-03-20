@@ -27,8 +27,10 @@ namespace Claw.Input
         public static bool MouseNeedFocus = true;
         public static Vector2 MousePosition { get; private set; }
         public static List<Keys> DownKeys = new List<Keys>();
-        private static bool canButton => ButtonNeedFocus ? Game.Instance.Window.IsActive : true;
-        private static bool canMouse => MouseNeedFocus ? Game.Instance.Window.IsMouseFocused : true;
+        public static event Action<int> ControllerAdded, ControllerRemoved;
+        public static event Action<char> TextInput;
+        private static bool canButton => Game.Instance.ConsoleOnly || (ButtonNeedFocus ? Game.Instance.Window.IsActive : true);
+        private static bool canMouse => Game.Instance.ConsoleOnly || (MouseNeedFocus ? Game.Instance.Window.IsMouseFocused : true);
         private static int previousMouseScroll = 0;
 
         private static int sdlKeyNumber;
@@ -43,9 +45,11 @@ namespace Claw.Input
             
             keyOldState = keyNewState;
             keyNewState = new KeyboardState(sdlKeyState, sdlKeyNumber);
-            DownKeys = keyNewState.GetDownKeys();
 
-            mouseOldState = mouseNewState;
+            DownKeys.Clear();
+			keyNewState.FillDownKeys(DownKeys);
+
+			mouseOldState = mouseNewState;
             mouseNewState = MouseState.GetState();
             MousePosition = new Vector2(mouseNewState.X, mouseNewState.Y);
 
@@ -63,6 +67,16 @@ namespace Claw.Input
             previousMouseScroll = wheel;
         }
         internal static void UpdateMouseMotion(SDL.SDL_MouseMotionEvent motionEvent) => MouseMotion = new Vector2(motionEvent.xrel, motionEvent.yrel);
+        internal static void TriggerText(char @char) => TextInput?.Invoke(@char);
+
+        /// <summary>
+        /// Começa o processamento dos eventos de digitação.
+        /// </summary>
+		public static void TurnOnTextInput() => SDL.SDL_StartTextInput();
+		/// <summary>
+		/// Encera o processamento dos eventos de digitação.
+		/// </summary>
+		public static void TurnOffTextInput() => SDL.SDL_StopTextInput();
 
         /// <summary>
         /// Checa se uma tecla foi pressionada.
@@ -266,6 +280,7 @@ namespace Claw.Input
             controllers.Add(new GameController(SDL.SDL_GameControllerOpen(id)));
 
             controllers[controllers.Count - 1].Update();
+            ControllerAdded?.Invoke(controllers.Count - 1);
         }
         /// <summary>
         /// Adiciona um controle na lista.
@@ -278,8 +293,9 @@ namespace Claw.Input
                 {
                     controllers[i].Dispose();
                     controllers.RemoveAt(i);
+                    ControllerRemoved?.Invoke(i);
 
-                    return;
+                    break;
                 }
             }
         }

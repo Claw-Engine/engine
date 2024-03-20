@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Claw.Graphics;
 using Claw.Extensions;
+using Claw.Modules;
 
 namespace Claw.Particles
 {
     /// <summary>
     /// Classe de emissão e manuseio de partículas.
     /// </summary>
-    public sealed class ParticleEmitter : DrawableGameComponent
+    public sealed class ParticleEmitter : BaseModule, IStep, IRender
     {
-        public Vector2 Position = Vector2.Zero, DrawOffset = Vector2.Zero, ParticleOriginDistortion = Vector2.Zero;
+        public Vector2 DrawOffset = Vector2.Zero, ParticleOriginDistortion = Vector2.Zero;
 
         public bool Stopped = false, PauseParticles = false;
         /// <summary>
@@ -22,13 +23,40 @@ namespace Claw.Particles
         internal Random random = new Random();
         internal List<Particle> particles = new List<Particle>();
 
-        public ParticleEmitter(ParticleEmitterConfig config) => Config = Config;
-        public ParticleEmitter() => Config = new ParticleEmitterConfig();
+		public int StepOrder
+		{
+			get => _stepOrder;
+			set
+			{
+				if (_stepOrder != value) StepOrderChanged?.Invoke(this);
 
-        /// <summary>
-        /// Retorna a quantidade de partículas que estão esperando na pool.
-        /// </summary>
-        public static int PoolCount() => Particle.Pool.Count();
+				_stepOrder = value;
+			}
+		}
+		public int RenderOrder
+		{
+			get => _renderOrder;
+			set
+			{
+				if (_renderOrder != value) RenderOrderChanged?.Invoke(this);
+
+				_renderOrder = value;
+			}
+		}
+		private int _stepOrder, _renderOrder;
+
+		public event Action<IStep> StepOrderChanged;
+		public event Action<IRender> RenderOrderChanged;
+
+		public ParticleEmitter(bool instantlyAdd = true) : this(new ParticleEmitterConfig(), instantlyAdd) { }
+		public ParticleEmitter(ParticleEmitterConfig config, bool instantlyAdd = true) : base(instantlyAdd) => Config = Config;
+
+		public override void Initialize() { }
+
+		/// <summary>
+		/// Retorna a quantidade de partículas que estão esperando na pool.
+		/// </summary>
+		public static int PoolCount() => Particle.Pool.Count();
         /// <summary>
         /// Limpa a lista de partículas que estão esperando na pool.
         /// </summary>
@@ -74,7 +102,7 @@ namespace Claw.Particles
                 {
                     spawnCounter = 0;
                     
-                    Emit(Position);
+                    Emit(Transform.Position);
                 }
             }
 

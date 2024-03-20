@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Claw.Extensions;
+using Claw.Physics;
 
 namespace Claw.Graphics
 {
@@ -153,7 +155,7 @@ namespace Claw.Graphics
                             break;
                         default:
                             charHeight = Math.Max(charHeight, font.Glyphs[glyphChar].Area.Height);
-                            SpriteFont.Glyph glyph = font.Glyphs[glyphChar];
+                            Glyph glyph = font.Glyphs[glyphChar];
 
                             if (i > 0) basePos.X += glyph.KerningPair.Get(text[i - 1], 0);
                             
@@ -352,29 +354,30 @@ namespace Claw.Graphics
         /// </summary>
         public static void BezierCurve(float lineWidth, int segments, Color color, Vector2 point0, Vector2 point1) => BezierCurve(lineWidth, segments, color, point0, point0, point1, point1);
 
-        /// <summary>
-        /// Desenha um colisor e um quadrado com a área que ele ocupa.
-        /// </summary>
-        public static void DebugCollider(float lineWidth, Polygon polygon, Color color)
-        {
-            float top = polygon.Top, bottom = polygon.Bottom, left = polygon.Left, right = polygon.Right;
-            Vector2[] points = new Vector2[]
-            {
-                new Vector2(left, top),
-                new Vector2(right, top),
-                new Vector2(right, bottom),
-                new Vector2(left, bottom)
-            };
+		/// <summary>
+		/// Desenha os colisores de um corpo e a área que eles ocupam.
+		/// </summary>
+		public static void DebugBody(float lineWidth, RigidBody body, Color color, int segments = 16)
+		{
+			if (body.Shape is CircleShape circle)
+			{
+				Rectangle(lineWidth, circle.BoundingBox, color * .5f);
+				Circle(lineWidth, circle.radiusInWorld, circle.Center, color, segments);
+				Line(1, Claw.Line.Rotate(new Line(circle.Center, circle.Center - new Vector2(0, circle.radiusInWorld)), circle.Center, body.Transform.Rotation), color);
+			}
+			else if (body.Shape is PolygonShape polygon)
+			{
+				Rectangle(lineWidth, polygon.BoundingBox, color * .5f);
+				Polygon(lineWidth, color, polygon.verticesInWorld);
+				Line(1, new Line(polygon.Center, polygon.verticesInWorld[0] + (polygon.verticesInWorld[1] - polygon.verticesInWorld[0]) * .5f), color);
+			}
+		}
+		#endregion
 
-            Polygon(lineWidth, color, points);
-            Polygon(lineWidth, color, polygon.LinesInWorld);
-        }
-        #endregion
-
-        /// <summary>
-        /// Se for diferente de nulo, o <see cref="Draw"/> forçará todas as texturas a terem esse <see cref="BlendMode"/>.
-        /// </summary>
-        public static void ForceBlendMode(BlendMode? blendMode) => forcedBlendMode = blendMode;
+		/// <summary>
+		/// Se for diferente de nulo, o <see cref="Draw"/> forçará todas as texturas a terem esse <see cref="BlendMode"/>.
+		/// </summary>
+		public static void ForceBlendMode(BlendMode? blendMode) => forcedBlendMode = blendMode;
 
         /// <summary>
         /// Retorna a câmera atual.

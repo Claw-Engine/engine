@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Claw.Modules;
 
 namespace Claw
 {
@@ -9,10 +10,10 @@ namespace Claw
     /// </summary>
     internal static class TagManager
     {
-        private static Dictionary<string, List<GameObject>> tags = new Dictionary<string, List<GameObject>>();
+        private static Dictionary<string, List<BaseModule>> tags = new Dictionary<string, List<BaseModule>>();
 
         /// <summary>
-        /// Retorna o número de objetos dentro de uma tag.
+        /// Retorna o número de módulos dentro de uma tag.
         /// </summary>
         public static int Count(string tag)
         {
@@ -24,48 +25,48 @@ namespace Claw
         }
 
         /// <summary>
-        /// Adiciona uma tag em um objeto.
+        /// Adiciona uma tag em um módulo.
         /// </summary>
-        public static void AddObject(string tag, GameObject gameObject)
+        public static void AddModule(string tag, BaseModule module)
         {
-            if (!tags.ContainsKey(tag)) tags.Add(tag, new List<GameObject>());
+            if (!tags.ContainsKey(tag)) tags.Add(tag, new List<BaseModule>());
 
-            if (!tags[tag].Contains(gameObject)) tags[tag].Add(gameObject);
+            if (!tags[tag].Contains(module)) tags[tag].Add(module);
         }
         /// <summary>
-        /// Remove uma tag de um objeto.
+        /// Remove uma tag de um módulo.
         /// </summary>
-        public static void RemoveObject(string tag, GameObject gameObject)
+        public static void RemoveModule(string tag, BaseModule module)
         {
-            if (tags.ContainsKey(tag) && tags[tag].Contains(gameObject)) tags[tag].Remove(gameObject);
+            if (tags.ContainsKey(tag) && tags[tag].Contains(module)) tags[tag].Remove(module);
         }
 
-        /// <summary>
-        /// Retorna o primeiro objeto com a determinada tag.
-        /// </summary>
-        public static GameObject GetObject(string tag, bool filterEnabled)
-        {
-            tag = tag.ToLower();
+		/// <summary>
+		/// Retorna o primeiro módulo com a determinada tag.
+		/// </summary>
+		public static BaseModule GetModule(string tag, bool filterEnabled)
+		{
+			tag = tag.ToLower();
 
-            if (tag.Length == 0 || !tags.ContainsKey(tag) || tags[tag].Count == 0) return null;
+			if (tag.Length == 0 || !tags.ContainsKey(tag) || tags[tag].Count == 0) return null;
 
-            if (!filterEnabled) return tags[tag][0];
-            else return tags[tag].FirstOrDefault(gO => gO.Enabled);
+			if (!filterEnabled) return tags[tag][0];
+			else return tags[tag].FirstOrDefault(m => m.Enabled);
 
-            return null;
-        }
-        /// <summary>
-        /// Retorna os objetos com a determinada tag.
-        /// </summary>
-        public static IEnumerable<GameObject> GetObjects(string tag, bool filterEnabled)
-        {
-            tag = tag.ToLower();
+			return null;
+		}
+		/// <summary>
+		/// Retorna os módulos com a determinada tag.
+		/// </summary>
+		public static IEnumerable<BaseModule> GetModules(string tag, bool filterEnabled)
+		{
+			tag = tag.ToLower();
 
-            if (tag.Length == 0 || !tags.ContainsKey(tag)) return new List<GameObject>();
+			if (tag.Length == 0 || !tags.ContainsKey(tag)) return new List<BaseModule>();
 
-            if (!filterEnabled) return tags[tag];
+			if (!filterEnabled) return tags[tag];
 
-            return tags[tag].Where(gO => gO.Enabled);
-        }
-    }
+			return tags[tag].Where(m => m.Enabled);
+		}
+	}
 }

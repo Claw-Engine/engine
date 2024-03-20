@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Claw.Physics;
+using Claw.Modules;
 
 namespace Claw.Maps
 {
     /// <summary>
     /// Representa uma camada dentro do <see cref="Tilemap"/>.
     /// </summary>
-    public sealed class TileLayer : IGameComponent, IDrawable
+    public sealed class TileLayer : BaseModule, IRender
     {
         public float Opacity = 1;
         public string Name
@@ -24,41 +24,29 @@ namespace Claw.Maps
 
                 name = value;
             }
-        }
-        public Color Color;
+		}
+		public Color Color;
         internal int index;
         internal Tilemap map;
         internal List<int> data = new List<int>();
         private string name = string.Empty;
 
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
+        public event Action<IRender> RenderOrderChanged;
 
-        public int DrawOrder
+        public int RenderOrder
         {
-            get => drawOrder;
+            get => _renderOrder;
             set
             {
-                drawOrder = value;
+				_renderOrder = value;
 
-                DrawOrderChanged?.Invoke(this, EventArgs.Empty);
+                RenderOrderChanged?.Invoke(this);
             }
         }
-        public bool Visible
-        {
-            get => visible;
-            set
-            {
-                visible = value;
-
-                VisibleChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-        private int drawOrder;
-        private bool visible = true;
+        private int _renderOrder;
 
         /// <summary>
-        /// Retorna/muda um tile da layer.
+        /// Retorna/altera um tile da layer.
         /// </summary>
         public int this[Vector2 cell]
         {
@@ -71,7 +59,7 @@ namespace Claw.Maps
             }
         }
         /// <summary>
-        /// Retorna/muda um tile da layer.
+        /// Retorna/altera um tile da layer.
         /// </summary>
         public int this[int x, int y]
         {
@@ -85,23 +73,21 @@ namespace Claw.Maps
             }
         }
 
-        internal TileLayer(int index, string name, Tilemap map)
+        internal TileLayer(int index, string name, Tilemap map, Vector2 size) : base(Game.Instance.Tilemap == map)
         {
-            this.index = index;
-            Name = name;
-            this.map = map;
-        }
-        internal TileLayer(int index, string name, Tilemap map, Vector2 size) : this(index, name, map)
-        {
-            if (Game.Instance.Tilemap == map) Game.Instance.Components.Add(this);
-
             for (int x = 0; x < size.X; x++)
             {
                 for (int y = 0; y < size.Y; y++) data.Add(0);
             }
         }
+		internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero)
+		{
+			this.index = index;
+			Name = name;
+			this.map = map;
+		}
 
-        public void Initialize() { }
+		public override void Initialize() { }
 
         /// <summary>
         /// Retorna todos os tiles da layer.
@@ -168,7 +154,7 @@ namespace Claw.Maps
             return tile > 0 && filterTiles.Contains(tile);
         }
 
-        public void Render()
+		public void Render()
         {
             if (map != null && Color.A != 0 && Opacity > 0) map.Render(this);
         }

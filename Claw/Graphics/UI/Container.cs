@@ -14,15 +14,15 @@ namespace Claw.Graphics.UI
         public bool Scrollable = false;
         public Vector2 ScrollOffset
         {
-            get => scrollOffset;
-            set => scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
+            get => _scrollOffset;
+            set => _scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
         }
         /// <summary>
         /// Scroll máximo possível (calculado durante o <see cref="Render(Vector2)"/>).
         /// </summary>
         public Vector2 ScrollMaxOffset { get; private set; } = Vector2.Zero;
         public List<Element> Elements = new List<Element>();
-        private Vector2 scrollOffset = Vector2.Zero, previousTopLeft, previousBottomRight;
+        private Vector2 _scrollOffset = Vector2.Zero, previousTopLeft, previousBottomRight;
         private RenderTarget surface;
 
         public override Vector2 CalculateSize()
@@ -136,7 +136,7 @@ namespace Claw.Graphics.UI
             if (Scrollable && surface != null)
             {
                 drawingPos = Vector2.Zero;
-                scroll = scrollOffset;
+                scroll = _scrollOffset;
                 
                 Game.Instance.Renderer.SetRenderTarget(surface);
                 Game.Instance.Renderer.Clear();

@@ -16,11 +16,13 @@ namespace Claw
         public static float Scale = 1;
         public static float DeltaTime { get; private set; } = 0;
         public static float UnscaledDeltaTime { get; private set; } = 0;
+        public static float FPS { get; private set; } = 0;
 
-        internal static void Update(int frameTime)
+        internal static void Update(uint frameTime)
         {
-            UnscaledDeltaTime = (float)(FrameDelay - frameTime) / 1000;
+            UnscaledDeltaTime = (float)(0.001d * frameTime);
             DeltaTime = UnscaledDeltaTime * Scale;
-        }
+            FPS = (int)Math.Round(1 / UnscaledDeltaTime);
+		}
     }
 }

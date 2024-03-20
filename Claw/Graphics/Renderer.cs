@@ -8,6 +8,16 @@ namespace Claw.Graphics
     /// </summary>
     public sealed class Renderer : IDisposable
     {
+        public bool VSync
+        {
+            get => _vSync;
+            set
+            {
+                _vSync = value;
+
+				SDL.SDL_RenderSetVSync(sdlRenderer, _vSync ? 1 : 0);
+			}
+        }
         public Color ClearColor
         {
             get
@@ -20,6 +30,7 @@ namespace Claw.Graphics
         }
         private IntPtr sdlRenderer;
         private RenderTarget currentTarget;
+        private bool _vSync = true;
         private static readonly uint PixelFormat = SDL.SDL_PIXELFORMAT_ABGR8888;
 
         internal Renderer(IntPtr renderer) => sdlRenderer = renderer;

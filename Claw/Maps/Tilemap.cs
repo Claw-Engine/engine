@@ -20,14 +20,14 @@ namespace Claw.Maps
         public Vector2 GridSize = Vector2.Zero;
         public Vector2 Size
         {
-            get => size;
+            get => _size;
             set
             {
                 if (value.Y >= 0 && value.X >= 0)
                 {
-                    for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, Size);
+                    for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, _size);
 
-                    size = value;
+                    _size = value;
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace Claw.Maps
         /// É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).
         /// </summary>
         public Action<int, TileLayer, Vector2> OnTileChange = null;
-        private Vector2 size = Vector2.Zero;
+        private Vector2 _size = Vector2.Zero;
         private List<TileLayer> layers = new List<TileLayer>();
         internal Dictionary<string, int> layerIndexes = new Dictionary<string, int>();
         internal List<TilePalette> tileSets = new List<TilePalette>();
@@ -98,11 +98,11 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, float priority, float opacity, Color color)
+        public int AddLayer(int RenderOrder, string name, float opacity, Color color)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-            var layer = new TileLayer(layers.Count, name, this, Size) { DrawOrder = drawOrder, Color = color, Opacity = opacity };
+            var layer = new TileLayer(layers.Count, name, this, Size) { RenderOrder = RenderOrder, Color = color, Opacity = opacity };
 
             layerIndexes.Add(layer.Name, layers.Count);
             layers.Add(layer);
@@ -112,11 +112,11 @@ namespace Claw.Maps
         /// <summary>
         /// Adiciona uma layer nova e já insere os tiles dela.
         /// </summary>
-        public int AddLayer(int drawOrder, string name, bool visible, float priority, float opacity, Color color, int[] data)
+        public int AddLayer(int RenderOrder, string name, bool visible, float opacity, Color color, int[] data)
         {
             if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-            var layer = new TileLayer(layers.Count, name, this) { DrawOrder = drawOrder, Visible = visible, Color = color, Opacity = opacity };
+            var layer = new TileLayer(layers.Count, name, this) { RenderOrder = RenderOrder, Enabled = visible, Color = color, Opacity = opacity };
             layer.data = data.ToList();
 
             layerIndexes.Add(layer.Name, layers.Count);
@@ -148,7 +148,7 @@ namespace Claw.Maps
         {
             layers[index].map = null;
 
-            Game.Instance.Components.Remove(layers[index]);
+            Game.Instance.Modules.Remove(layers[index]);
             layerIndexes.Remove(layers[index].Name);
             layers.RemoveAt(index);
         }
@@ -167,18 +167,18 @@ namespace Claw.Maps
         public bool LayerExists(string name) => layerIndexes.Keys.Contains(name);
 
         /// <summary>
-        /// Adiciona todas as layers nos componentes do jogo.
+        /// Adiciona todas as layers nos módulos do jogo.
         /// </summary>
         internal void AddAll()
         {
-            foreach (TileLayer layer in layers) Game.Instance.Components.Add(layer);
+            foreach (TileLayer layer in layers) Game.Instance.Modules.Add(layer);
         }
         /// <summary>
-        /// Remove todas as layers dos componentes do jogo.
+        /// Remove todas as layers dos módulos do jogo.
         /// </summary>
         internal void RemoveAll()
         {
-            foreach (TileLayer layer in layers) Game.Instance.Components.Remove(layer);
+            foreach (TileLayer layer in layers) Game.Instance.Modules.Remove(layer);
 
         }
 
@@ -204,12 +204,12 @@ namespace Claw.Maps
             if (tileset.Index == 0) return tileIndex;
             else return tileIndex - tileset.Sub;
         }
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Tamanho do mapa (em pixels).
-        /// </summary>
-        public abstract Vector2 PixelSize { get; }
+		/// <summary>
+		/// Tamanho do mapa (em pixels).
+		/// </summary>
+		public abstract Vector2 PixelSize { get; }
 
         /// <summary>
         /// Transforma uma posição livre em uma célula.

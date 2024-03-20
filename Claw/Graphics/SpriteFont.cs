@@ -144,20 +144,19 @@ namespace Claw.Graphics
 
             return result;
         }
-
-        /// <summary>
-        /// Representa os dados de um único caractere de um <see cref="SpriteFont"/>.
-        /// </summary>
-        public sealed class Glyph
-        {
-            public readonly Rectangle Area;
-            public readonly Dictionary<char, float> KerningPair;
-
-            public Glyph(Rectangle area, Dictionary<char, float> kerningPair = null)
-            {
-                Area = area;
-                KerningPair = kerningPair ?? new Dictionary<char, float>();
-            }
-        }
     }
+	/// <summary>
+	/// Representa os dados de um único caractere de um <see cref="SpriteFont"/>.
+	/// </summary>
+	public sealed class Glyph
+	{
+		public readonly Rectangle Area;
+		public readonly Dictionary<char, float> KerningPair;
+
+		public Glyph(Rectangle area, Dictionary<char, float> kerningPair = null)
+		{
+			Area = area;
+			KerningPair = kerningPair ?? new Dictionary<char, float>();
+		}
+	}
 }

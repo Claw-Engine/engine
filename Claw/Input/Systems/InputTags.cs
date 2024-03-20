@@ -20,7 +20,7 @@ namespace Claw.Input.Systems
         public float Buffer;
         public Keys Key, AltKey;
         public Buttons? Button, AltButton;
-        private float BufferTimer;
+        private float bufferTimer;
 
         /// <summary>
         /// Cria uma instância de input de botões.
@@ -53,7 +53,7 @@ namespace Claw.Input.Systems
                 (Input.KeyDown(Key) || Input.KeyDown(AltKey)) ||
                 (gamepad && (Input.GamePadButtonDown(player.GamePad, Button.Value) || Input.GamePadButtonDown(player.GamePad, AltButton.Value)));
 
-            IsPressed = BufferTimer > 0 || (MouseButton.HasValue && Input.MouseButtonPressed(MouseButton.Value)) ||
+            IsPressed = bufferTimer > 0 || (MouseButton.HasValue && Input.MouseButtonPressed(MouseButton.Value)) ||
                 (Input.KeyPressed(Key) || Input.KeyPressed(AltKey)) ||
                 (gamepad && (Input.GamePadButtonPressed(player.GamePad, Button.Value) || Input.GamePadButtonPressed(player.GamePad, AltButton.Value)));
 
@@ -61,8 +61,8 @@ namespace Claw.Input.Systems
                 (Input.KeyReleased(Key) || Input.KeyReleased(AltKey)) ||
                 (gamepad && (Input.GamePadButtonReleased(player.GamePad, Button.Value) || Input.GamePadButtonReleased(player.GamePad, AltButton.Value)));
             
-            if (BufferTimer > 0) BufferTimer -= Time.UnscaledDeltaTime;
-            else if (IsPressed) BufferTimer = Buffer;
+            if (bufferTimer > 0) bufferTimer -= Time.UnscaledDeltaTime;
+            else if (IsPressed) bufferTimer = Buffer;
         }
     }
 

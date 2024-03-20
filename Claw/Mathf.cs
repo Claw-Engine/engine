@@ -92,14 +92,14 @@ namespace Claw
         /// Transforma um valor em um valor em grid.
         /// </summary>
         public static float ToGrid(float value, int grid) => (float)Math.Floor(value / grid) * grid;
-        /// <summary>
-        /// Transforma uma posição em uma posição em grid.
-        /// </summary>
-        public static Vector2 GetGridPosition(Vector2 position, Vector2 grid) => new Vector2(ToGrid(position.X, (int)grid.X), ToGrid(position.Y, (int)grid.Y));
-        /// <summary>
-        /// Transforma uma posição em uma posição em grid.
-        /// </summary>
-        public static Vector2 GetGridPosition(Vector2 position, int grid) => new Vector2(ToGrid(position.X, grid), ToGrid(position.Y, grid));
+		/// <summary>
+		/// Transforma uma posição em uma posição em grid.
+		/// </summary>
+		public static Vector2 ToGrid(Vector2 position, int grid) => new Vector2(ToGrid(position.X, grid), ToGrid(position.Y, grid));
+		/// <summary>
+		/// Transforma uma posição em uma posição em grid.
+		/// </summary>
+		public static Vector2 ToGrid(Vector2 position, Vector2 grid) => new Vector2(ToGrid(position.X, (int)grid.X), ToGrid(position.Y, (int)grid.Y));
 
         /// <summary>
         /// Transforma um index 2D em um index 1D.

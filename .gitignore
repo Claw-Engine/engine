@@ -9,11 +9,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-.bin/
-
 /packages
 .vs/
+[Bb]uild/
 
 *.user
-
-desktop.ini

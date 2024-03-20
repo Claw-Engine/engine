@@ -76,11 +76,11 @@ namespace Claw.Utils
         /// </summary>
         public static string StringToBinary(string text)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
-            foreach (char character in text) stringBuilder.Append(Convert.ToString(character, 2).PadLeft(8, '0'));
+            foreach (char character in text) builder.Append(Convert.ToString(character, 2).PadLeft(8, '0'));
 
-            return stringBuilder.ToString();
+            return builder.ToString();
         }
         /// <summary>
         /// Converte binário para texto.
@@ -99,12 +99,12 @@ namespace Claw.Utils
         /// </summary>
         public static string StringToHex(string text)
         {
-            var stringBuilder = new StringBuilder();
+            var builder = new StringBuilder();
             var bytes = Encoding.Unicode.GetBytes(text);
 
-            foreach (var t in bytes) stringBuilder.Append(t.ToString("X2"));
+            foreach (var t in bytes) builder.Append(t.ToString("X2"));
 
-            return stringBuilder.ToString();
+            return builder.ToString();
         }
         /// <summary>
         /// Converte hex para texto.
@@ -116,40 +116,6 @@ namespace Claw.Utils
             for (var i = 0; i < bytes.Length; i++) bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
 
             return Encoding.Unicode.GetString(bytes);
-        }
-
-        /// <summary>
-        /// Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
-        /// </summary>
-        /// <param name="encrypt">True para criptografia e false para descriptografia.</param>
-        /// <param name="amount">Senha para a criptografia/descriptografia.</param>
-        public static string AllCrypt(string text, bool encrypt, int amount)
-        {
-            if (encrypt) return StringToBinary(StringToHex(Crypt(text, encrypt, amount)));
-
-            return Crypt(HexToString(BinaryToString(text)), encrypt, amount);
-        }
-        /// <summary>
-        /// Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
-        /// </summary>
-        /// <param name="encrypt">True para criptografia e false para descriptografia.</param>
-        /// <param name="amount">Sequência para a criptografia/descriptografia.</param>
-        public static string AllCrypt(string text, bool encrypt, params int[] amount)
-        {
-            if (encrypt) return StringToBinary(StringToHex(Crypt(text, encrypt, amount)));
-
-            return Crypt(HexToString(BinaryToString(text)), encrypt, amount);
-        }
-        /// <summary>
-        /// Usa os métodos Crypt, StringToBinary/BinaryToString e StringToHex/HexToString para criptografar/descriptografar um texto.
-        /// </summary>
-        /// <param name="encrypt">True para criptografia e false para descriptografia.</param>
-        /// <param name="password">Senha da criptografia.</param>
-        public static string AllCrypt(string text, bool encrypt, string password)
-        {
-            if (encrypt) return StringToBinary(StringToHex(Crypt(text, encrypt, password)));
-
-            return Crypt(HexToString(BinaryToString(text)), encrypt, password);
         }
     }
 }

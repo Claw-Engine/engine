@@ -1,9 +1,0 @@
-﻿| Teste massa
-../../bin/Debug/Assets
-../../bin/Release/Assets
-
-#Texture:MainAtlas
-collision_tiles.png
-
-#SpriteFont:Fonts
-font.csf
