@@ -46,19 +46,17 @@ namespace Claw.Physics
 		/// <summary>
 		/// Cria um polígono retangular.
 		/// </summary>
-		public PolygonShape(Rectangle box)
+		public PolygonShape(Vector2 offset, Vector2 size)
 		{
-			Vector2 size = box.Size;
-			Vector2 start = size * -.5f;
 			Area = size.X * size.Y;
-			Offset = box.Location;
+			Offset = offset;
 
 			vertices = new Vector2[4]
 			{
-				start,
-				new Vector2(start.X + size.X, start.Y),
-				new Vector2(start.X + size.X, start.Y + size.Y),
-				new Vector2(start.X, start.Y + size.Y),
+				Vector2.Zero,
+				new Vector2(size.X, 0),
+				new Vector2(size.X, size.Y),
+				new Vector2(0, size.Y),
 			};
 			this.verticesInWorld = new Vector2[4];
 		}

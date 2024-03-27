@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Claw.Graphics
@@ -43,5 +44,39 @@ namespace Claw.Graphics
             SDL.SDL_UpdateTexture(sdlTexture, IntPtr.Zero, handle.AddrOfPinnedObject(), Width * sizeof(UInt32));
             handle.Free();
         }
-    }
+
+		/// <summary>
+		/// Carrega uma textura, com base num arquivo binário.
+		/// </summary>
+		internal static Texture ReadTexture(string filePath)
+		{
+			StreamReader stream = new StreamReader(filePath);
+			BinaryReader reader = new BinaryReader(stream.BaseStream);
+
+            return ReadTexture(reader);
+		}
+		/// <summary>
+		/// Carrega uma textura, com base num arquivo binário.
+		/// </summary>
+		internal static Texture ReadTexture(BinaryReader reader)
+		{
+			int width = reader.ReadInt32(), height = reader.ReadInt32();
+
+			if (width <= 0 || height <= 0) return null;
+
+			uint[] pixels = new uint[width * height];
+			byte a, b, g, r;
+
+			for (int i = 0; i < pixels.Length; i++)
+			{
+				b = reader.ReadByte();
+				g = reader.ReadByte();
+				r = reader.ReadByte();
+				a = reader.ReadByte();
+				pixels[i] = ((uint)a << 24) | ((uint)b << 16) | ((uint)g << 8) | ((uint)r);
+			}
+
+			return new Texture(width, height, pixels);
+		}
+	}
 }

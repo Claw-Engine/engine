@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Claw.Graphics;
 using Claw.Audio;
+using Claw.Tiled;
 
 namespace Claw
 {
@@ -25,12 +26,14 @@ namespace Claw
         {
             currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             readers = new Dictionary<Type, Func<string, object>>()
-            {
-                { typeof(Sprite[]), TextureAtlas.ReadAtlas },
+			{
+				{ typeof(Texture), Texture.ReadTexture },
+				{ typeof(TextureAtlas), TextureAtlas.ReadAtlas },
                 { typeof(SpriteFont), SpriteFont.ReadFont },
                 { typeof(SoundEffect), SoundEffect.LoadSFX },
-                { typeof(Music), Music.LoadMusic }
-            };
+                { typeof(Music), Music.LoadMusic },
+				{ typeof(Map), Map.ReadMap }
+			};
         }
 
         /// <summary>
