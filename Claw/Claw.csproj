@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <ExportDir>$(SolutionDir)Build\</ExportDir>
+    <ExportDir>$(SolutionDir)Build\Claw\</ExportDir>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{673096A4-9F32-4D37-83B2-AD0DAA73CA45}</ProjectGuid>
@@ -144,6 +144,15 @@
     <Compile Include="Save\Shortcuts.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Cursor.cs" />
+    <Compile Include="Tiled\Chunk.cs" />
+    <Compile Include="Tiled\Config.cs" />
+    <Compile Include="Tiled\Layer.cs" />
+    <Compile Include="Tiled\Map.cs" />
+    <Compile Include="Tiled\Vertice.cs" />
+    <Compile Include="Tiled\Object.cs" />
+    <Compile Include="Tiled\Property.cs" />
+    <Compile Include="Tiled\Tiled.cs" />
+    <Compile Include="Tiled\Tileset.cs" />
     <Compile Include="Utils\InternalUtils.cs" />
     <Compile Include="Wrappers\PropertySetter.cs" />
     <Compile Include="Wrappers\SDL.cs" />

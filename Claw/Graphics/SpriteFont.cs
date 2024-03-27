@@ -103,7 +103,7 @@ namespace Claw.Graphics
             StreamReader stream = new StreamReader(filePath);
             BinaryReader reader = new BinaryReader(stream.BaseStream);
 
-            Texture atlas = TextureAtlas.ReadTexture(reader);
+            Texture atlas = Texture.ReadTexture(reader);
             string fontName = reader.ReadString();
             float charSpacing = reader.ReadSingle();
             int charCount = reader.ReadInt32();

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="14">
+ <editorsettings>
+  <export target="../../Assets/Maps/l0.tmj" format="json"/>
+ </editorsettings>
+ <objectgroup id="2" name="Camada de Objetos 1">
+  <object id="7" name="jota" type="DrawBody" x="32" y="0" width="32" height="32"/>
+  <object id="9" name="saas" type="DrawBody" x="0" y="0" width="32" height="32">
+   <properties>
+    <property name="Segments" type="int" value="32"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="11" name="conv" type="DrawBody" x="64" y="32">
+   <polygon points="0,0 -7.41476,60.907 26.4813,39.1923 20.1258,-9.53327"/>
+  </object>
+ </objectgroup>
+</map>

@@ -1,18 +1,17 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Clawssets")]
-[assembly: AssemblyDescription("Compilador de assets da Claw Engine.")]
+[assembly: AssemblyDescription("Compilador de assets da Claw.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Claw")]
 [assembly: AssemblyProduct("Clawssets")]
-[assembly: AssemblyCopyright("Copyright © Clawssets 2024")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © Claw 2023")]
+[assembly: AssemblyTrademark("Clawssets")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 
-[assembly: Guid("4f044d96-7508-4255-8289-5bb36397bad8")]
+[assembly: Guid("2eda8c5b-7dcc-450e-b06b-66a103f9b5ea")]
 
 [assembly: AssemblyVersion("2.0.0")] // Main.Release.SubRelease
