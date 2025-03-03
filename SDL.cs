@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
-namespace claw;
+namespace Claw;
 
 internal static unsafe partial class SDL
 {
@@ -1601,11 +1601,14 @@ internal static unsafe partial class SDL
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-	public static partial SDL_Surface* SDL_CreateSurfaceFrom(int width, int height, SDL_PixelFormat format, IntPtr pixels, int pitch);
+	public static partial IntPtr SDL_CreateSurfaceFrom(int width, int height, SDL_PixelFormat format, IntPtr pixels, int pitch);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 	public static partial void SDL_DestroySurface(IntPtr surface);
+	[LibraryImport(nativeLibName)]
+	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+	public unsafe static partial void SDL_DestroySurface(SDL_Surface* surface);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -7697,11 +7700,11 @@ internal static unsafe partial class SDL
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-	public static partial SDL_Texture* SDL_CreateTexture(IntPtr renderer, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h);
+	public static partial IntPtr SDL_CreateTexture(IntPtr renderer, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-	public static partial SDL_Texture* SDL_CreateTextureFromSurface(IntPtr renderer, IntPtr surface);
+	public static partial IntPtr SDL_CreateTextureFromSurface(IntPtr renderer, IntPtr surface);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -7826,6 +7829,9 @@ internal static unsafe partial class SDL
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 	public static partial SDLBool SDL_SetRenderViewport(IntPtr renderer, ref SDL_Rect rect);
+	[LibraryImport(nativeLibName)]
+	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+	public static partial SDLBool SDL_SetRenderViewport(IntPtr renderer, IntPtr rect);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
