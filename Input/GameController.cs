@@ -13,20 +13,20 @@ internal class GameController : IDisposable
 	public Vector2 LeftThumbStick, RightThumbStick;
 
 	private const int MaxAxis = 32767;
-	private IntPtr sdlController;
-	private ControllerState controllerNewState = new(), controllerOldState;
+	private IntPtr id;
+	private ControllerState controllerNewState, controllerOldState;
 
 	public GameController(IntPtr controller)
 	{
-		sdlController = controller;
-		Id = SDL_GetJoystickID(SDL_GetGamepadJoystick(sdlController));
-		Type = (ControllerTypes)SDL_GetGamepadType(sdlController);
+		id = controller;
+		Id = SDL_GetJoystickID(SDL_GetGamepadJoystick(id));
+		Type = (ControllerTypes)SDL_GetGamepadType(id);
 	}
 	~GameController() => Dispose();
 
 	public void Dispose()
 	{
-		sdlController = IntPtr.Zero;
+		id = IntPtr.Zero;
 		Id = 0;
 		Type = ControllerTypes.Unknown;
 	}
@@ -34,14 +34,14 @@ internal class GameController : IDisposable
 	public void Update()
 	{
 		controllerOldState = controllerNewState;
-		controllerNewState = ControllerState.GetState(sdlController);
+		controllerNewState = ControllerState.GetState(id);
 
-		LeftThumbStick.X = Mathf.Clamp(SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFTX), -MaxAxis, MaxAxis) / MaxAxis; // Thumb sticks vão de -32768 à 32767
-		LeftThumbStick.Y = Mathf.Clamp(SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFTY), -MaxAxis, MaxAxis) / MaxAxis;
-		RightThumbStick.X = Mathf.Clamp(SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHTX), -MaxAxis, MaxAxis) / MaxAxis;
-		RightThumbStick.Y = Mathf.Clamp(SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHTY), -MaxAxis, MaxAxis) / MaxAxis;
-		LeftTrigger = SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFT_TRIGGER) / MaxAxis;
-		RightTrigger = SDL_GetGamepadAxis(sdlController, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) / MaxAxis;
+		LeftThumbStick.X = Mathf.Clamp(SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFTX), -MaxAxis, MaxAxis) / MaxAxis; // Thumb sticks vão de -32768 à 32767
+		LeftThumbStick.Y = Mathf.Clamp(SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFTY), -MaxAxis, MaxAxis) / MaxAxis;
+		RightThumbStick.X = Mathf.Clamp(SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHTX), -MaxAxis, MaxAxis) / MaxAxis;
+		RightThumbStick.Y = Mathf.Clamp(SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHTY), -MaxAxis, MaxAxis) / MaxAxis;
+		LeftTrigger = SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_LEFT_TRIGGER) / MaxAxis;
+		RightTrigger = SDL_GetGamepadAxis(id, SDL_GamepadAxis.SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) / MaxAxis;
 
 		controllerNewState.buttonStates.Add(Buttons.LeftTrigger, LeftTrigger >= .5f);
 		controllerNewState.buttonStates.Add(Buttons.RightTrigger, RightTrigger >= .5f);
@@ -54,7 +54,12 @@ internal class GameController : IDisposable
 	/// <summary>
 	/// Diz se o botão estava sendo pressionado.
 	/// </summary>
-	public bool IsOldButtonDown(Buttons button) => controllerOldState.buttonStates[button];
+	public bool IsOldButtonDown(Buttons button)
+	{
+		if (controllerOldState != null) return controllerOldState.buttonStates[button];
+
+		return false;
+	}
 
 	/// <summary>
 	/// Muda a vibração do controle.
@@ -62,7 +67,7 @@ internal class GameController : IDisposable
 	/// <param name="duration">Duração da vibração, em milissegundos.</param>
 	/// <param name="leftMotor">Intensidade da vibração do motor esquerdo (de 0 a 0xffff).</param>
 	/// <param name="rightMotor">Intensidade da vibração do motor direito (de 0 a 0xffff).</param>
-	public void SetVibration(uint duration, ushort leftMotor, ushort rightMotor) => SDL_RumbleGamepad(sdlController, leftMotor, rightMotor, duration);
+	public void SetVibration(uint duration, ushort leftMotor, ushort rightMotor) => SDL_RumbleGamepad(id, leftMotor, rightMotor, duration);
 
 	/// <summary>
 	/// Representa o estado do controle.

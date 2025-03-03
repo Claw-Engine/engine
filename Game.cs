@@ -45,6 +45,14 @@ public class Game : IDisposable
 		{
 			Input.Input.SetControllers();
 			Display.SetDisplays();
+
+			if (Texture.Pixel == null)
+			{
+				Texture.Pixel = new Texture(1, 1, 0xffffffff);
+
+				//Draw.Initialize();
+			}
+
 			Initialize();
 			GameLoop();
 		}
