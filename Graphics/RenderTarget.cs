@@ -53,7 +53,7 @@ public sealed class RenderTarget : Texture
 
 			x++;
 
-			if (x == Width - 1)
+			if (x == Width)
 			{
 				x = 0;
 				y++;

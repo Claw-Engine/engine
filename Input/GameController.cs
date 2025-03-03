@@ -54,12 +54,7 @@ internal class GameController : IDisposable
 	/// <summary>
 	/// Diz se o botão estava sendo pressionado.
 	/// </summary>
-	public bool IsOldButtonDown(Buttons button)
-	{
-		if (controllerOldState != null) return controllerOldState.buttonStates[button];
-
-		return false;
-	}
+	public bool IsOldButtonDown(Buttons button) => controllerOldState.buttonStates[button];
 
 	/// <summary>
 	/// Muda a vibração do controle.
