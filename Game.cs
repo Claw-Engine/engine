@@ -19,10 +19,18 @@ public class Game : IDisposable
 
 	public void Dispose()
 	{
-		isRunning = false;
+		Window?.Dispose();
+        Renderer?.Dispose();
+
+		Window = null;
+		Renderer = null;
 		Instance = null;
+		isRunning = false;
 	}
 
+	/// <summary>
+	/// Tenta inicializar o jogo e, se obter sucesso, executa o <see cref="Initialize"/> e o game loop.
+	/// </summary>
 	public void Run()
 	{
 		if (isRunning) return;
@@ -50,7 +58,7 @@ public class Game : IDisposable
 			{
 				Texture.Pixel = new Texture(1, 1, 0xffffffff);
 
-				//Draw.Initialize();
+				Draw.Initialize();
 			}
 
 			Initialize();
@@ -81,7 +89,7 @@ public class Game : IDisposable
 			Input.Input.Update();
 			Step();
 			Renderer.Clear();
-			//Draw.UpdateCamera();
+			Draw.UpdateCamera();
 			Render();
 			Renderer.Present();
 
