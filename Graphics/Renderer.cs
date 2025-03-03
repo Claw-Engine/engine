@@ -132,7 +132,7 @@ public sealed class Renderer : IDisposable
 	/// <summary>
 	/// Aplica o viewport da câmera.
 	/// </summary>
-	/* internal void SetViewport(Camera camera)
+	internal void SetViewport(Camera camera)
 	{
 		if (!camera.Viewport.IsEmpty)
 		{
@@ -141,7 +141,7 @@ public sealed class Renderer : IDisposable
 			SDL_SetRenderViewport(id, ref view);
 		}
 		else SDL_SetRenderViewport(id, IntPtr.Zero);
-	} */
+	}
 	/// <summary>
 	/// Remove o viewport.
 	/// </summary>
