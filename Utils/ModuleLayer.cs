@@ -14,6 +14,7 @@ public sealed class ModuleLayer : Collection<Module>
 	public readonly bool TriggersInitialize;
 	public readonly string Name;
 	public event Action<Module> ModuleAdded, ModuleRemoved;
+	public event Action LayerCleared;
 
 	public ModuleLayer(string name, bool triggersInitialize)
 	{
@@ -55,6 +56,15 @@ public sealed class ModuleLayer : Collection<Module>
 		base.SetItem(index, newModule);
 		
 		if (newModule != null) OnModuleAdded(newModule);
+	}
+
+	/// <summary>
+	/// Limpa a camada e aciona o evento <see cref="LayerCleared"/>.
+	/// </summary>
+	protected override void ClearItems()
+	{
+		base.ClearItems();
+		LayerCleared?.Invoke();
 	}
 
 	private void OnModuleAdded(Module module)
