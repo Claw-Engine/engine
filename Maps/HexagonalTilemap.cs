@@ -1,5 +1,3 @@
-using Claw.Graphics;
-
 namespace Claw.Maps;
 
 /// <summary>
@@ -12,6 +10,6 @@ public class HexagonalTilemap : StaggeredTilemap
 	internal override float VerticalOffset { get; } = .75f;
 	internal override Vector2 GuessGridMultiplier { get; } = new Vector2(1, 1.5f);
 
-	public HexagonalTilemap() { }
-	public HexagonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
+	public HexagonalTilemap(){}
+	public HexagonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize){}
 }

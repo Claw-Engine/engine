@@ -9,8 +9,8 @@ public class IsometricTilemap : Tilemap
 {
 	public override Vector2 PixelSize => Size * GridSize;
 
-	public IsometricTilemap() { }
-	public IsometricTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
+	public IsometricTilemap(){}
+	public IsometricTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize){}
 
 	/// <summary>
 	/// Obtém o deslocamento necessário para a renderização do ponto (0,0).

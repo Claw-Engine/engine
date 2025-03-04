@@ -7,10 +7,7 @@ public abstract class Module
 {
 	public readonly Transform Transform;
 
-	public Module()
-	{
-		Transform = new(this);
-	}
+	public Module() => Transform = new(this);
 
 	public abstract void Initialize();
 	public abstract void Step();

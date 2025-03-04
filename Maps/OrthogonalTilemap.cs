@@ -9,8 +9,8 @@ public class OrthogonalTilemap : Tilemap
 {
 	public override Vector2 PixelSize => Size * GridSize;
 
-	public OrthogonalTilemap() { }
-	public OrthogonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
+	public OrthogonalTilemap(){}
+	public OrthogonalTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize){}
 
 	public override Vector2 PositionToCell(Vector2 position) => Mathf.ToGrid(position, GridSize) / GridSize;
 	public override Vector2 PositionToGrid(Vector2 position) => Mathf.ToGrid(position, GridSize) + GridSize * .5f;

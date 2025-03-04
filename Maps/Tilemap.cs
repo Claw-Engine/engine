@@ -46,7 +46,7 @@ public abstract class Tilemap
 	/// </summary>
 	public TileLayer this[string layerName] => layers[layerIndexes[layerName]];
 
-	public Tilemap() { }
+	public Tilemap(){}
 	public Tilemap(Vector2 size, Vector2 gridSize)
 	{
 		Size = size;

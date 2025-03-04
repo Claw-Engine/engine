@@ -40,7 +40,7 @@ public sealed class TilePalette
 	/// </summary>
 	public Sprite Texture { get; internal set; }
 
-	internal TilePalette() { }
+	internal TilePalette(){}
 
 	/// <summary>
 	/// Diz se o tile pertence a esta paleta.

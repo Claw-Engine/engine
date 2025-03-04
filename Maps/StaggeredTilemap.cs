@@ -17,7 +17,7 @@ public class StaggeredTilemap : Tilemap
 	/// </summary>
 	internal virtual Vector2 GuessGridMultiplier { get; } = Vector2.One;
 
-	public StaggeredTilemap() { }
+	public StaggeredTilemap(){}
 	public StaggeredTilemap(Vector2 size, Vector2 gridSize) : base(size, gridSize) { }
 
 	public override Vector2 PositionToCell(Vector2 position)
