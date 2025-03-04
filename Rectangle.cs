@@ -60,8 +60,8 @@ public struct Rectangle
 	/// <summary>
 	/// Cria um novo retângulo de uma interpolação linear com os retângulos especificados, usando delta time.
 	/// </summary>
-	/// <param name="a">Valor atual.</param>
-	/// <param name="b">Valor alvo.</param>
+	/// <param name="value1">Valor atual.</param>
+	/// <param name="value2">Valor alvo.</param>
 	/// <param name="amount">Valor de ponderação.</param>
 	/// <param name="scaled">Se o delta time será <see cref="Time.DeltaTime"/> (true) ou <see cref="Time.UnscaledDeltaTime"/> (false).</param>
 	public static Rectangle DeltaLerp(Rectangle value1, Rectangle value2, float amount, bool scaled = true) => new Rectangle(Vector2.DeltaLerp(value1.Location, value2.Location, amount, scaled), Vector2.DeltaLerp(value1.Size, value2.Size, amount, scaled));

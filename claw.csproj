@@ -4,6 +4,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>1573;1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

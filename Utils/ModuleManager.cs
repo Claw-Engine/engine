@@ -73,7 +73,7 @@ public sealed class ModuleManager
 	/// </summary>
 	/// <remarks>
 	/// Não há nenhuma verificação interna para garantir que o módulo não exista em outras camadas.
-	/// Se necessário, você pode utilizar <see cref="Exists"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
+	/// Se necessário, você pode utilizar <see cref="Exists(Module)"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
 	/// </remarks>
 	public void AddTo(Module module, string stepLayer, string renderLayer)
 	{
@@ -85,7 +85,7 @@ public sealed class ModuleManager
 	/// </summary>
 	/// <remarks>
 	/// Não há nenhuma verificação interna para garantir que o módulo não exista em outras camadas.
-	/// Se necessário, você pode utilizar <see cref="Exists"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
+	/// Se necessário, você pode utilizar <see cref="Exists(Module)"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
 	/// </remarks>
 	public void AddToStep(Module module, string stepLayer) => FindLayer(stepLayer, StepLayers).Add(module);
 	/// <summary>
@@ -93,7 +93,7 @@ public sealed class ModuleManager
 	/// </summary>
 	/// <remarks>
 	/// Não há nenhuma verificação interna para garantir que o módulo não exista em outras camadas.
-	/// Se necessário, você pode utilizar <see cref="Exists"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
+	/// Se necessário, você pode utilizar <see cref="Exists(Module)"/>, <see cref="ExistsOnStep"/> ou <see cref="ExistsOnRender"/> para uma verificação genérica.
 	/// </remarks>
 	public void AddToRender(Module module, string renderLayer) => FindLayer(renderLayer, RenderLayers).Add(module);
 

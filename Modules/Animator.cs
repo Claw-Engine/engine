@@ -56,7 +56,7 @@ public sealed class Animator : IDisposable
 	/// <param name="frame">Frame que a animação vai começar.</param>
 	public void Play(string name, bool playIfNot = true, int frame = 0) => Play(animationIndexes[name], playIfNot, frame);
 	/// <summary>
-	/// Atualiza o frame do <see cref="GameObject"/>.
+	/// Atualiza o frame.
 	/// </summary>
 	private void UpdateFrame()
 	{
