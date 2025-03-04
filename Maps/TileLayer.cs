@@ -1,9 +1,11 @@
+using Claw.Modules;
+
 namespace Claw.Maps;
 
 /// <summary>
 /// Representa uma camada dentro do <see cref="Tilemap"/>.
 /// </summary>
-public sealed class TileLayer
+public sealed class TileLayer : Module
 {
 	public float Opacity = 1;
 	public string Name
@@ -67,6 +69,9 @@ public sealed class TileLayer
 		Name = name;
 		this.map = map;
 	}
+
+	public override void Initialize(){}
+	public override void Step(){}
 
 	/// <summary>
 	/// Retorna todos os tiles da layer.
@@ -133,7 +138,7 @@ public sealed class TileLayer
 		return tile > 0 && filterTiles.Contains(tile);
 	}
 
-	public void Render()
+	public override void Render()
 	{
 		if (map != null && Color.A != 0 && Opacity > 0) map.Render(this);
 	}

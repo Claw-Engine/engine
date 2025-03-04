@@ -95,11 +95,12 @@ public abstract class Tilemap
 	/// <summary>
 	/// Adiciona uma layer nova.
 	/// </summary>
+	/// <returns>O index da layer.</returns>
 	public int AddLayer(int renderOrder, string name, float opacity, Color color)
 	{
 		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-		var layer = new TileLayer(layers.Count, name, this, Size) { Color = color, Opacity = opacity };
+		TileLayer layer = new(layers.Count, name, this, Size) { Color = color, Opacity = opacity };
 
 		layerIndexes.Add(layer.Name, layers.Count);
 		layers.Add(layer);
@@ -109,11 +110,12 @@ public abstract class Tilemap
 	/// <summary>
 	/// Adiciona uma layer nova e já insere os tiles dela.
 	/// </summary>
+	/// <returns>O index da layer.</returns>
 	public int AddLayer(int renderOrder, string name, bool visible, float opacity, Color color, int[] data)
 	{
 		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
-		var layer = new TileLayer(layers.Count, name, this) { Color = color, Opacity = opacity };
+		TileLayer layer = new(layers.Count, name, this) { Color = color, Opacity = opacity };
 		layer.data = data.ToList();
 
 		layerIndexes.Add(layer.Name, layers.Count);
@@ -124,10 +126,13 @@ public abstract class Tilemap
 	/// <summary>
 	/// Adiciona uma layer.
 	/// </summary>
+	/// <returns>O index da layer.</returns>
 	public int Addlayer(TileLayer layer)
 	{
 		if (layer.map == null)
 		{
+			if (!layerIndexes.FirstOrDefault(n => n.Key == layer.Name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", layer.Name));
+
 			layerIndexes.Add(layer.Name, layers.Count);
 			layers.Add(layer);
 
