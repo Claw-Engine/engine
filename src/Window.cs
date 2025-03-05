@@ -96,7 +96,7 @@ public sealed class Window : IDisposable
 	}
 
 	/// <summary>
-	/// Centraliza a janela em um <see cref="Display" />.
+	/// Centraliza a janela em um <see cref="Display"/>.
 	/// </summary>
 	/// <param name="display">Tela em que a janela deve ser posicionada.</param>
 	public void Centralize(Display display)

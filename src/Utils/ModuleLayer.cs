@@ -13,8 +13,8 @@ public sealed class ModuleLayer : Collection<Module>
 	/// </summary>
 	public readonly bool TriggersInitialize;
 	public readonly string Name;
-	public event Action<Module> ModuleAdded, ModuleRemoved;
-	public event Action LayerCleared;
+	public event Action<Module> OnAdded, OnRemoved;
+	public event Action OnCleared;
 
 	public ModuleLayer(string name, bool triggersInitialize)
 	{
@@ -23,7 +23,7 @@ public sealed class ModuleLayer : Collection<Module>
 	}
 
 	/// <summary>
-	/// Insere um <see cref="Module"/> na camada e aciona o evento <see cref="ModuleAdded"/>.
+	/// Insere um <see cref="Module"/> na camada e aciona o evento <see cref="OnAdded"/>.
 	/// </summary>
 	protected override void InsertItem(int index, Module module)
 	{
@@ -31,10 +31,10 @@ public sealed class ModuleLayer : Collection<Module>
 
 		base.InsertItem(index, module);
 
-		if (module != null) OnModuleAdded(module);
+		if (module != null) HandleAdded(module);
 	}
 	/// <summary>
-	/// Remove um <see cref="Module"/> da camada e aciona o evento <see cref="ModuleRemoved"/>.
+	/// Remove um <see cref="Module"/> da camada e aciona o evento <see cref="OnRemoved"/>.
 	/// </summary>
 	protected override void RemoveItem(int index)
 	{
@@ -42,7 +42,7 @@ public sealed class ModuleLayer : Collection<Module>
 
 		base.RemoveItem(index);
 
-		if (module != null) OnModuleRemoved(module);
+		if (module != null) HandleRemoved(module);
 	}
 	/// <summary>
 	/// Remove um <see cref="Module"/> e insere outro no mesmo index.
@@ -51,27 +51,27 @@ public sealed class ModuleLayer : Collection<Module>
 	{
 		Module oldModule = this[index];
 
-		if (oldModule != null) OnModuleRemoved(oldModule);
+		if (oldModule != null) HandleRemoved(oldModule);
 
 		base.SetItem(index, newModule);
 		
-		if (newModule != null) OnModuleAdded(newModule);
+		if (newModule != null) HandleAdded(newModule);
 	}
 
 	/// <summary>
-	/// Limpa a camada e aciona o evento <see cref="LayerCleared"/>.
+	/// Limpa a camada e aciona o evento <see cref="OnCleared"/>.
 	/// </summary>
 	protected override void ClearItems()
 	{
 		base.ClearItems();
-		LayerCleared?.Invoke();
+		OnCleared?.Invoke();
 	}
 
-	private void OnModuleAdded(Module module)
+	private void HandleAdded(Module module)
 	{
 		if (TriggersInitialize) module.Initialize();
 
-		ModuleAdded?.Invoke(module);
+		OnAdded?.Invoke(module);
 	}
-	private void OnModuleRemoved(Module module) => ModuleRemoved?.Invoke(module);
+	private void HandleRemoved(Module module) => OnRemoved?.Invoke(module);
 }

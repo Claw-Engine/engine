@@ -26,8 +26,8 @@ public static class Input
 	public static bool MouseNeedFocus = true;
 	public static Vector2 MousePosition { get; private set; }
 	public static List<Keys> DownKeys = new();
-	public static event Action<int> ControllerAdded, ControllerRemoved;
-	public static event Action<char> TextInput;
+	public static event Action<int> OnControllerAdded, OnControllerRemoved;
+	public static event Action<char> OnTextInput;
 	private static bool canButton => ButtonNeedFocus ? Game.Instance.Window.IsActive : true;
 	private static bool canMouse => MouseNeedFocus ? Game.Instance.Window.IsMouseFocused : true;
 	private static float previousMouseScroll = 0;
@@ -66,7 +66,7 @@ public static class Input
 		previousMouseScroll = wheel;
 	}
 	internal static void UpdateMouseMotion(SDL_MouseMotionEvent motionEvent) => MouseMotion = new(motionEvent.xrel, motionEvent.yrel);
-	internal static void TriggerText(char @char) => TextInput?.Invoke(@char);
+	internal static void TriggerText(char @char) => OnTextInput?.Invoke(@char);
 
 	/// <summary>
 	/// Checa se uma tecla foi pressionada.
@@ -268,7 +268,7 @@ public static class Input
 		controllers.Add(new(SDL_OpenGamepad(id)));
 
 		controllers[controllers.Count - 1].Update();
-		ControllerAdded?.Invoke(controllers.Count - 1);
+		OnControllerAdded?.Invoke(controllers.Count - 1);
 	}
 	/// <summary>
 	/// Remove um controle da lista.
@@ -281,7 +281,7 @@ public static class Input
 			{
 				controllers[i].Dispose();
 				controllers.RemoveAt(i);
-				ControllerRemoved?.Invoke(i);
+				OnControllerRemoved?.Invoke(i);
 
 				break;
 			}

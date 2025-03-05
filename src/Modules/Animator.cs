@@ -9,7 +9,7 @@ public sealed class Animator : IDisposable
 	public int AnimationCount => animations.Count;
 	public bool Stop = false, Reverse = false;
 	public IAnimatable Animatable;
-	public event Action AnimationEnd;
+	public event Action OnAnimationEnd;
 	private int framesPerSecond = 0;
 	private float counter = 0;
 	private List<Animation> animations = new List<Animation>();
@@ -140,7 +140,7 @@ public sealed class Animator : IDisposable
 					if (Frame < animations[Animation].Frames.Count - 1) Frame++;
 					else
 					{
-						AnimationEnd?.Invoke();
+						OnAnimationEnd?.Invoke();
 
 						if (!Stop) Frame = 0;
 					}
@@ -150,7 +150,7 @@ public sealed class Animator : IDisposable
 					if (Frame > 0) Frame--;
 					else
 					{
-						AnimationEnd?.Invoke();
+						OnAnimationEnd?.Invoke();
 
 						if (!Stop) Frame = animations[Animation].Frames.Count - 1;
 					}

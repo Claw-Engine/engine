@@ -8,7 +8,7 @@ namespace Claw;
 public class Display
 {
 	public static List<Display> Instances;
-	public static event Action<int> DisplayAdded, DisplayRemoved;
+	public static event Action<int> OnAdded, OnRemoved;
 
 	public readonly Rectangle Bounds;
 	internal uint id;
