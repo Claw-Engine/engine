@@ -42,7 +42,7 @@ public class Display
 	{
 		Instances.Add(new(id));
 
-		DisplayAdded?.Invoke(Instances.Count - 1);
+		OnAdded?.Invoke(Instances.Count - 1);
 	}
 	/// <summary>
 	/// Remove uma tela da lista.
@@ -54,7 +54,7 @@ public class Display
 			if (Instances[i].id == id)
 			{
 				Instances.RemoveAt(i);
-				DisplayRemoved?.Invoke(i);
+				OnRemoved?.Invoke(i);
 
 				break;
 			}
