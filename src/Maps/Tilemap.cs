@@ -14,7 +14,7 @@ public abstract class Tilemap
 	/// </summary>
 	public static int OutOfView = 1;
 	public int LayerCount => layers.Count;
-	public Vector2 GridSize = Vector2.Zero;
+	public Vector2 GridSize;
 	public Vector2 Size
 	{
 		get => _size;
