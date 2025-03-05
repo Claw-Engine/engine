@@ -15,11 +15,7 @@ public abstract class Container : Element
 	public Vector2 Padding
 	{
 		get => _padding;
-		set
-		{
-			_padding = value;
-			sourceRectangle = new Rectangle(_padding, _padding * -2);
-		}
+		set => _padding = value;
 	}
 	public Vector2 MinSize
 	{
@@ -46,7 +42,7 @@ public abstract class Container : Element
 	}
 	public Vector2 ScrollMaxOffset { get; private set; } = Vector2.Zero;
 	public LayoutAlignment Alignment = LayoutAlignment.Right;
-	private bool needUpdate;
+	private bool needUpdate = true;
 	private Vector2 _scrollOffset, _size, _minSize, _padding;
 	private Vector2? _maxSize;
 	private Rectangle sourceRectangle;
@@ -93,7 +89,7 @@ public abstract class Container : Element
 		Element current = null, previous;
 		float addY = 0;
 		Vector2 elementPos = Padding;
-		Vector2 content = Vector2.Zero;
+		Vector2 content = Padding;
 		Vector2? maxContent = _maxSize.HasValue ? _maxSize - Padding * 2 : null;
 
 		for (int i = 0; i < elements.Count; i++)
@@ -105,7 +101,6 @@ public abstract class Container : Element
 			{
 				current.Position = elementPos;
 				content.X += current.Size.X;
-				elementPos.X = content.X;
 				addY = current.Size.Y;
 			}
 			else
@@ -151,7 +146,8 @@ public abstract class Container : Element
 			current.RealSize = current.Size;
 		}
 
-		content += Padding * 2;
+		content.Y += addY;
+		content += Padding;
 
 		_size.X = Math.Max(content.X, _minSize.X);
 		_size.Y = Math.Max(content.Y, _minSize.Y);
@@ -161,6 +157,8 @@ public abstract class Container : Element
 			_size.X = Math.Min(content.X, _maxSize.Value.X);
 			_size.Y = Math.Min(content.Y, _maxSize.Value.Y);
 		}
+
+		sourceRectangle = new Rectangle(Padding, _size - Padding * 2);
 
 		return _size != previousSize;
 	}
@@ -176,7 +174,7 @@ public abstract class Container : Element
 		{
 			result = DoUpdate();
 
-			if (result && AllowOverflow)
+			if (result && !AllowOverflow)
 			{
 				if (surface != null) surface.Destroy();
 
@@ -192,9 +190,12 @@ public abstract class Container : Element
 		if (!AllowOverflow && surface == null) return;
 
 		RenderTarget previousTarget = Game.Instance.Renderer.GetRenderTarget();
+		Color previousColor = Game.Instance.Renderer.ClearColor;
 
 		if (!AllowOverflow)
 		{
+			Game.Instance.Renderer.ClearColor = Color.Transparent;
+
 			Game.Instance.Renderer.SetRenderTarget(surface);
 			Game.Instance.Renderer.Clear();
 		}
@@ -203,6 +204,8 @@ public abstract class Container : Element
 
 		if (!AllowOverflow)
 		{
+			Game.Instance.Renderer.ClearColor = previousColor;
+
 			Game.Instance.Renderer.SetRenderTarget(previousTarget);
 			Draw.Sprite(surface, Position + Padding, sourceRectangle, Color.White);
 		}
