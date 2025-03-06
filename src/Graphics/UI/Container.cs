@@ -174,6 +174,26 @@ public abstract class Container : Element
 
 		sourceRectangle = new(_padding, _size - _padding * 2);
 		addedScroll = Vector2.Zero;
+		/* int rowCount = 0;
+		float rowWidth = 0, currentY = elements[0].Position.Y;
+
+		if (Alignment != LayoutAlignment.Left)
+		{
+			for (int i = 0; i < elements.Count; i++)
+			{
+				if (currentY != elements[i].Position.Y)
+				{
+					rowCount = 0;
+					rowWidth = 0;
+					currentY = elements[i].Position.Y;
+				}
+
+				if (rowCount > 0) rowWidth += Gap.X;
+
+				rowWidth += elements[i].Size.X;
+				rowCount++;
+			}
+		} */
 
 		return _size != previousSize;
 	}
@@ -181,12 +201,24 @@ public abstract class Container : Element
 	public override bool Step(Vector2 relativeCursor)
 	{
 		bool result = needUpdate;
+		Vector2 childRelative;
 		needUpdate = false;
 
 		for (int i = 0; i < elements.Count; i++)
 		{
 			elements[i].Position -= addedScroll;
-			result = elements[i].Step(relativeCursor - elements[i].Position) || result;
+			childRelative = relativeCursor - elements[i].Position;
+			
+			if (elements[i].Contains(childRelative))
+			{
+				if (relativeCursor.X < _padding.X) childRelative.X = -Math.Sign(_padding.X - relativeCursor.X);
+				else if (relativeCursor.X > _size.X - _padding.X) childRelative.X = relativeCursor.X - _size.X - _padding.X;
+
+				if (relativeCursor.Y < _padding.Y) childRelative.Y = -Math.Sign(_padding.Y - relativeCursor.Y);
+				else if (relativeCursor.Y > _size.Y - _padding.Y) childRelative.Y = relativeCursor.Y - _size.Y - _padding.Y;
+			}
+
+			result = elements[i].Step(childRelative) || result;
 		}
 
 		addedScroll = Vector2.Zero;
