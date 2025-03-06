@@ -11,11 +11,6 @@ public abstract class Element
 	/// </summary>
 	/// <remarks>Objetos, como o <see cref="Container"/>, devem alterar os valores deste campo.</remarks> 
 	public Vector2 Position;
-	/// <summary>
-	/// Tamanho relativo do elemento, para fins de renderização e checagens de colisão.
-	/// </summary>
-	/// <remarks>Objetos, como o <see cref="Container"/>, devem alterar os valores deste campo.</remarks> 
-	public Vector2 RealSize;
 	public abstract Vector2 Size { get; }
 	/// <summary>
 	/// Define a disposição deste elemento (<see cref="LayoutMode.InlineBlock"/> por padrão).
@@ -26,7 +21,7 @@ public abstract class Element
 	/// Verifica se este elemento contém um ponto.
 	/// </summary>
 	/// <param name="relativePoint">Ponto de verificação, relativo à <see cref="Position"/>.</param>
-	public virtual bool Contains(Vector2 relativePoint) => relativePoint.X >= 0 && relativePoint.Y >= 0 && relativePoint.X < RealSize.X && relativePoint.Y < RealSize.Y;
+	public virtual bool Contains(Vector2 relativePoint) => relativePoint.X >= 0 && relativePoint.Y >= 0 && relativePoint.X < Size.X && relativePoint.Y < Size.Y;
 
 	/// <param name="relativeCursor">Posição do mouse, relativo à <see cref="Position"/>.</param>
 	/// <returns>Se houve alguma mudança espacial.</returns>

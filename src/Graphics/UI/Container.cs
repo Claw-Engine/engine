@@ -38,12 +38,17 @@ public abstract class Container : Element
 	public Vector2 ScrollOffset
 	{
 		get => _scrollOffset;
-		set => _scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
+		set
+		{
+			Vector2 previous = _scrollOffset;
+			_scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
+			addedScroll += _scrollOffset - previous;
+		}
 	}
 	public Vector2 ScrollMaxOffset { get; private set; } = Vector2.Zero;
 	public LayoutAlignment Alignment = LayoutAlignment.Right;
 	private bool needUpdate = true;
-	private Vector2 _scrollOffset, _size, _minSize, _padding;
+	private Vector2 _scrollOffset, _size, _minSize, _padding, addedScroll = Vector2.Zero;
 	private Vector2? _maxSize;
 	private Rectangle sourceRectangle;
 	private RenderTarget surface;
@@ -86,11 +91,20 @@ public abstract class Container : Element
 	private bool DoUpdate()
 	{
 		Vector2 previousSize = _size;
+		ScrollMaxOffset = Vector2.Zero;
+
+		if (elements.Count == 0)
+		{
+			_size = _minSize;
+
+			return _size != previousSize;
+		}
+
 		Element current = null, previous;
 		float addY = 0;
-		Vector2 elementPos = Padding;
-		Vector2 content = Padding;
-		Vector2? maxContent = _maxSize.HasValue ? _maxSize - Padding * 2 : null;
+		Vector2 elementPos = _padding;
+		Vector2 content = _padding;
+		Vector2? maxContent = _maxSize.HasValue ? _maxSize - _padding * 2 : null;
 
 		for (int i = 0; i < elements.Count; i++)
 		{
@@ -111,7 +125,7 @@ public abstract class Container : Element
 						addY += Gap.Y;
 						content.Y += addY;
 						addY = current.Size.Y;
-						elementPos.X = Padding.X;
+						elementPos.X = _padding.X;
 						elementPos.Y = content.Y;
 						current.Position = elementPos;
 						break;
@@ -129,7 +143,7 @@ public abstract class Container : Element
 							addY += Gap.Y;
 							content.Y += addY;
 							addY = current.Size.Y;
-							elementPos.X = Padding.X;
+							elementPos.X = _padding.X;
 							elementPos.Y = content.Y;
 						}
 						else
@@ -143,11 +157,11 @@ public abstract class Container : Element
 				}
 			}
 
-			current.RealSize = current.Size;
+			ScrollMaxOffset = new(Math.Max(Math.Abs(current.Position.X + current.Size.X - _padding.X), ScrollMaxOffset.X), Math.Max(Math.Abs(current.Position.Y + current.Size.Y - _padding.Y), ScrollMaxOffset.Y));
 		}
 
 		content.Y += addY;
-		content += Padding;
+		content += _padding;
 
 		_size.X = Math.Max(content.X, _minSize.X);
 		_size.Y = Math.Max(content.Y, _minSize.Y);
@@ -158,7 +172,8 @@ public abstract class Container : Element
 			_size.Y = Math.Min(content.Y, _maxSize.Value.Y);
 		}
 
-		sourceRectangle = new Rectangle(Padding, _size - Padding * 2);
+		sourceRectangle = new(_padding, _size - _padding * 2);
+		addedScroll = Vector2.Zero;
 
 		return _size != previousSize;
 	}
@@ -168,7 +183,13 @@ public abstract class Container : Element
 		bool result = needUpdate;
 		needUpdate = false;
 
-		for (int i = 0; i < elements.Count; i++) result = elements[i].Step(relativeCursor - Padding - elements[i].Position) || result;
+		for (int i = 0; i < elements.Count; i++)
+		{
+			elements[i].Position -= addedScroll;
+			result = elements[i].Step(relativeCursor - elements[i].Position) || result;
+		}
+
+		addedScroll = Vector2.Zero;
 
 		if (result)
 		{
@@ -207,7 +228,7 @@ public abstract class Container : Element
 			Game.Instance.Renderer.ClearColor = previousColor;
 
 			Game.Instance.Renderer.SetRenderTarget(previousTarget);
-			Draw.Sprite(surface, Position + Padding, sourceRectangle, Color.White);
+			Draw.Sprite(surface, Position + _padding, sourceRectangle, Color.White);
 		}
 	}
 }
