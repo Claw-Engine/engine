@@ -41,11 +41,11 @@ public abstract class Container : Element
 		set
 		{
 			Vector2 previous = _scrollOffset;
-			_scrollOffset = Vector2.Clamp(value, Vector2.Zero, ScrollMaxOffset);
+			_scrollOffset = Vector2.Clamp(value, Vector2.Zero, MaxScrollOffset);
 			addedScroll += _scrollOffset - previous;
 		}
 	}
-	public Vector2 ScrollMaxOffset { get; private set; } = Vector2.Zero;
+	public Vector2 MaxScrollOffset { get; private set; } = Vector2.Zero;
 	public LayoutAlignment Alignment = LayoutAlignment.Right;
 	private bool needUpdate = true;
 	private Vector2 _scrollOffset, _size, _minSize, _padding, addedScroll = Vector2.Zero;
@@ -91,7 +91,7 @@ public abstract class Container : Element
 	private bool DoUpdate()
 	{
 		Vector2 previousSize = _size;
-		ScrollMaxOffset = Vector2.Zero;
+		MaxScrollOffset = Vector2.Zero;
 
 		if (elements.Count == 0)
 		{
@@ -156,23 +156,18 @@ public abstract class Container : Element
 						break;
 				}
 			}
-
-			ScrollMaxOffset = new(Math.Max(Math.Abs(current.Position.X + current.Size.X - _padding.X), ScrollMaxOffset.X), Math.Max(Math.Abs(current.Position.Y + current.Size.Y - _padding.Y), ScrollMaxOffset.Y));
+			
+			MaxScrollOffset = Vector2.Max(Vector2.Abs(current.Position + current.Size - _padding), MaxScrollOffset);
 		}
 
 		content.Y += addY;
 		content += _padding;
+		_size = Vector2.Max(content, _minSize);
 
-		_size.X = Math.Max(content.X, _minSize.X);
-		_size.Y = Math.Max(content.Y, _minSize.Y);
-
-		if (_maxSize.HasValue)
-		{
-			_size.X = Math.Min(content.X, _maxSize.Value.X);
-			_size.Y = Math.Min(content.Y, _maxSize.Value.Y);
-		}
+		if (_maxSize.HasValue) _size = Vector2.Min(content, _maxSize.Value);
 
 		sourceRectangle = new(_padding, _size - _padding * 2);
+		MaxScrollOffset = Vector2.Max(MaxScrollOffset - _size + _padding * 2, Vector2.Zero);
 		addedScroll = Vector2.Zero;
 		/* int rowCount = 0;
 		float rowWidth = 0, currentY = elements[0].Position.Y;
