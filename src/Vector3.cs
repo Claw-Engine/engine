@@ -47,6 +47,16 @@ public struct Vector3
 	}
 	
 	/// <summary>
+	/// Retorna um vetor com o menor valor de X, o menor valor de Y e o menor valor de Z.
+	/// </summary>
+	public static Vector3 Min(Vector3 a, Vector3 b) => new Vector3(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
+	
+	/// <summary>
+	/// Retorna um vetor com o maior valor de X, o maior valor de Y e o maior valor de Z.
+	/// </summary>
+	public static Vector3 Max(Vector3 a, Vector3 b) => new Vector3(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z));
+	
+	/// <summary>
 	/// Retorna um vetor que respeite os limites mínimo e máximo.
 	/// </summary>
 	public static Vector3 Clamp(Vector3 value, Vector3 min, Vector3 max) => new Vector3(Mathf.Clamp(value.X, min.X, max.X), Mathf.Clamp(value.Y, min.Y, max.Y), Mathf.Clamp(value.Z, min.Z, max.Z));

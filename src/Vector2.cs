@@ -66,6 +66,16 @@ public struct Vector2
 	/// Retorna um vetor que respeite os limites mínimo e máximo.
 	/// </summary>
 	public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max) => new Vector2(Mathf.Clamp(value.X, min.X, max.X), Mathf.Clamp(value.Y, min.Y, max.Y));
+	
+	/// <summary>
+	/// Retorna um vetor com o menor valor de X e o menor valor de Y.
+	/// </summary>
+	public static Vector2 Min(Vector2 a, Vector2 b) => new Vector2(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y));
+	
+	/// <summary>
+	/// Retorna um vetor com o maior valor de X e o maior valor de Y.
+	/// </summary>
+	public static Vector2 Max(Vector2 a, Vector2 b) => new Vector2(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
 
 	/// <summary>
 	/// Retorna o ângulo entre duas posições.
