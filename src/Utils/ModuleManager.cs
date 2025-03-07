@@ -1,3 +1,4 @@
+using Claw.Maps;
 using Claw.Modules;
 
 namespace Claw.Utils;
@@ -7,6 +8,11 @@ namespace Claw.Utils;
 /// </summary>
 public sealed class ModuleManager
 {
+	/// <summary>
+	/// Variável de suporte, indicando os mapas presentes neste gerenciador (null por padrão).
+	/// </summary>
+	/// <remarks>O mapa estar presente nesta lista não significa, necessariamente, que suas camadas estejam em <see cref="StepLayers"/> ou <see cref="RenderLayers"/>.</remarks>
+	public List<Tilemap> Tilemaps;
 	public readonly ModuleLayer[] StepLayers, RenderLayers;
 
 	/// <summary>
