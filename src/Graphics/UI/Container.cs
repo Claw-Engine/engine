@@ -209,13 +209,13 @@ public abstract class Container : Element
 			elements[i].Position -= addedScroll;
 			childRelative = relativeCursor - elements[i].Position;
 			
-			if (elements[i].Contains(childRelative))
+			if (!AllowOverflow && elements[i].Contains(childRelative))
 			{
 				if (relativeCursor.X < _padding.X) childRelative.X = -Math.Sign(_padding.X - relativeCursor.X);
-				else if (relativeCursor.X > _size.X - _padding.X) childRelative.X = relativeCursor.X - _size.X - _padding.X;
+				else if (relativeCursor.X > _size.X - _padding.X) childRelative.X = elements[i].Size.X + relativeCursor.X - (_size.X - _padding.X);
 
 				if (relativeCursor.Y < _padding.Y) childRelative.Y = -Math.Sign(_padding.Y - relativeCursor.Y);
-				else if (relativeCursor.Y > _size.Y - _padding.Y) childRelative.Y = relativeCursor.Y - _size.Y - _padding.Y;
+				else if (relativeCursor.Y > _size.Y - _padding.Y) childRelative.Y = elements[i].Size.Y + relativeCursor.Y - (_size.Y - _padding.Y);
 			}
 
 			result = elements[i].Step(childRelative) || result;
@@ -227,7 +227,7 @@ public abstract class Container : Element
 		{
 			result = DoUpdate();
 
-			if (result && !AllowOverflow)
+			if (!AllowOverflow && result)
 			{
 				if (surface != null) surface.Destroy();
 
