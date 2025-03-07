@@ -46,11 +46,21 @@ public abstract class Container : Element
 		}
 	}
 	public Vector2 MaxScrollOffset { get; private set; } = Vector2.Zero;
-	public LayoutAlignment Alignment = LayoutAlignment.Right;
+	public LayoutAlignment Alignment
+	{
+		get => _alignment;
+		set
+		{
+			_alignment = value;
+			needUpdate = true;
+		}
+	}
+
 	private bool needUpdate = true;
 	private Vector2 _scrollOffset, _size, _minSize, _padding, addedScroll = Vector2.Zero;
 	private Vector2? _maxSize;
 	private Rectangle sourceRectangle;
+	private LayoutAlignment _alignment = LayoutAlignment.Left;
 	private RenderTarget surface;
 
 	public int Count => elements.Count;
@@ -91,6 +101,7 @@ public abstract class Container : Element
 	private bool DoUpdate()
 	{
 		Vector2 previousSize = _size;
+		_scrollOffset = Vector2.Zero;
 		MaxScrollOffset = Vector2.Zero;
 
 		if (elements.Count == 0)
@@ -166,10 +177,7 @@ public abstract class Container : Element
 
 		if (_maxSize.HasValue) _size = Vector2.Min(content, _maxSize.Value);
 
-		sourceRectangle = new(_padding, _size - _padding * 2);
-		MaxScrollOffset = Vector2.Max(MaxScrollOffset - _size + _padding * 2, Vector2.Zero);
-		addedScroll = Vector2.Zero;
-		/* int rowCount = 0;
+		int rowCount = 0;
 		float rowWidth = 0, currentY = elements[0].Position.Y;
 
 		if (Alignment != LayoutAlignment.Left)
@@ -178,6 +186,8 @@ public abstract class Container : Element
 			{
 				if (currentY != elements[i].Position.Y)
 				{
+					for (int j = i - rowCount; j < i; j++) elements[j].Position.X = Align(elements[j].Position.X, rowWidth);
+
 					rowCount = 0;
 					rowWidth = 0;
 					currentY = elements[i].Position.Y;
@@ -188,9 +198,21 @@ public abstract class Container : Element
 				rowWidth += elements[i].Size.X;
 				rowCount++;
 			}
-		} */
+
+			elements[elements.Count - 1].Position.X = Align(elements[elements.Count - 1].Position.X, rowWidth);
+		}
+
+		sourceRectangle = new(_padding, _size - _padding * 2);
+		MaxScrollOffset = Vector2.Max(MaxScrollOffset - _size + _padding * 2, Vector2.Zero);
+		addedScroll = Vector2.Zero;
 
 		return _size != previousSize;
+	}
+	private float Align(float x, float rowWidth)
+	{
+		if (Alignment == LayoutAlignment.Right) return MaxScrollOffset.X - rowWidth + x;
+		
+		return MaxScrollOffset.X * .5f - rowWidth * .5f + x;
 	}
 
 	public override bool Step(Vector2 relativeCursor)
