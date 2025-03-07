@@ -101,12 +101,12 @@ public abstract class Container : Element
 	private bool DoUpdate()
 	{
 		Vector2 previousSize = _size;
-		_scrollOffset = Vector2.Zero;
 		MaxScrollOffset = Vector2.Zero;
 
 		if (elements.Count == 0)
 		{
 			_size = _minSize;
+			_scrollOffset = Vector2.Zero;
 
 			return _size != previousSize;
 		}
@@ -204,7 +204,8 @@ public abstract class Container : Element
 
 		sourceRectangle = new(_padding, _size - _padding * 2);
 		MaxScrollOffset = Vector2.Max(MaxScrollOffset - _size + _padding * 2, Vector2.Zero);
-		addedScroll = Vector2.Zero;
+		_scrollOffset = Vector2.Min(_scrollOffset, MaxScrollOffset);
+		addedScroll = _scrollOffset;
 
 		return _size != previousSize;
 	}
