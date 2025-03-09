@@ -70,7 +70,6 @@ public static class NineSlice
 	/// </summary>
 	private static void TiledSprite(Piece piece, Rectangle destinationRectangle, Color color)
 	{
-		TextureAtlas.CurrentPage = piece.texture;
 		Rectangle source = piece.area;
 		source.Size = Vector2.Clamp(source.Size, Vector2.Zero, destinationRectangle.Size);
 

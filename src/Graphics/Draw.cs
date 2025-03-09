@@ -13,10 +13,7 @@ public static class Draw
 	public static bool IgnoreCamera = false;
 	private static Camera camera;
 	private static BlendMode? forcedBlendMode;
-	private static Texture pixelTexture;
 	private static Rectangle pixelArea = new Rectangle(0, 0, 1, 1);
-
-	internal static void Initialize() => pixelTexture = Texture.Pixel;
 
 	#region Sprite
 	/// <summary>
@@ -27,8 +24,6 @@ public static class Draw
 	public static void Sprite(Sprite sprite, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, Flip flip)
 	{
 		Rectangle src;
-		TextureAtlas.CurrentPage = sprite.Texture;
-		pixelTexture = sprite.Texture;
 
 		if (sourceRectangle.HasValue) src = new Rectangle(sourceRectangle.Value.Location + new Vector2(sprite.X, sprite.Y), sourceRectangle.Value.Size);
 		else src = new Rectangle(sprite.X, sprite.Y, sprite.Width, sprite.Height);
@@ -181,11 +176,11 @@ public static class Draw
 	/// <summary>
 	/// Desenha um pixel.
 	/// </summary>
-	public static void Pixel(int scale, Vector2 position, Color color) => Sprite(pixelTexture, position, pixelArea, color, 0, Vector2.Zero, scale, Flip.None);
+	public static void Pixel(int scale, Vector2 position, Color color) => Sprite(Texture.Pixel, position, pixelArea, color, 0, Vector2.Zero, scale, Flip.None);
 	/// <summary>
 	/// Desenha um pixel.
 	/// </summary>
-	public static void Pixel(Vector2 scale, Vector2 position, Color color) => Sprite(pixelTexture, position, pixelArea, color, 0, Vector2.Zero, scale, Flip.None);
+	public static void Pixel(Vector2 scale, Vector2 position, Color color) => Sprite(Texture.Pixel, position, pixelArea, color, 0, Vector2.Zero, scale, Flip.None);
 
 	/// <summary>
 	/// Desenha uma linha.
@@ -194,7 +189,7 @@ public static class Draw
 	{
 		float angle = Vector2.GetAngle(start, end), length = Vector2.Distance(start, end);
 
-		Sprite(pixelTexture, start, pixelArea, color, angle, Vector2.Zero, new Vector2(length, lineWidth), Flip.None);
+		Sprite(Texture.Pixel, start, pixelArea, color, angle, Vector2.Zero, new Vector2(length, lineWidth), Flip.None);
 	}
 	/// <summary>
 	/// Desenha uma linha.
@@ -338,7 +333,7 @@ public static class Draw
 			float t = (float)i / segments;
 			Vector2 pixel = Mathf.CalculateBezierPoint(t, point0, point1, point2, point3);
 
-			Sprite(pixelTexture, pixel, pixelArea, color, 0, Vector2.Zero, lineWidth, Flip.None);
+			Sprite(Texture.Pixel, pixel, pixelArea, color, 0, Vector2.Zero, lineWidth, Flip.None);
 		}
 	}
 	/// <summary>

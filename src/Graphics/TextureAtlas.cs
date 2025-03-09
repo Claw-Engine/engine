@@ -10,11 +10,6 @@ public class TextureAtlas
 	/// Retorna uma sprite específica.
 	/// </summary>
 	public Sprite this[string sprite] => sprites[sprite];
-
-	/// <summary>
-	/// Qual a última <see cref="Sprite.Texture"/> usada pelo <see cref="Draw"/>.
-	/// </summary>
-	public static Texture CurrentPage { get; internal set; }
 	private Dictionary<string, Sprite> sprites;
 
 	private TextureAtlas() => sprites = new Dictionary<string, Sprite>();
