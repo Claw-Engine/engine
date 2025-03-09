@@ -1025,7 +1025,7 @@ internal static unsafe partial class SDL
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-	public static partial SDLBool SDL_PutAudioStreamData(IntPtr stream, IntPtr buf, int len);
+	public static partial SDLBool SDL_PutAudioStreamData(IntPtr stream, void* buf, int len);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

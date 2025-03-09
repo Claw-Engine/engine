@@ -1,6 +1,4 @@
-using Claw.Graphics;
-
-namespace Claw.Modules;
+namespace Claw.Graphics;
 
 /// <summary>
 /// Dados de uma animação para o <see cref="Animator"/>.

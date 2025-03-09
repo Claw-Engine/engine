@@ -1,4 +1,4 @@
-namespace Claw.Modules;
+namespace Claw.Graphics;
 
 /// <summary>
 /// Cuida do manuseio das animações de um <see cref="IAnimatable"/>.

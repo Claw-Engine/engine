@@ -1,6 +1,4 @@
-using Claw.Graphics;
-
-namespace Claw.Modules;
+namespace Claw.Graphics;
 
 /// <summary>
 /// Interface para elementos com animação.

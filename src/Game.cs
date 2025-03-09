@@ -1,5 +1,6 @@
 using System.Text;
 using Claw.Graphics;
+using Claw.Audio;
 using static Claw.SDL;
 
 namespace Claw;
@@ -12,6 +13,7 @@ public class Game : IDisposable
 	public static Game Instance { get; private set; }
 	public Window Window { get; private set; }
 	public Renderer Renderer { get; private set; }
+	public AudioManager Audio { get; private set; }
 	private bool isRunning;
 
 	public Game(){}
@@ -21,9 +23,11 @@ public class Game : IDisposable
 	{
 		Window?.Dispose();
         Renderer?.Dispose();
+		Audio?.Dispose();
 
 		Window = null;
 		Renderer = null;
+		Audio = null;
 		Instance = null;
 		isRunning = false;
 	}
@@ -46,6 +50,8 @@ public class Game : IDisposable
 				Instance = this;
 				Window = new(window);
 				Renderer = new(renderer);
+				Audio = new();
+				Renderer.ClearColor = Color.CornflowerBlue;
 			}
 		}
 
