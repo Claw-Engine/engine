@@ -10,11 +10,6 @@ public sealed class RenderTarget : Texture
 	public RenderTarget(int width, int height) : base(width, height, Game.Instance.Renderer.CreateTexture(width, height, SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET)) { }
 
 	/// <summary>
-	/// Destrói este alvo.
-	/// </summary>
-	public void Destroy() => SDL_DestroyTexture(id);
-
-	/// <summary>
 	/// <para>Obtém os pixels desta textura.</para>
 	/// <para>Aviso: Função lenta e não recomendada de se usar dentro de um loop.</para>
 	/// </summary>
