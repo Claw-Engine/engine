@@ -32,6 +32,11 @@ public class Texture
 	}
 	public Texture(int width, int height) : this(width, height, Game.Instance.Renderer.CreateTexture(width, height, SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING)) { }
 	public Texture(int width, int height, params uint[] pixels) : this(width, height, Game.Instance.Renderer.CreateTexture(width, height, pixels)) { }
+
+	/// <summary>
+	/// Destrói esta textura.
+	/// </summary>
+	public void Destroy() => SDL_DestroyTexture(id);
 	
 	/// <summary>
 	/// Altera os pixels desta textura.
