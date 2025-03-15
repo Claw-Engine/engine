@@ -33,7 +33,7 @@ public sealed class SoundEffect
 	{
 		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);
 
-		if (file.ReadString() != "audio") throw new Exception("Este não é um arquivo de áudio válido!");
+		if (file.ReadString() != "audio") return null;
 
 		Channels channels = (Channels)file.ReadByte();
 		long size = file.ReadInt64();

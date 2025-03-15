@@ -37,6 +37,27 @@ public class Texture
 	/// Destrói esta textura.
 	/// </summary>
 	public void Destroy() => SDL_DestroyTexture(id);
+
+	/// <summary>
+	/// Carrega uma textura.
+	/// </summary>
+	public static Texture Load(string path)
+	{
+		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);
+
+		if (file.ReadString() != "texture") return null;
+
+		return Load(file);
+	}
+	internal static Texture Load(BinaryReader reader)
+	{
+		int width = reader.ReadInt32(), height = reader.ReadInt32();
+		uint[] pixels = new uint[width * height];
+
+		for (int i = 0; i < pixels.Length; i++) pixels[i] = reader.ReadUInt32();
+
+		return new Texture(width, height, pixels);
+	}
 	
 	/// <summary>
 	/// Altera os pixels desta textura.

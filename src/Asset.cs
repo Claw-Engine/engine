@@ -24,7 +24,9 @@ public static class Asset
 		readers = new Dictionary<Type, Func<string, object>>()
 		{
 			{ typeof(Music), Music.Load },
-			{ typeof(SoundEffect), SoundEffect.Load }
+			{ typeof(SoundEffect), SoundEffect.Load },
+			{ typeof(Texture), Texture.Load },
+			{ typeof(TextureAtlas), TextureAtlas.Load }
 		};
 	}
 

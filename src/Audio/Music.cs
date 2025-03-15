@@ -28,8 +28,6 @@ public sealed class Music : IDisposable
 
 	private Music(BinaryReader file)
 	{
-		if (file.ReadString() != "audio") throw new Exception("Este não é um arquivo de áudio válido!");
-
 		Channels = (Channels)file.ReadByte();
 		Length = file.ReadInt64();
 		Duration = AudioManager.CalculateDuration(Length, Channels);
@@ -48,7 +46,14 @@ public sealed class Music : IDisposable
 	/// <summary>
 	/// Carrega uma áudio, em modo Stream.
 	/// </summary>
-	public static Music Load(string path) => new Music(new BinaryReader(new StreamReader(path).BaseStream));
+	public static Music Load(string path)
+	{
+		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);
+
+		if (file.ReadString() != "audio") return null;
+
+		return new Music(file);
+	}
 
 	/// <summary>
 	/// Reseta a posição da stream.
