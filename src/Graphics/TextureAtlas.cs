@@ -3,7 +3,7 @@ namespace Claw.Graphics;
 /// <summary>
 /// Representa um texture atlas.
 /// </summary>
-public class TextureAtlas
+public sealed class TextureAtlas
 {
 	public Texture Page { get; private set; }
 	/// <summary>

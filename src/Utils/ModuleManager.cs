@@ -6,7 +6,7 @@ namespace Claw.Utils;
 /// <summary>
 /// Gerenciador de <see cref="Module"/>s.
 /// </summary>
-public sealed class ModuleManager
+public class ModuleManager
 {
 	/// <summary>
 	/// Variável de suporte, indicando os mapas presentes neste gerenciador (null por padrão).
@@ -103,7 +103,7 @@ public sealed class ModuleManager
 	/// </remarks>
 	public void AddToRender(Module module, string renderLayer) => FindLayer(renderLayer, RenderLayers).Add(module);
 
-	public void Step()
+	public virtual void Step()
 	{
 		foreach (ModuleLayer layer in StepLayers)
 		{
@@ -111,7 +111,7 @@ public sealed class ModuleManager
 		}
 	}
 
-	public void Render()
+	public virtual void Render()
 	{
 		foreach (ModuleLayer layer in RenderLayers)
 		{
