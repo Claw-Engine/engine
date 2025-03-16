@@ -29,6 +29,7 @@ public sealed class SoundEffect
 	/// <summary>
 	/// Carrega um áudio.
 	/// </summary>
+	/// <returns>O áudio ou null (se não for um arquivo válido).</returns>
 	public static SoundEffect Load(string path)
 	{
 		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);

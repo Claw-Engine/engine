@@ -44,8 +44,9 @@ public sealed class Music : IDisposable
 	}
 
 	/// <summary>
-	/// Carrega uma áudio, em modo Stream.
+	/// Carrega um áudio, em modo Stream.
 	/// </summary>
+	/// <returns>O áudio ou null (se não for um arquivo válido).</returns>
 	public static Music Load(string path)
 	{
 		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);

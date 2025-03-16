@@ -41,6 +41,7 @@ public class Texture
 	/// <summary>
 	/// Carrega uma textura.
 	/// </summary>
+	/// <returns>A textura ou null (se não for um arquivo válido).</returns>
 	public static Texture Load(string path)
 	{
 		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);

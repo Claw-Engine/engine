@@ -25,6 +25,7 @@ public sealed class TextureAtlas
 	/// <summary>
 	/// Carrega um atlas de texturas.
 	/// </summary>
+	/// <returns>O atlas ou null (se não for um arquivo válido).</returns>
 	public static TextureAtlas Load(string path)
 	{
 		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);

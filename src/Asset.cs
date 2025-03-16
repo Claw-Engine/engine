@@ -26,7 +26,8 @@ public static class Asset
 			{ typeof(Music), Music.Load },
 			{ typeof(SoundEffect), SoundEffect.Load },
 			{ typeof(Texture), Texture.Load },
-			{ typeof(TextureAtlas), TextureAtlas.Load }
+			{ typeof(TextureAtlas), TextureAtlas.Load },
+			{ typeof(SpriteFont), SpriteFont.Load }
 		};
 	}
 

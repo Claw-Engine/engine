@@ -29,6 +29,37 @@ public sealed class SpriteFont
 	public SpriteFont(Sprite sprite, Vector2 spacing, Vector2 charSize, string chars) : this(sprite, spacing, charSize, chars.ToCharArray()) { }
 
 	/// <summary>
+	/// Carrega uma fonte.
+	/// </summary>
+	/// <returns>A fonte ou null (se não for um arquivo válido).</returns>
+	public static SpriteFont Load(string path)
+	{
+		BinaryReader file = new BinaryReader(new StreamReader(path).BaseStream);
+
+		if (file.ReadString() != "font") return null;
+
+		Texture texture = Texture.Load(file);
+		Vector2 spacing = new(file.ReadSingle(), file.ReadSingle());
+		SpriteFont font = new SpriteFont(new Sprite(texture, Path.GetFileNameWithoutExtension(path), 0, 0, texture.Width, texture.Height), spacing, new Dictionary<char, Glyph>());
+		int length = file.ReadInt32(), pairLength;
+		char currentChar;
+		Glyph currentGlyph;
+
+		for (int i = 0; i < length; i++)
+		{
+			currentChar = (char)file.ReadInt32();
+			currentGlyph = new(new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32()));
+			pairLength = file.ReadInt32();
+
+			for (int j = 0; j < pairLength; j++) currentGlyph.KerningPair.Add(file.ReadChar(), file.ReadSingle());
+
+			font.Glyphs.Add(currentChar, currentGlyph);
+		}
+
+		return font;
+	}
+
+	/// <summary>
 	/// Adiciona um par de kerning para este <see cref="SpriteFont"/>.
 	/// </summary>
 	public SpriteFont AddKerning(char first, char second, float value)
@@ -91,37 +122,6 @@ public sealed class SpriteFont
 	public Vector2 MeasureChar(char character) => Glyphs[character].Area.Size;
 
 	public override string ToString() => string.Format("SpriteFont({0})", Sprite.Name);
-
-	/// <summary>
-	/// Carrega um dicionário de caracteres.
-	/// </summary>
-	private static Dictionary<char, Glyph> ReadGlyphs(BinaryReader reader, int charCount)
-	{
-		Dictionary<char, Glyph> result = new Dictionary<char, Glyph>();
-
-		for (int i = 0; i < charCount; i++)
-		{
-			char character = reader.ReadChar();
-			Rectangle area = new Rectangle(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
-			int pairCount = reader.ReadInt32();
-			Dictionary<char, float> pairs = ReadPairs(reader, pairCount);
-
-			result.Add(character, new Glyph(area, pairs));
-		}
-
-		return result;
-	}
-	/// <summary>
-	/// Carrega um dicionário de pares kerning.
-	/// </summary>
-	private static Dictionary<char, float> ReadPairs(BinaryReader reader, int pairCount)
-	{
-		Dictionary<char, float> result = new Dictionary<char, float>();
-
-		for (int i = 0; i < pairCount; i++) result.Add(reader.ReadChar(), reader.ReadSingle());
-
-		return result;
-	}
 }
 /// <summary>
 /// Representa os dados de um único caractere de um <see cref="SpriteFont"/>.
