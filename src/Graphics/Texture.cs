@@ -21,7 +21,18 @@ public class Texture
 			SDL_SetTextureBlendMode(id, (uint)value);
 		}
 	}
+	public ScaleMode ScaleMode
+	{
+		get => _scaleMode;
+		set
+		{
+			_scaleMode = value;
+
+			SDL_SetTextureScaleMode(id, (SDL_ScaleMode)value);
+		}
+	}
 	private BlendMode _blendMode = BlendMode.None;
+	private ScaleMode _scaleMode = ScaleMode.Linear;
 	internal readonly IntPtr id;
 
 	internal Texture(int width, int height, IntPtr texture)

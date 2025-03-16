@@ -96,7 +96,7 @@ public sealed class Renderer : IDisposable
 	internal unsafe IntPtr CreateTexture(int width, int height, uint[] data)
 	{
 		GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-		IntPtr surface = SDL_CreateSurfaceFrom(width, height, PixelFormat, handle.AddrOfPinnedObject(), width * 4);//SDL_CreateRGBSurfaceWithFormatFrom(handle.AddrOfPinnedObject(), width, height, 32, width * 4, PixelFormat);
+		IntPtr surface = SDL_CreateSurfaceFrom(width, height, PixelFormat, handle.AddrOfPinnedObject(), width * 4);
 		IntPtr texture = SDL_CreateTextureFromSurface(id, surface);
 
 		handle.Free();
