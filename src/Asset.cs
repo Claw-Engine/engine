@@ -32,6 +32,12 @@ public static class Asset
 	}
 
 	/// <summary>
+	/// Obtem o caminho completo para o asset, incluindo a extensão.
+	/// </summary>
+	/// <param name="path">Caminho relativo do arquivo, sem a extensão.</param>
+	public static string GetFullPath(string path) => Path.Combine(fullPath, path + AssetExtension);
+
+	/// <summary>
 	/// Define uma função que carregará determinado tipo de asset.
 	/// </summary>
 	/// <typeparam name="T">O tipo de asset.</typeparam>
@@ -46,7 +52,7 @@ public static class Asset
 	}
 
 	/// <summary>
-	/// Carrega um asset através de um arquivo.
+	/// Carrega um asset.
 	/// </summary>
 	/// <typeparam name="T">O tipo de asset.</typeparam>
 	/// <param name="path">Caminho relativo do arquivo, sem a extensão.</param>
