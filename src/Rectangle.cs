@@ -7,6 +7,11 @@ namespace Claw;
 /// </summary>
 public struct Rectangle
 {
+	/// <summary>
+	/// X: 0; Y: 0; Width: 0; Height: 0.
+	/// </summary>
+	public static readonly Rectangle Empty = new Rectangle(0, 0, 0, 0);
+
 	public float X, Y, Width, Height;
 	public Vector2 Location
 	{

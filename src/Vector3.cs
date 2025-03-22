@@ -8,11 +8,11 @@ public struct Vector3
 	/// <summary>
 	/// X: 0; Y: 0; Z: 0.
 	/// </summary>
-	public static Vector3 Zero => new Vector3(0);
+	public static readonly Vector3 Zero = new Vector3(0);
 	/// <summary>
 	/// X: 1; Y: 1; Z: 1.
 	/// </summary>
-	public static Vector3 One => new Vector3(1);
+	public static readonly Vector3 One = new Vector3(1);
 
 	public float X, Y, Z;
 

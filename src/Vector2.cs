@@ -10,19 +10,19 @@ public struct Vector2
 	/// <summary>
 	/// X: 0; Y: 0.
 	/// </summary>
-	public static Vector2 Zero => new Vector2(0);
+	public static readonly Vector2 Zero = new Vector2(0);
 	/// <summary>
 	/// X: 1; Y: 1.
 	/// </summary>
-	public static Vector2 One => new Vector2(1);
+	public static readonly Vector2 One = new Vector2(1);
 	/// <summary>
 	/// X: 1; Y: 0.
 	/// </summary>
-	public static Vector2 UnitX => new Vector2(1, 0);
+	public static readonly Vector2 UnitX = new Vector2(1, 0);
 	/// <summary>
 	/// X: 0; Y: 1.
 	/// </summary>
-	public static Vector2 UnitY => new Vector2(0, 1);
+	public static readonly Vector2 UnitY = new Vector2(0, 1);
 
 	public float X, Y;
 
