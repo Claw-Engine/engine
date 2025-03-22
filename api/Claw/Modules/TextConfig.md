@@ -2,7 +2,7 @@
 ```csharp
 public sealed class TextConfig
 ```
-Define as configurações para a renderização do [TextRenderer](api/Claw/Modules/TextRenderer.md#TextRenderer) .<br />
+Define as configurações para a renderização do [TextRenderer](/Claw/Modules/TextRenderer.md#TextRenderer) .<br />
 ## TextConfig
 ```csharp
 public TextConfig() { }
@@ -43,4 +43,4 @@ public Claw.Graphics.Flip? Flip;
 ```csharp
 public void Copy(TextConfig other) { }
 ```
-Copia os valores de um outro [TextConfig](api/Claw/Modules/TextConfig.md#TextConfig) .<br />
+Copia os valores de um outro [TextConfig](/Claw/Modules/TextConfig.md#TextConfig) .<br />

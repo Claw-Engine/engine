@@ -123,12 +123,12 @@ ABGR - 32 bits.<br />
 public virtual string ToString() { }
 ```
 Retorna uma string representando esta cor no formato:
-            {R:[ [Color.R](api/Claw/Color.md#R) ] G:[ [Color.G](api/Claw/Color.md#G) ] B:[ [Color.B](api/Claw/Color.md#B) ] A:[ [Color.A](api/Claw/Color.md#A) ]}<br />
+            {R:[ [Color.R](/Claw/Color.md#R) ] G:[ [Color.G](/Claw/Color.md#G) ] B:[ [Color.B](/Claw/Color.md#B) ] A:[ [Color.A](/Claw/Color.md#A) ]}<br />
 ## FromHSV
 ```csharp
 public static Color FromHSV(float hue, float saturation, float value, float alpha) { }
 ```
-Cria uma [Color](api/Claw/Color.md#Color) com HSV.<br />
+Cria uma [Color](/Claw/Color.md#Color) com HSV.<br />
 **hue**: 0 - 359.<br />
 **saturation**: 0 - 1.<br />
 **value**: 0 - 1.<br />
@@ -137,7 +137,7 @@ Cria uma [Color](api/Claw/Color.md#Color) com HSV.<br />
 ```csharp
 public void ToHSV(out float hue, out float saturation, out float value, out float alpha) { }
 ```
-Desconstrói esse [Color](api/Claw/Color.md#Color) como HSV.<br />
+Desconstrói esse [Color](/Claw/Color.md#Color) como HSV.<br />
 ## ToHex
 ```csharp
 public string ToHex(HexFormat format) { }
@@ -158,7 +158,7 @@ Realiza a interpolação linear entre duas cores, usando delta time.<br />
 **a**: Valor atual.<br />
 **b**: Valor alvo.<br />
 **amount**: Valor de ponderação.<br />
-**scaled**: Se o delta time será [Time.DeltaTime](api/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](api/Claw/Time.md#UnscaledDeltaTime) (false).<br />
+**scaled**: Se o delta time será [Time.DeltaTime](/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](/Claw/Time.md#UnscaledDeltaTime) (false).<br />
 ## Equals
 ```csharp
 public virtual bool Equals(object obj) { }

@@ -2,7 +2,7 @@
 ```csharp
 public sealed class Glyph
 ```
-Representa os dados de um único caractere de um [SpriteFont](api/Claw/Graphics/SpriteFont.md#SpriteFont) .<br />
+Representa os dados de um único caractere de um [SpriteFont](/Claw/Graphics/SpriteFont.md#SpriteFont) .<br />
 ## Glyph
 ```csharp
 public Glyph(Claw.Rectangle area, System.Collections.Generic.Dictionary<char,float> kerningPair) { }

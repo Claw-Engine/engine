@@ -2,7 +2,7 @@
 ```csharp
 public sealed class Animator
 ```
-Cuida do manuseio das animações de um [IAnimatable](api/Claw/Graphics/IAnimatable.md#IAnimatable) .<br />
+Cuida do manuseio das animações de um [IAnimatable](/Claw/Graphics/IAnimatable.md#IAnimatable) .<br />
 ## Animator
 ```csharp
 public Animator() { }

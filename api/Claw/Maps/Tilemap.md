@@ -57,12 +57,12 @@ Transforma um index 2D em um index 1D.<br />
 ```csharp
 public void AddPalette(Claw.Graphics.Sprite palette, int margin, int spacing) { }
 ```
-Adiciona uma paleta ao [Tilemap](api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Adiciona uma paleta ao [Tilemap](/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## AddPalette
 ```csharp
 public void AddPalette(Claw.Graphics.Sprite palette, Claw.Vector2 gridSize, int margin, int spacing) { }
 ```
-Adiciona uma paleta ao [Tilemap](api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Adiciona uma paleta ao [Tilemap](/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## AddLayer
 ```csharp
 public int AddLayer(int renderOrder, string name, float opacity, Claw.Color color) { }

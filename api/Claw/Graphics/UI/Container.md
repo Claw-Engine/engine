@@ -13,7 +13,7 @@ public bool AllowOverflow;
 ```
 Define se o conteúdo deste elemento pode ultrapassar as bordas (true por padrão).<br />
 ### Observações
-Ao marcar como false, o elemento usará o [RenderTarget](api/Claw/Graphics/RenderTarget.md#RenderTarget) como método de corte.<br />
+Ao marcar como false, o elemento usará o [RenderTarget](/Claw/Graphics/RenderTarget.md#RenderTarget) como método de corte.<br />
 ## Gap
 ```csharp
 public Claw.Vector2 Gap;

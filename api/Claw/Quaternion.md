@@ -39,24 +39,24 @@ public static Quaternion Identity { get; }
 ```csharp
 public void Normalize() { }
 ```
-Redimensiona a magnitude deste [Quaternion](api/Claw/Quaternion.md#Quaternion) para um comprimento em unidade.<br />
+Redimensiona a magnitude deste [Quaternion](/Claw/Quaternion.md#Quaternion) para um comprimento em unidade.<br />
 ## CreateFromAxisAngle
 ```csharp
 public static Quaternion CreateFromAxisAngle(Claw.Vector3 axis, float angle) { }
 ```
-Cria um [Quaternion](api/Claw/Quaternion.md#Quaternion) que contém a versão conjugada do [Quaternion](api/Claw/Quaternion.md#Quaternion) especificado.<br />
+Cria um [Quaternion](/Claw/Quaternion.md#Quaternion) que contém a versão conjugada do [Quaternion](/Claw/Quaternion.md#Quaternion) especificado.<br />
 **angle**: Radianos.<br />
 ## Normalize
 ```csharp
 public static Quaternion Normalize(Quaternion value) { }
 ```
-Redimensiona a magnitude de um [Quaternion](api/Claw/Quaternion.md#Quaternion) para um comprimento em unidade.<br />
+Redimensiona a magnitude de um [Quaternion](/Claw/Quaternion.md#Quaternion) para um comprimento em unidade.<br />
 ## ToString
 ```csharp
 public virtual string ToString() { }
 ```
 Retorna uma string representando este quaternion no formato:
-            {X:[ [Quaternion.X](api/Claw/Quaternion.md#X) ] Y:[ [Quaternion.Y](api/Claw/Quaternion.md#Y) ] Z:[ [Quaternion.Z](api/Claw/Quaternion.md#Z) ] W:[ [Quaternion.W](api/Claw/Quaternion.md#W) ]}<br />
+            {X:[ [Quaternion.X](/Claw/Quaternion.md#X) ] Y:[ [Quaternion.Y](/Claw/Quaternion.md#Y) ] Z:[ [Quaternion.Z](/Claw/Quaternion.md#Z) ] W:[ [Quaternion.W](/Claw/Quaternion.md#W) ]}<br />
 ## Equals
 ```csharp
 public virtual bool Equals(object obj) { }

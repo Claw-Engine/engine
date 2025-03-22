@@ -2,7 +2,7 @@
 ```csharp
 public sealed class TileLayer : Claw.Modules.Module
 ```
-Representa uma camada dentro do [Tilemap](api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Representa uma camada dentro do [Tilemap](/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## Opacity
 ```csharp
 public float Opacity;
@@ -42,12 +42,12 @@ Retorna todos os tiles da layer.<br />
 ```csharp
 public void SetMultipleTiles(int[] mapData) { }
 ```
-Muda vários tiles de uma layer. Esse método não chama o [Tilemap.OnTileChange](api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
+Muda vários tiles de uma layer. Esse método não chama o [Tilemap.OnTileChange](/Claw/Maps/Tilemap.md#OnTileChange) !<br />
 ## SetChunkTiles
 ```csharp
 public void SetChunkTiles(Claw.Rectangle chunk, int[] chunkData) { }
 ```
-Muda vários tiles de um chunk imaginário. Esse método não chama o [Tilemap.OnTileChange](api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
+Muda vários tiles de um chunk imaginário. Esse método não chama o [Tilemap.OnTileChange](/Claw/Maps/Tilemap.md#OnTileChange) !<br />
 ## Clear
 ```csharp
 public void Clear() { }

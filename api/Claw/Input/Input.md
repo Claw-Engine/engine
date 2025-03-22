@@ -7,12 +7,12 @@ Funções de input.<br />
 ```csharp
 public static bool ButtonNeedFocus;
 ```
-Define se o input de botões será considerado somente se [Window.IsActive](api/Claw/Window.md#IsActive) (true por padrão).<br />
+Define se o input de botões será considerado somente se [Window.IsActive](/Claw/Window.md#IsActive) (true por padrão).<br />
 ## MouseNeedFocus
 ```csharp
 public static bool MouseNeedFocus;
 ```
-Define se o input do mouse será considerado somente se [Window.IsMouseFocused](api/Claw/Window.md#IsMouseFocused) (true por padrão).<br />
+Define se o input do mouse será considerado somente se [Window.IsMouseFocused](/Claw/Window.md#IsMouseFocused) (true por padrão).<br />
 ## DownKeys
 ```csharp
 public static System.Collections.Generic.List<Claw.Input.Keys> DownKeys;

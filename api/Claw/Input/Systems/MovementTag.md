@@ -2,7 +2,7 @@
 ```csharp
 public sealed class MovementTag
 ```
-Representa um input de movimento dentro do [TaggedInput](api/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
+Representa um input de movimento dentro do [TaggedInput](/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
 ## MovementTag
 ```csharp
 public MovementTag(bool leftThumb, bool rightThumb, System.ValueTuple<Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys> keys, System.ValueTuple<Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys,Claw.Input.Keys> altKeys, System.ValueTuple<Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons,Claw.Input.Buttons>? buttons) { }

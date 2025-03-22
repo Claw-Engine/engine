@@ -7,7 +7,7 @@ Desenha formas, textos e sprites de forma simplificada.<br />
 ```csharp
 public static bool IgnoreCamera;
 ```
-Diz se o [Draw](api/Claw/Graphics/Draw.md#Draw) deverá ignorar a câmera (falso por padrão).<br />
+Diz se o [Draw](/Claw/Graphics/Draw.md#Draw) deverá ignorar a câmera (falso por padrão).<br />
 ## Sprite
 ```csharp
 public static void Sprite(Claw.Graphics.Sprite sprite, Claw.Vector2 position, Claw.Rectangle? sourceRectangle, Claw.Color color, float rotation, Claw.Vector2 origin, Claw.Vector2 scale, Claw.Graphics.Flip flip) { }
@@ -174,7 +174,7 @@ Desenha uma curva de Bézier.<br />
 ```csharp
 public static void ForceBlendMode(Claw.Graphics.BlendMode? blendMode) { }
 ```
-Se for diferente de nulo, o [Draw](api/Claw/Graphics/Draw.md#Draw) forçará todas as texturas a terem esse [BlendMode](api/Claw/Graphics/BlendMode.md#BlendMode) .<br />
+Se for diferente de nulo, o [Draw](/Claw/Graphics/Draw.md#Draw) forçará todas as texturas a terem esse [BlendMode](/Claw/Graphics/BlendMode.md#BlendMode) .<br />
 ## GetCamera
 ```csharp
 public static Claw.Graphics.Camera GetCamera() { }

@@ -7,7 +7,7 @@ Contém os dados de um tileset.<br />
 ```csharp
 public int Index { get; internal set; } 
 ```
-Index desta paleta na lista de paletas do [Tilemap](api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Index desta paleta na lista de paletas do [Tilemap](/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## FirstIndex
 ```csharp
 public int FirstIndex { get; internal set; } 

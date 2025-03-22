@@ -2,7 +2,7 @@
 ```csharp
 public sealed class CheatCode
 ```
-Cria uma sequência de [InputTag](api/Claw/Input/Systems/InputTag.md#InputTag) s para fazer um código de trapaça.<br />
+Cria uma sequência de [InputTag](/Claw/Input/Systems/InputTag.md#InputTag) s para fazer um código de trapaça.<br />
 ## CheatCode
 ```csharp
 public CheatCode(string player, Claw.Input.Systems.TaggedInput input, string[] tags) { }
@@ -31,4 +31,4 @@ Reseta o cheatcode para poder ser usado novamente.<br />
 ```csharp
 public void Update() { }
 ```
-Atualiza o [CheatCode.Got](api/Claw/Input/Systems/CheatCode.md#Got) .<br />
+Atualiza o [CheatCode.Got](/Claw/Input/Systems/CheatCode.md#Got) .<br />
