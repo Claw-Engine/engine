@@ -32,7 +32,7 @@ public static class Asset
 
 	static Asset()
 	{
-		currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+		currentDirectory = Directory.GetCurrentDirectory();
 		RootDirectory = "Assets";
 		readers = new Dictionary<Type, Func<string, object>>()
 		{
