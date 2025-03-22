@@ -35,7 +35,7 @@ public virtual void Dispose() { }
 ```csharp
 public void Run() { }
 ```
-Tenta inicializar o jogo e, se obter sucesso, executa o [Game.Initialize](/Claw/Game.md#Initialize) e o game loop.<br />
+Tenta inicializar o jogo e, se obter sucesso, executa o [Game.Initialize](/api/Claw/Game.md#Initialize) e o game loop.<br />
 ## Close
 ```csharp
 public void Close() { }

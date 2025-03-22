@@ -2,7 +2,7 @@
 ```csharp
 public sealed class InputTag
 ```
-Representa um input dentro do [TaggedInput](/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
+Representa um input dentro do [TaggedInput](/api/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
 ## InputTag
 ```csharp
 public InputTag(Claw.Input.Keys key, Claw.Input.Keys altKey, Claw.Input.Buttons? button, Claw.Input.Buttons? altButton, Claw.Input.MouseButtons? mouse, float bufferTime) { }

@@ -2,7 +2,7 @@
 ```csharp
 public sealed class TaggedPlayer
 ```
-Representa a instância de um player dentro do [TaggedInput](/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
+Representa a instância de um player dentro do [TaggedInput](/api/Claw/Input/Systems/TaggedInput.md#TaggedInput) .<br />
 ## TaggedPlayer
 ```csharp
 public TaggedPlayer(int gamePad) { }

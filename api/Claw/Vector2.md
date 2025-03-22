@@ -48,7 +48,7 @@ Troca o X pelo Y e vice-versa.<br />
 ```csharp
 public void Normalize() { }
 ```
-Transforma este [Vector2](/Claw/Vector2.md#Vector2) em um vetor de magnitude 1 com a mesma direção.<br />
+Transforma este [Vector2](/api/Claw/Vector2.md#Vector2) em um vetor de magnitude 1 com a mesma direção.<br />
 ## Abs
 ```csharp
 public static Vector2 Abs(Vector2 value) { }
@@ -104,12 +104,12 @@ Retorna o produto cruzado entre um vetor e um escalar.<br />
 ```csharp
 public static Vector2 Normalize(Vector2 value) { }
 ```
-Transforma um [Vector2](/Claw/Vector2.md#Vector2) em um vetor de magnitude 1 com a mesma direção.<br />
+Transforma um [Vector2](/api/Claw/Vector2.md#Vector2) em um vetor de magnitude 1 com a mesma direção.<br />
 ## Rotate
 ```csharp
 public static Vector2 Rotate(Vector2 point, Vector2 origin, float rotation) { }
 ```
-Retorna um [Vector2](/Claw/Vector2.md#Vector2) rotacionado.<br />
+Retorna um [Vector2](/api/Claw/Vector2.md#Vector2) rotacionado.<br />
 **rotation**: Graus.<br />
 ## Lerp
 ```csharp
@@ -127,7 +127,7 @@ Realiza a interpolação linear entre dois vetores, usando delta time.<br />
 **a**: Valor atual.<br />
 **b**: Valor alvo.<br />
 **amount**: Valor de ponderação.<br />
-**scaled**: Se o delta time será [Time.DeltaTime](/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](/Claw/Time.md#UnscaledDeltaTime) (false).<br />
+**scaled**: Se o delta time será [Time.DeltaTime](/api/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](/api/Claw/Time.md#UnscaledDeltaTime) (false).<br />
 ## Approach
 ```csharp
 public static Vector2 Approach(Vector2 value, Vector2 target, float shift) { }
@@ -154,19 +154,19 @@ Retorna o módulo horizontal do vetor determinado pelo comprimento e direção i
 ```csharp
 public static Vector2 Transform(Vector2 value, Claw.Quaternion rotation) { }
 ```
-Cria um novo [Vector2](/Claw/Vector2.md#Vector2) que contém a transformação do vetor 2d pelo [Quaternion](/Claw/Quaternion.md#Quaternion) especificado, representando a rotação.<br />
+Cria um novo [Vector2](/api/Claw/Vector2.md#Vector2) que contém a transformação do vetor 2d pelo [Quaternion](/api/Claw/Quaternion.md#Quaternion) especificado, representando a rotação.<br />
 ## FindFacing
 ```csharp
 public static Vector2 FindFacing(float angle) { }
 ```
-Transforma um ângulo em um [Vector2](/Claw/Vector2.md#Vector2) .<br />
+Transforma um ângulo em um [Vector2](/api/Claw/Vector2.md#Vector2) .<br />
 **angle**: Graus.<br />
 ## ToString
 ```csharp
 public virtual string ToString() { }
 ```
 Retorna uma string representando este vetor 2D no formato:
-            {X:[ [Vector2.X](/Claw/Vector2.md#X) ] Y:[ [Vector2.Y](/Claw/Vector2.md#Y) ]}<br />
+            {X:[ [Vector2.X](/api/Claw/Vector2.md#X) ] Y:[ [Vector2.Y](/api/Claw/Vector2.md#Y) ]}<br />
 ## Equals
 ```csharp
 public virtual bool Equals(object obj) { }

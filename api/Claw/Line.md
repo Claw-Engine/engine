@@ -44,7 +44,7 @@ Limita o valor especificado.<br />
 ```csharp
 public static Line Rotate(Line line, Claw.Vector2 origin, float rotation) { }
 ```
-Retorna uma [Line](/Claw/Line.md#Line) rotacionada.<br />
+Retorna uma [Line](/api/Claw/Line.md#Line) rotacionada.<br />
 **rotation**: Graus.<br />
 ## BoxGenerator
 ```csharp
@@ -61,7 +61,7 @@ Gera um círculo.<br />
 public virtual string ToString() { }
 ```
 Retorna uma string representando esta linha no formato:
-            {Start:[ [Line.Start](/Claw/Line.md#Start) ] End:[ [Line.End](/Claw/Line.md#End) ]}<br />
+            {Start:[ [Line.Start](/api/Claw/Line.md#Start) ] End:[ [Line.End](/api/Claw/Line.md#End) ]}<br />
 ## Equals
 ```csharp
 public virtual bool Equals(object obj) { }

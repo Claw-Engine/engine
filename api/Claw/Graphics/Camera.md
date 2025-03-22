@@ -2,7 +2,7 @@
 ```csharp
 public class Camera
 ```
-Representa uma câmera 2D para operações no [Draw](/Claw/Graphics/Draw.md#Draw) .<br />
+Representa uma câmera 2D para operações no [Draw](/api/Claw/Graphics/Draw.md#Draw) .<br />
 ## Camera
 ```csharp
 public Camera() { }
@@ -67,14 +67,14 @@ Segue uma posição específica, sem passar dos limites estipulados.<br />
 ```csharp
 public Claw.Vector2 CalculateFollow(Claw.Vector2 position, Claw.Graphics.FollowMode mode) { }
 ```
-Cálculo de posição usado pelo método [Camera.Follow](/Claw/Graphics/Camera.md#Follow) .<br />
+Cálculo de posição usado pelo método [Camera.Follow](/api/Claw/Graphics/Camera.md#Follow) .<br />
 ## ScreenToWorld
 ```csharp
 public Claw.Vector2 ScreenToWorld(Claw.Vector2 point) { }
 ```
-Converte um ponto da tela em um ponto do mundo, com base no [Camera.State](/Claw/Graphics/Camera.md#State) .<br />
+Converte um ponto da tela em um ponto do mundo, com base no [Camera.State](/api/Claw/Graphics/Camera.md#State) .<br />
 ## WorldToScreen
 ```csharp
 public Claw.Vector2 WorldToScreen(Claw.Vector2 point) { }
 ```
-Converte um ponto do mundo em um ponto da tela, com base no [Camera.State](/Claw/Graphics/Camera.md#State) .<br />
+Converte um ponto do mundo em um ponto da tela, com base no [Camera.State](/api/Claw/Graphics/Camera.md#State) .<br />

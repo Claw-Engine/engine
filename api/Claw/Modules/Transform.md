@@ -43,9 +43,9 @@ public Transform Parent { get; set; }
 ```csharp
 public int ChildCount() { }
 ```
-Retorna a quantidade de filhos deste [Transform](/Claw/Modules/Transform.md#Transform) .<br />
+Retorna a quantidade de filhos deste [Transform](/api/Claw/Modules/Transform.md#Transform) .<br />
 ## GetChild
 ```csharp
 public Transform GetChild(int index) { }
 ```
-Retorna um filho deste [Transform](/Claw/Modules/Transform.md#Transform) .<br />
+Retorna um filho deste [Transform](/api/Claw/Modules/Transform.md#Transform) .<br />

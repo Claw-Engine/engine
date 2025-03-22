@@ -2,7 +2,7 @@
 ```csharp
 public sealed class SoundEffectInstance
 ```
-Representa uma instância de [SoundEffect](/Claw/Audio/SoundEffect.md#SoundEffect) .<br />
+Representa uma instância de [SoundEffect](/api/Claw/Audio/SoundEffect.md#SoundEffect) .<br />
 ## SoundEffectInstance
 ```csharp
 public SoundEffectInstance(Claw.Audio.SoundEffect audio, Claw.Audio.SoundEffectGroup group) { }
@@ -39,4 +39,4 @@ Momento em que o áudio está, em segundos.<br />
 ```csharp
 public SoundEffectInstance SetVolume(float volume) { }
 ```
-Altera o [SoundEffectInstance.LeftVolume](/Claw/Audio/SoundEffectInstance.md#LeftVolume) e [SoundEffectInstance.RightVolume](/Claw/Audio/SoundEffectInstance.md#RightVolume) para um mesmo volume.<br />
+Altera o [SoundEffectInstance.LeftVolume](/api/Claw/Audio/SoundEffectInstance.md#LeftVolume) e [SoundEffectInstance.RightVolume](/api/Claw/Audio/SoundEffectInstance.md#RightVolume) para um mesmo volume.<br />

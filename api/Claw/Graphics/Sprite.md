@@ -2,7 +2,7 @@
 ```csharp
 public sealed class Sprite
 ```
-Representa uma sprite, dentro de um [TextureAtlas](/Claw/Graphics/TextureAtlas.md#TextureAtlas) .<br />
+Representa uma sprite, dentro de um [TextureAtlas](/api/Claw/Graphics/TextureAtlas.md#TextureAtlas) .<br />
 ## Sprite
 ```csharp
 public Sprite(Claw.Graphics.Texture texture, string name, int x, int y, int width, int height) { }

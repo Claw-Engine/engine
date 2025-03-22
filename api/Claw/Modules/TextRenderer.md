@@ -62,7 +62,7 @@ Dicionário para armazenar configurações prontas.<br />
 ```csharp
 public int MaxLength { get; set; } 
 ```
-Máximo de caracteres das linhas para o [TextRenderer.TextWrap](/Claw/Modules/TextRenderer.md#TextWrap) .<br />
+Máximo de caracteres das linhas para o [TextRenderer.TextWrap](/api/Claw/Modules/TextRenderer.md#TextWrap) .<br />
 ## Text
 ```csharp
 public string Text { get; set; } 

@@ -53,7 +53,7 @@ Realiza a interpolação linear entre dois valores, usando delta time.<br />
 **a**: Valor atual.<br />
 **b**: Valor alvo.<br />
 **amount**: Valor de ponderação.<br />
-**scaled**: Se o delta time será [Time.DeltaTime](/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](/Claw/Time.md#UnscaledDeltaTime) (false).<br />
+**scaled**: Se o delta time será [Time.DeltaTime](/api/Claw/Time.md#DeltaTime) (true) ou [Time.UnscaledDeltaTime](/api/Claw/Time.md#UnscaledDeltaTime) (false).<br />
 ## Approach
 ```csharp
 public static float Approach(float value, float target, float shift) { }

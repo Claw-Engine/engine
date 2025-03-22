@@ -50,7 +50,7 @@ Limpa a lista de partículas que estão esperando na pool.<br />
 ```csharp
 public int Count() { }
 ```
-Retorna a quantidade de partículas deste [ParticleEmitter](/Claw/Particles/ParticleEmitter.md#ParticleEmitter) .<br />
+Retorna a quantidade de partículas deste [ParticleEmitter](/api/Claw/Particles/ParticleEmitter.md#ParticleEmitter) .<br />
 ## Clear
 ```csharp
 public void Clear() { }
@@ -61,7 +61,7 @@ Elimina todas as partículas.<br />
 public void Emit(Claw.Vector2 basePosition, float? direction) { }
 ```
 Emite partículas em uma direção.<br />
-**direction**: Null para deixar o [ParticleValue<T>](/Claw/Particles/ParticleValue`1.md#ParticleValue\<T>) como padrão. A direção deve ser em graus.<br />
+**direction**: Null para deixar o [ParticleValue<T>](/api/Claw/Particles/ParticleValue`1.md#ParticleValue\<T>) como padrão. A direção deve ser em graus.<br />
 ## Step
 ```csharp
 public virtual void Step() { }
