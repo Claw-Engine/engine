@@ -68,13 +68,18 @@ public sealed class AudioManager : IDisposable
 		want.channels = 2;
 		want.format = AudioFormat;
 
-		callback += AudioCallback;
 		stream = SDL_OpenAudioDeviceStream(0xFFFFFFFFu, ref want, callback, 0);
 
-		if (stream == 0) throw new Exception("O sistema não conseguiu iniciar o AudioManager!");
+		if (stream == 0)
+		{
+			Console.WriteLine("Nenhuma saída de áudio encontrada!");
+
+			return;
+		}
 
 		SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
+		callback += AudioCallback;
 		int groupSize = Enum.GetValues(typeof(SoundEffectGroup)).Length;
 		groupVolumes = new float[groupSize];
 		trackList = new List<Music>();
