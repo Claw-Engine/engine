@@ -3,7 +3,7 @@ Claw Engine é uma engine 2D para a criação de jogos com .NET, utilizando SDL 
 Este é um projeto pessoal e contribuições de código não são aceitas.
 
 # Como Utilizar
-A API Reference pode ser encontrada em [API](./api).
+A API Reference pode ser encontrada em [API](./api). O compilador de assets pode ser encontrado em [Clawssets](../../../clawssets).
 Para utilizar, basta referenciar o projeto no seu `.csproj`.
 ```xml
 <!-- ... -->
