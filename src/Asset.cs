@@ -12,15 +12,28 @@ public static class Asset
 	/// <summary>
 	/// Diretório base dos assets ("Assets", por padrão).
 	/// </summary>
-	public static string RootDirectory = "Assets";
-	private const string AssetExtension = ".ca";
+	public static string RootDirectory
+	{
+		get => _rootDirectory;
+		set
+		{
+			_rootDirectory = value;
+			FullPath = Path.Combine(currentDirectory, value);
+		}
+	}
+	/// <summary>
+	/// Diretório em que os assets estão ([caminho]/<see cref="RootDirectory" />).
+	/// </summary>
+	public static string FullPath { get; private set; }
+	public const string AssetExtension = ".ca";
 	private static string currentDirectory;
-	private static string fullPath => Path.Combine(currentDirectory, RootDirectory);
+	private static string _rootDirectory;
 	private static Dictionary<Type, Func<string, object>> readers;
 
 	static Asset()
 	{
 		currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+		RootDirectory = "Assets";
 		readers = new Dictionary<Type, Func<string, object>>()
 		{
 			{ typeof(Music), Music.Load },
@@ -30,12 +43,6 @@ public static class Asset
 			{ typeof(SpriteFont), SpriteFont.Load }
 		};
 	}
-
-	/// <summary>
-	/// Obtem o caminho completo para o asset, incluindo a extensão.
-	/// </summary>
-	/// <param name="path">Caminho relativo do arquivo, sem a extensão.</param>
-	public static string GetFullPath(string path) => Path.Combine(fullPath, path + AssetExtension);
 
 	/// <summary>
 	/// Define uma função que carregará determinado tipo de asset.
@@ -58,7 +65,7 @@ public static class Asset
 	/// <param name="path">Caminho relativo do arquivo, sem a extensão.</param>
 	public static T Load<T>(string path) where T : class
 	{
-		path = Path.Combine(fullPath, path + AssetExtension);
+		path = Path.Combine(FullPath, path + AssetExtension);
 
 		if (!File.Exists(path)) throw new Exception("Arquivo \"{0}\" não encontrado!");
 

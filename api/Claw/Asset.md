@@ -3,17 +3,20 @@
 public static class Asset
 ```
 Classe responsável pelo carregamento de assets.<br />
+## AssetExtension
+```csharp
+public const string AssetExtension;
+```
 ## RootDirectory
 ```csharp
-public static string RootDirectory;
+public static string RootDirectory { get; set; } 
 ```
 Diretório base dos assets ("Assets", por padrão).<br />
-## GetFullPath
+## FullPath
 ```csharp
-public static string GetFullPath(string path) { }
+public static string FullPath { get; private set; } 
 ```
-Obtem o caminho completo para o asset, incluindo a extensão.<br />
-**path**: Caminho relativo do arquivo, sem a extensão.<br />
+Diretório em que os assets estão ([caminho]/ [Asset.RootDirectory](/api/Claw/Asset.md#RootDirectory) ).<br />
 ## AddReader
 ```csharp
 public static void AddReader<T>(System.Func<string,T> reader) { }
