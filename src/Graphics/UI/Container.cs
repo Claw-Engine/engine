@@ -256,7 +256,7 @@ public class Container : Element
 		return result;
 	}
 
-	public override void Render()
+	public override void Render(Vector2 offset)
 	{
 		if (!AllowOverflow && surface == null) return;
 
@@ -270,8 +270,9 @@ public class Container : Element
 			Game.Instance.Renderer.SetRenderTarget(surface);
 			Game.Instance.Renderer.Clear();
 		}
+		else offset += Position;
 
-		for (int i = 0; i < elements.Count; i++) elements[i].Render();
+		for (int i = 0; i < elements.Count; i++) elements[i].Render(offset);
 
 		if (!AllowOverflow)
 		{

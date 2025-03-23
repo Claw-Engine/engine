@@ -7,7 +7,7 @@ public abstract class Element
 {
 	public string Name = string.Empty;
 	/// <summary>
-	/// Posição relativa do elemento, para fins de renderização.
+	/// Posição relativa do elemento.
 	/// </summary>
 	/// <remarks>Objetos, como o <see cref="Container"/>, devem alterar os valores deste campo.</remarks> 
 	public Vector2 Position;
@@ -26,5 +26,6 @@ public abstract class Element
 	/// <param name="relativeCursor">Posição do mouse, relativo à <see cref="Position"/>.</param>
 	/// <returns>Se houve alguma mudança espacial.</returns>
 	public abstract bool Step(Vector2 relativeCursor);
-	public abstract void Render();
+	/// <param name="offset">Quanto a <see cref="Position"/> deve ser deslocada ao desenhar.</param>
+	public abstract void Render(Vector2 offset);
 }
