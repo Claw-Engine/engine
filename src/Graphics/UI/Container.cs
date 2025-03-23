@@ -3,7 +3,7 @@ namespace Claw.Graphics.UI;
 /// <summary>
 /// Contêiner base para carregar outros elementos.
 /// </summary>
-public abstract class Container : Element
+public class Container : Element
 {
 	/// <summary>
 	/// Define se o conteúdo deste elemento pode ultrapassar as bordas (true por padrão).
