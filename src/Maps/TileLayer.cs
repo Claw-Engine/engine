@@ -31,6 +31,19 @@ public sealed class TileLayer : Module
 	/// <summary>
 	/// Retorna/altera um tile da layer.
 	/// </summary>
+	public int this[int index]
+	{
+		get => data[index];
+		set
+		{
+			data[index] = value;
+
+			map.OnTileChange?.Invoke(value, this, Mathf.Get2DIndex(index, (int)map.Size.X));
+		}
+	}
+	/// <summary>
+	/// Retorna/altera um tile da layer.
+	/// </summary>
 	public int this[Vector2 cell]
 	{
 		get => data[Mathf.Get1DIndex(cell, map.Size)];
@@ -55,6 +68,10 @@ public sealed class TileLayer : Module
 			map.OnTileChange?.Invoke(value, this, position);
 		}
 	}
+	/// <summary>
+	/// Retorna o número de tiles da layer.
+	/// </summary>
+	public int Length => data.Count;
 
 	internal TileLayer(int index, string name, Tilemap map, Vector2 size)
 	{
@@ -62,21 +79,15 @@ public sealed class TileLayer : Module
 		{
 			for (int y = 0; y < size.Y; y++) data.Add(0);
 		}
-	}
-	internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero)
-	{
+
 		this.index = index;
 		Name = name;
 		this.map = map;
 	}
+	internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero){}
 
 	public override void Initialize(){}
 	public override void Step(){}
-
-	/// <summary>
-	/// Retorna todos os tiles da layer.
-	/// </summary>
-	public int[] GetData() => data.ToArray();
 
 	/// <summary>
 	/// Muda vários tiles de uma layer. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
