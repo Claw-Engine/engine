@@ -96,14 +96,20 @@ public sealed class Window : IDisposable
 	}
 
 	/// <summary>
-	/// Centraliza a janela em um <see cref="Display"/>.
+	/// Centraliza a janela.
 	/// </summary>
-	/// <param name="display">Tela em que a janela deve ser posicionada.</param>
-	public void Centralize(Display display)
+	public void Centralize()
 	{
-		Vector2 point = (display.Bounds.Location + display.Bounds.Size * .5f) - Size * .5f;
+		uint display = SDL_GetDisplayForWindow(id);
 
-		SDL_SetWindowPosition(id, (int)point.X, (int)point.Y);
+		if (SDL_GetDisplayBounds(display, out SDL_Rect bounds))
+		{
+			Vector2 size = Size;
+			float pointX = bounds.x + bounds.w * .5f - size.X * .5f;
+			float pointY = bounds.y + bounds.h * .5f - size.Y * .5f;
+
+			SDL_SetWindowPosition(id, (int)pointX, (int)pointY);
+		}
 	}
 	/// <summary>
 	/// Restaura o estado da janela.

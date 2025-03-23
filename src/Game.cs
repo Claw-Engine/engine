@@ -58,7 +58,6 @@ public class Game : IDisposable
 		if (isRunning)
 		{
 			Input.Input.SetControllers();
-			Display.SetDisplays();
 
 			if (Texture.Pixel == null) Texture.Pixel = new Texture(1, 1, 0xffffffff);
 
@@ -123,8 +122,6 @@ public class Game : IDisposable
 
 					return;
 				case (uint)SDL_EventType.SDL_EVENT_WINDOW_RESIZED: Window.OnResize?.Invoke(); break;
-				case (uint)SDL_EventType.SDL_EVENT_DISPLAY_ADDED: Display.AddDisplay(sdlEvent.display.displayID); break;
-				case (uint)SDL_EventType.SDL_EVENT_DISPLAY_REMOVED: Display.RemoveDisplay(sdlEvent.display.displayID); break;
 				case (uint)SDL_EventType.SDL_EVENT_MOUSE_WHEEL:
 					Input.Input.UpdateScroll(sdlEvent.wheel);
 
