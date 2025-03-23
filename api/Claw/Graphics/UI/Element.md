@@ -15,7 +15,7 @@ public string Name;
 ```csharp
 public Claw.Vector2 Position;
 ```
-Posição relativa do elemento, para fins de renderização.<br />
+Posição relativa do elemento.<br />
 ### Observações
 Objetos, como o [Container](/api/Claw/Graphics/UI/Container.md#Container) , devem alterar os valores deste campo.<br />
 ## Layout
@@ -41,5 +41,6 @@ public abstract bool Step(Claw.Vector2 relativeCursor) { }
 **Retorna**: Se houve alguma mudança espacial.<br />
 ## Render
 ```csharp
-public abstract void Render() { }
+public abstract void Render(Claw.Vector2 offset) { }
 ```
+**offset**: Quanto a [Element.Position](/api/Claw/Graphics/UI/Element.md#Position) deve ser deslocada ao desenhar.<br />

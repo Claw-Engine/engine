@@ -27,6 +27,11 @@ public float Width;
 ```csharp
 public float Height;
 ```
+## Empty
+```csharp
+public static readonly Rectangle Empty;
+```
+X: 0; Y: 0; Width: 0; Height: 0.<br />
 ## Location
 ```csharp
 public Claw.Vector2 Location { get; set; } 

@@ -21,22 +21,22 @@ public float Y;
 ```
 ## Zero
 ```csharp
-public static Vector2 Zero { get; } 
+public static readonly Vector2 Zero;
 ```
 X: 0; Y: 0.<br />
 ## One
 ```csharp
-public static Vector2 One { get; } 
+public static readonly Vector2 One;
 ```
 X: 1; Y: 1.<br />
 ## UnitX
 ```csharp
-public static Vector2 UnitX { get; } 
+public static readonly Vector2 UnitX;
 ```
 X: 1; Y: 0.<br />
 ## UnitY
 ```csharp
-public static Vector2 UnitY { get; } 
+public static readonly Vector2 UnitY;
 ```
 X: 0; Y: 1.<br />
 ## Invert

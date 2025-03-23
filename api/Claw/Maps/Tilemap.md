@@ -65,13 +65,13 @@ public void AddPalette(Claw.Graphics.Sprite palette, Claw.Vector2 gridSize, int 
 Adiciona uma paleta ao [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## AddLayer
 ```csharp
-public int AddLayer(int renderOrder, string name, float opacity, Claw.Color color) { }
+public int AddLayer(string name, float opacity, Claw.Color color) { }
 ```
 Adiciona uma layer nova.<br />
 **Retorna**: O index da layer.<br />
 ## AddLayer
 ```csharp
-public int AddLayer(int renderOrder, string name, bool visible, float opacity, Claw.Color color, int[] data) { }
+public int AddLayer(string name, bool visible, float opacity, Claw.Color color, int[] data) { }
 ```
 Adiciona uma layer nova e já insere os tiles dela.<br />
 **Retorna**: O index da layer.<br />

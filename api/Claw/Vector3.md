@@ -29,12 +29,12 @@ public float Z;
 ```
 ## Zero
 ```csharp
-public static Vector3 Zero { get; } 
+public static readonly Vector3 Zero;
 ```
 X: 0; Y: 0; Z: 0.<br />
 ## One
 ```csharp
-public static Vector3 One { get; } 
+public static readonly Vector3 One;
 ```
 X: 1; Y: 1; Z: 1.<br />
 ## Normalize

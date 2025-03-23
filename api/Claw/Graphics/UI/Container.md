@@ -1,11 +1,11 @@
 # Container
 ```csharp
-public abstract class Container : Claw.Graphics.UI.Element
+public class Container : Claw.Graphics.UI.Element
 ```
 Contêiner base para carregar outros elementos.<br />
 ## Container
 ```csharp
-protected Container() { }
+public Container() { }
 ```
 ## AllowOverflow
 ```csharp
@@ -70,5 +70,5 @@ public virtual bool Step(Claw.Vector2 relativeCursor) { }
 ```
 ## Render
 ```csharp
-public virtual void Render() { }
+public virtual void Render(Claw.Vector2 offset) { }
 ```

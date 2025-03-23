@@ -66,10 +66,9 @@ public virtual void Dispose() { }
 ```
 ## Centralize
 ```csharp
-public void Centralize(Claw.Display display) { }
+public void Centralize() { }
 ```
-Centraliza a janela em um [Display](/api/Claw/Display.md#Display) .<br />
-**display**: Tela em que a janela deve ser posicionada.<br />
+Centraliza a janela.<br />
 ## Restore
 ```csharp
 public void Restore() { }
