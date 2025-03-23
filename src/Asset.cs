@@ -32,7 +32,7 @@ public static class Asset
 
 	static Asset()
 	{
-		currentDirectory = Directory.GetCurrentDirectory();
+		currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 		RootDirectory = "Assets";
 		readers = new Dictionary<Type, Func<string, object>>()
 		{
@@ -67,7 +67,7 @@ public static class Asset
 	{
 		path = Path.Combine(FullPath, path + AssetExtension);
 
-		if (!File.Exists(path)) throw new Exception("Arquivo \"{0}\" não encontrado!");
+		if (!File.Exists(path)) throw new Exception(string.Format("Arquivo \"{0}\" não encontrado!", path));
 
 		return (T)readers[typeof(T)](path);
 	}
