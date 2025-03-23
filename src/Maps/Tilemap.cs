@@ -96,7 +96,7 @@ public abstract class Tilemap
 	/// Adiciona uma layer nova.
 	/// </summary>
 	/// <returns>O index da layer.</returns>
-	public int AddLayer(int renderOrder, string name, float opacity, Color color)
+	public int AddLayer(string name, float opacity, Color color)
 	{
 		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
@@ -111,7 +111,7 @@ public abstract class Tilemap
 	/// Adiciona uma layer nova e já insere os tiles dela.
 	/// </summary>
 	/// <returns>O index da layer.</returns>
-	public int AddLayer(int renderOrder, string name, bool visible, float opacity, Color color, int[] data)
+	public int AddLayer(string name, bool visible, float opacity, Color color, int[] data)
 	{
 		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
 
