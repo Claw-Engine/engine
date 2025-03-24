@@ -56,6 +56,10 @@ public Claw.Vector2 Location { get; set; }
 ```csharp
 public Claw.Vector2 Size { get; set; } 
 ```
+## MinSize
+```csharp
+public Claw.Vector2 MinSize { get; set; } 
+```
 ## Finalize
 ```csharp
 protected virtual void Finalize() { }

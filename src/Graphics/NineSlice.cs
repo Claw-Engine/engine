@@ -26,7 +26,7 @@ public static class NineSlice
 			for (int y = 0; y < 3; y++)
 			{
 				Vector2 pos = new Vector2(x, y);
-				pieces[Mathf.Get1DIndex(pos, new Vector2(3))] = new Piece(sprite.Texture, new Rectangle(new Vector2(sprite.X + textureArea.X, sprite.Y + textureArea.Y) + pos * pieceSize, pieceSize));
+				pieces[Mathf.Get1DIndex(pos, 3)] = new Piece(sprite.Texture, new Rectangle(new Vector2(sprite.X + textureArea.X, sprite.Y + textureArea.Y) + pos * pieceSize, pieceSize));
 			}
 		}
 

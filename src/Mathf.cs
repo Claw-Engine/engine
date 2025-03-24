@@ -98,13 +98,11 @@ public static class Mathf
 	/// <summary>
 	/// Transforma um index 2D em um index 1D.
 	/// </summary>
-	public static int Get1DIndex(Vector2 index, Vector2 Size) => (int)(index.Y * Size.X + index.X);
+	public static int Get1DIndex(Vector2 index, float width) => (int)(index.Y * width + index.X);
 	/// <summary>
 	/// Transforma um index 1D em um index 2D.
 	/// </summary>
-	/// <param name="index"></param>
-	/// <returns></returns>
-	public static Vector2 Get2DIndex(int index, int width) => new Vector2((int)Math.Floor((double)index % width), (int)(index / width));
+	public static Vector2 Get2DIndex(int index, float width) => new Vector2((int)Math.Floor((double)index % width), (int)(index / width));
 
 	/// <summary>
 	/// Retorna uma lista de pontos de uma curva de Bézier.

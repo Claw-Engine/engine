@@ -15,6 +15,11 @@ public Claw.Color Color;
 ```csharp
 public string Name { get; set; } 
 ```
+## TileLayer[int index]
+```csharp
+public int TileLayer[int index] { get; set; } 
+```
+Retorna/altera um tile da layer.<br />
 ## TileLayer[Claw.Vector2 cell]
 ```csharp
 public int TileLayer[Claw.Vector2 cell] { get; set; } 
@@ -25,6 +30,11 @@ Retorna/altera um tile da layer.<br />
 public int TileLayer[int x, int y] { get; set; } 
 ```
 Retorna/altera um tile da layer.<br />
+## Length
+```csharp
+public int Length { get; } 
+```
+Retorna o número de tiles da layer.<br />
 ## Initialize
 ```csharp
 public virtual void Initialize() { }
@@ -33,21 +43,16 @@ public virtual void Initialize() { }
 ```csharp
 public virtual void Step() { }
 ```
-## GetData
-```csharp
-public int[] GetData() { }
-```
-Retorna todos os tiles da layer.<br />
 ## SetMultipleTiles
 ```csharp
 public void SetMultipleTiles(int[] mapData) { }
 ```
-Muda vários tiles de uma layer. Esse método não chama o [Tilemap.OnTileChange](/api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
+Muda vários tiles de uma layer. Este método não chama o [Tilemap.OnTileChange](/api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
 ## SetChunkTiles
 ```csharp
 public void SetChunkTiles(Claw.Rectangle chunk, int[] chunkData) { }
 ```
-Muda vários tiles de um chunk imaginário. Esse método não chama o [Tilemap.OnTileChange](/api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
+Muda vários tiles de um chunk imaginário. Este método não chama o [Tilemap.OnTileChange](/api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
 ## Clear
 ```csharp
 public void Clear() { }

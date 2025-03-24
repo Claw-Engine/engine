@@ -46,10 +46,10 @@ public sealed class TileLayer : Module
 	/// </summary>
 	public int this[Vector2 cell]
 	{
-		get => data[Mathf.Get1DIndex(cell, map.Size)];
+		get => data[Mathf.Get1DIndex(cell, map.Size.X)];
 		set
 		{
-			data[Mathf.Get1DIndex(cell, map.Size)] = value;
+			data[Mathf.Get1DIndex(cell, map.Size.X)] = value;
 
 			map.OnTileChange?.Invoke(value, this, cell);
 		}
@@ -59,11 +59,11 @@ public sealed class TileLayer : Module
 	/// </summary>
 	public int this[int x, int y]
 	{
-		get => data[Mathf.Get1DIndex(new Vector2(x, y), map.Size)];
+		get => data[Mathf.Get1DIndex(new Vector2(x, y), map.Size.X)];
 		set
 		{
 			var position = new Vector2(x, y);
-			data[Mathf.Get1DIndex(position, map.Size)] = value;
+			data[Mathf.Get1DIndex(position, map.Size.X)] = value;
 
 			map.OnTileChange?.Invoke(value, this, position);
 		}
@@ -113,7 +113,7 @@ public sealed class TileLayer : Module
 			for (int y = (int)chunk.Location.Y; y < end.Y; y++)
 			{
 				Vector2 pos = new Vector2(x, y);
-				data[Mathf.Get1DIndex(pos, map.Size)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size)];
+				data[Mathf.Get1DIndex(pos, map.Size.X)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size.X)];
 			}
 		}
 	}

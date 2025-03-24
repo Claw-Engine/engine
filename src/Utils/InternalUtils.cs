@@ -16,7 +16,7 @@ internal static class InternalUtils
 		{
 			listG.Add(new List<T>());
 
-			for (int x = 0; x < size.X; x++) listG[y].Add(list[Mathf.Get1DIndex(new Vector2(x, y), size)]);
+			for (int x = 0; x < size.X; x++) listG[y].Add(list[Mathf.Get1DIndex(new Vector2(x, y), size.X)]);
 		}
 
 		return listG;

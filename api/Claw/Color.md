@@ -137,7 +137,7 @@ Cria uma [Color](/api/Claw/Color.md#Color) com HSV.<br />
 ```csharp
 public void ToHSV(out float hue, out float saturation, out float value, out float alpha) { }
 ```
-Desconstrói esse [Color](/api/Claw/Color.md#Color) como HSV.<br />
+Desconstrói este [Color](/api/Claw/Color.md#Color) como HSV.<br />
 ## ToHex
 ```csharp
 public string ToHex(HexFormat format) { }
