@@ -79,6 +79,16 @@ public sealed class Window : IDisposable
 		}
 		set => SDL_SetWindowSize(id, (int)value.X, (int)value.Y);
 	}
+	public Vector2 MinSize
+	{
+		get
+		{
+			SDL_GetWindowMinimumSize(id, out int w, out int h);
+
+			return new Vector2(w, h);
+		}
+		set => SDL_SetWindowMinimumSize(id, (int)value.X, (int)value.Y);
+	}
 	/// <summary>
 	/// É executado sempre que o tamanho da janela é alterado.
 	/// </summary>

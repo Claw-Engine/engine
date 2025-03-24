@@ -271,7 +271,7 @@ public struct Color
 		return new Color((int)r * 255, (int)g * 255, (int)b * 255, (int)alpha * 255);
 	}
 	/// <summary>
-	/// Desconstrói esse <see cref="Color"/> como HSV.
+	/// Desconstrói este <see cref="Color"/> como HSV.
 	/// </summary>
 	public void ToHSV(out float hue, out float saturation, out float value, out float alpha)
 	{

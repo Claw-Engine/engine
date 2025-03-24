@@ -90,7 +90,7 @@ public sealed class TileLayer : Module
 	public override void Step(){}
 
 	/// <summary>
-	/// Muda vários tiles de uma layer. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
+	/// Muda vários tiles de uma layer. Este método não chama o <see cref="Tilemap.OnTileChange"/>!
 	/// </summary>
 	public void SetMultipleTiles(int[] mapData)
 	{
@@ -102,7 +102,7 @@ public sealed class TileLayer : Module
 		}
 	}
 	/// <summary>
-	/// Muda vários tiles de um chunk imaginário. Esse método não chama o <see cref="Tilemap.OnTileChange"/>!
+	/// Muda vários tiles de um chunk imaginário. Este método não chama o <see cref="Tilemap.OnTileChange"/>!
 	/// </summary>
 	public void SetChunkTiles(Rectangle chunk, int[] chunkData)
 	{
