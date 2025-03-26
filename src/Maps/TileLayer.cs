@@ -8,25 +8,12 @@ namespace Claw.Maps;
 public sealed class TileLayer : Module
 {
 	public float Opacity = 1;
-	public string Name
-	{
-		get => name;
-		set
-		{
-			if (map != null)
-			{
-				map.layerIndexes.Add(value, index);
-				map.layerIndexes.Remove(name);
-			}
-
-			name = value;
-		}
-	}
+	public string Name = string.Empty;
 	public Color Color;
+	public Tilemap Map => _map;
 	internal int index;
-	internal Tilemap map;
-	internal List<int> data = new List<int>();
-	private string name = string.Empty;
+	internal Tilemap _map;
+	internal List<int> data = new();
 
 	/// <summary>
 	/// Retorna/altera um tile da layer.
@@ -38,7 +25,7 @@ public sealed class TileLayer : Module
 		{
 			data[index] = value;
 
-			map.OnTileChange?.Invoke(value, this, Mathf.Get2DIndex(index, (int)map.Size.X));
+			_map.OnTileChange?.Invoke(value, this, Mathf.Get2DIndex(index, (int)_map.Size.X));
 		}
 	}
 	/// <summary>
@@ -46,26 +33,26 @@ public sealed class TileLayer : Module
 	/// </summary>
 	public int this[Vector2 cell]
 	{
-		get => data[Mathf.Get1DIndex(cell, map.Size.X)];
+		get => data[Mathf.Get1DIndex(cell, _map.Size.X)];
 		set
 		{
-			data[Mathf.Get1DIndex(cell, map.Size.X)] = value;
+			data[Mathf.Get1DIndex(cell, _map.Size.X)] = value;
 
-			map.OnTileChange?.Invoke(value, this, cell);
+			_map.OnTileChange?.Invoke(value, this, cell);
 		}
 	}
 	/// <summary>
 	/// Retorna/altera um tile da layer.
 	/// </summary>
-	public int this[int x, int y]
+	public int this[float x, float y]
 	{
-		get => data[Mathf.Get1DIndex(new Vector2(x, y), map.Size.X)];
+		get => data[Mathf.Get1DIndex(x, y, _map.Size.X)];
 		set
 		{
-			var position = new Vector2(x, y);
-			data[Mathf.Get1DIndex(position, map.Size.X)] = value;
+			Vector2 position = new(x, y);
+			data[Mathf.Get1DIndex(position, _map.Size.X)] = value;
 
-			map.OnTileChange?.Invoke(value, this, position);
+			_map.OnTileChange?.Invoke(value, this, position);
 		}
 	}
 	/// <summary>
@@ -82,7 +69,7 @@ public sealed class TileLayer : Module
 
 		this.index = index;
 		Name = name;
-		this.map = map;
+		this._map = map;
 	}
 	internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero){}
 
@@ -106,14 +93,14 @@ public sealed class TileLayer : Module
 	/// </summary>
 	public void SetChunkTiles(Rectangle chunk, int[] chunkData)
 	{
-		var end = chunk.Location + chunk.Size;
+		Vector2 end = chunk.Location + chunk.Size;
 
 		for (int x = (int)chunk.Location.X; x < end.X; x++)
 		{
 			for (int y = (int)chunk.Location.Y; y < end.Y; y++)
 			{
 				Vector2 pos = new Vector2(x, y);
-				data[Mathf.Get1DIndex(pos, map.Size.X)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size.X)];
+				data[Mathf.Get1DIndex(pos, _map.Size.X)] = chunkData[Mathf.Get1DIndex(pos - chunk.Location, chunk.Size.X)];
 			}
 		}
 	}
@@ -131,26 +118,17 @@ public sealed class TileLayer : Module
 	public bool CheckCollision(Vector2 position, out int tile)
 	{
 		tile = 0;
-		Vector2 check = map.PositionToCell(position);
+		Vector2 check = _map.PositionToCell(position);
 
-		if (check.X < 0 || check.Y < 0 || check.X >= map.Size.X || check.Y >= map.Size.Y) return false;
+		if (check.X < 0 || check.Y < 0 || check.X >= _map.Size.X || check.Y >= _map.Size.Y) return false;
 
 		tile = this[check];
 
 		return tile > 0;
 	}
-	/// <summary>
-	/// Checa se um ponto está dentro de uma célula com tile.
-	/// </summary>
-	public bool CheckCollision(Vector2 position, int[] filterTiles, out int tile)
-	{
-		CheckCollision(position, out tile);
-
-		return tile > 0 && filterTiles.Contains(tile);
-	}
 
 	public override void Render()
 	{
-		if (map != null && Color.A != 0 && Opacity > 0) map.Render(this);
+		if (_map != null && Color.A != 0 && Opacity > 0) _map.Render(this);
 	}
 }

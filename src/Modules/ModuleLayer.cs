@@ -26,7 +26,7 @@ public sealed class ModuleLayer : Collection<Module>
 	/// </summary>
 	protected override void InsertItem(int index, Module module)
 	{
-		if (IndexOf(module) != -1) throw new ArgumentException("Não é permitido adicionar o mesmo módulo duas vezes!");
+		if (module.Layer != null) throw new ArgumentException("Esse módulo já faz parte de uma camada!");
 
 		base.InsertItem(index, module);
 
@@ -62,6 +62,8 @@ public sealed class ModuleLayer : Collection<Module>
 	/// </summary>
 	protected override void ClearItems()
 	{
+		for (int i = 0; i < Count; i++) this[i].Layer = null;
+
 		base.ClearItems();
 		OnCleared?.Invoke();
 	}
@@ -70,7 +72,14 @@ public sealed class ModuleLayer : Collection<Module>
 	{
 		if (TriggersInitialize) module.Initialize();
 
+		module.Layer = this;
+
 		OnAdded?.Invoke(module);
 	}
-	private void HandleRemoved(Module module) => OnRemoved?.Invoke(module);
+	private void HandleRemoved(Module module)
+	{
+		module.Layer = null;
+
+		OnRemoved?.Invoke(module);
+	}
 }

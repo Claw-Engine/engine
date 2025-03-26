@@ -13,7 +13,6 @@ public abstract class Tilemap
 	/// Define quantos tiles fora da view serão desenhados (1 por padrão).
 	/// </summary>
 	public static int OutOfView = 1;
-	public int LayerCount => layers.Count;
 	public Vector2 GridSize;
 	public Vector2 Size
 	{
@@ -22,7 +21,7 @@ public abstract class Tilemap
 		{
 			if (value.Y >= 0 && value.X >= 0)
 			{
-				for (int layerIndex = 0; layerIndex < LayerCount; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, _size);
+				for (int layerIndex = 0; layerIndex < Count; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, _size);
 
 				_size = value;
 			}
@@ -31,20 +30,13 @@ public abstract class Tilemap
 	/// <summary>
 	/// É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).
 	/// </summary>
-	public Action<int, TileLayer, Vector2> OnTileChange = null;
+	public TileChangeEvent OnTileChange;
 	private Vector2 _size = Vector2.Zero;
-	private List<TileLayer> layers = new List<TileLayer>();
-	internal Dictionary<string, int> layerIndexes = new Dictionary<string, int>();
-	internal List<TilePalette> tileSets = new List<TilePalette>();
+	private List<TileLayer> layers = new();
+	internal List<TilePalette> tileSets = new();
 
-	/// <summary>
-	/// Retorna uma layer.
-	/// </summary>
+	public int Count => layers.Count;
 	public TileLayer this[int layerIndex] => layers[layerIndex];
-	/// <summary>
-	/// Retorna uma layer.
-	/// </summary>
-	public TileLayer this[string layerName] => layers[layerIndexes[layerName]];
 
 	public Tilemap(){}
 	public Tilemap(Vector2 size, Vector2 gridSize)
@@ -52,6 +44,8 @@ public abstract class Tilemap
 		Size = size;
 		GridSize = gridSize;
 	}
+
+	public delegate void TileChangeEvent(int newTile, TileLayer layer, Vector2 position);
 
 	/// <summary>
 	/// Transforma um index 2D em um index 1D.
@@ -98,11 +92,8 @@ public abstract class Tilemap
 	/// <returns>O index da layer.</returns>
 	public int AddLayer(string name, float opacity, Color color)
 	{
-		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
-
 		TileLayer layer = new(layers.Count, name, this, Size) { Color = color, Opacity = opacity };
 
-		layerIndexes.Add(layer.Name, layers.Count);
 		layers.Add(layer);
 
 		return layer.index;
@@ -113,12 +104,9 @@ public abstract class Tilemap
 	/// <returns>O index da layer.</returns>
 	public int AddLayer(string name, bool visible, float opacity, Color color, int[] data)
 	{
-		if (!layerIndexes.FirstOrDefault(n => n.Key == name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", name));
-
 		TileLayer layer = new(layers.Count, name, this) { Color = color, Opacity = opacity };
 		layer.data = data.ToList();
 
-		layerIndexes.Add(layer.Name, layers.Count);
 		layers.Add(layer);
 
 		return layers.Count - 1;
@@ -129,43 +117,31 @@ public abstract class Tilemap
 	/// <returns>O index da layer.</returns>
 	public int Addlayer(TileLayer layer)
 	{
-		if (layer.map == null)
+		if (layer._map == null)
 		{
-			if (!layerIndexes.FirstOrDefault(n => n.Key == layer.Name).Equals(default(KeyValuePair<string, int>))) throw new Exception(string.Format("Já existe uma layer \"{0}\" no mapa!", layer.Name));
-
-			layerIndexes.Add(layer.Name, layers.Count);
 			layers.Add(layer);
 
 			layer.index = layers.Count - 1;
-			layer.map = this;
+			layer._map = this;
 
 			return layer.index;
 		}
-		else throw new ArgumentException("Essa layer pertence à outro mapa!");
+		else throw new ArgumentException("Essa layer pertence à um mapa!");
 	}
 	/// <summary>
 	/// Remove uma layer.
 	/// </summary>
 	public void RemoveLayer(int index)
 	{
-		layers[index].map = null;
+		layers[index]._map = null;
 
-		layerIndexes.Remove(layers[index].Name);
 		layers.RemoveAt(index);
 	}
-	/// <summary>
-	/// Remove uma layer.
-	/// </summary>
-	public void RemoveLayer(string name) => RemoveLayer(layerIndexes[name]);
 
 	/// <summary>
 	/// Verifica se a layer existe.
 	/// </summary>
 	public bool LayerExists(int index) => layers.Count > index;
-	/// <summary>
-	/// Verifica se a layer existe.
-	/// </summary>
-	public bool LayerExists(string name) => layerIndexes.Keys.Contains(name);
 
 	/// <summary>
 	/// Retorna um tileset.

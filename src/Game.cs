@@ -1,6 +1,7 @@
 using System.Text;
 using Claw.Graphics;
 using Claw.Audio;
+using Claw.Modules;
 using static Claw.SDL;
 
 namespace Claw;
@@ -14,6 +15,7 @@ public class Game : IDisposable
 	public Window Window { get; private set; }
 	public Renderer Renderer { get; private set; }
 	public AudioManager Audio { get; private set; }
+	public ModuleManager Modules { get; private set; }
 	private bool isRunning;
 
 	public Game(){}
@@ -28,6 +30,7 @@ public class Game : IDisposable
 		Window = null;
 		Renderer = null;
 		Audio = null;
+		Modules = null;
 		Instance = null;
 		isRunning = false;
 	}
@@ -51,6 +54,7 @@ public class Game : IDisposable
 				Window = new(window);
 				Renderer = new(renderer);
 				Audio = new();
+				Modules = new();
 				Renderer.ClearColor = Color.CornflowerBlue;
 			}
 		}
@@ -75,8 +79,8 @@ public class Game : IDisposable
 
 	protected virtual void OnClose(){}
 	protected virtual void Initialize(){}
-	protected virtual void Step(){}
-	protected virtual void Render(){}
+	protected virtual void Step() => Modules.Step();
+	protected virtual void Render() => Modules.Render();
 
 	private void GameLoop()
 	{
