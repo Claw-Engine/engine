@@ -23,6 +23,10 @@ public Claw.Graphics.Renderer Renderer { get; private set; }
 ```csharp
 public Claw.Audio.AudioManager Audio { get; private set; } 
 ```
+## Modules
+```csharp
+public Claw.Modules.ModuleManager Modules { get; private set; } 
+```
 ## Finalize
 ```csharp
 protected virtual void Finalize() { }

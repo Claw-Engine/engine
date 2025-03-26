@@ -17,7 +17,7 @@ public Claw.Vector2 GridSize;
 ```
 ## OnTileChange
 ```csharp
-public System.Action<int,Claw.Maps.TileLayer,Claw.Vector2> OnTileChange;
+public TileChangeEvent OnTileChange;
 ```
 É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).<br />
 ## OutOfView
@@ -25,24 +25,18 @@ public System.Action<int,Claw.Maps.TileLayer,Claw.Vector2> OnTileChange;
 public static int OutOfView;
 ```
 Define quantos tiles fora da view serão desenhados (1 por padrão).<br />
-## LayerCount
-```csharp
-public int LayerCount { get; } 
-```
 ## Size
 ```csharp
 public Claw.Vector2 Size { get; set; } 
+```
+## Count
+```csharp
+public int Count { get; } 
 ```
 ## Tilemap[int layerIndex]
 ```csharp
 public Claw.Maps.TileLayer Tilemap[int layerIndex] { get; } 
 ```
-Retorna uma layer.<br />
-## Tilemap[string layerName]
-```csharp
-public Claw.Maps.TileLayer Tilemap[string layerName] { get; } 
-```
-Retorna uma layer.<br />
 ## PixelSize
 ```csharp
 public abstract Claw.Vector2 PixelSize { get; } 
@@ -55,52 +49,14 @@ public int GetTileIndex(int palette, Claw.Vector2 index) { }
 Transforma um index 2D em um index 1D.<br />
 ## AddPalette
 ```csharp
-public void AddPalette(Claw.Graphics.Sprite palette, int margin, int spacing) { }
+public Claw.Maps.TilePalette AddPalette(Claw.Graphics.Sprite palette, int margin, int spacing) { }
 ```
 Adiciona uma paleta ao [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## AddPalette
 ```csharp
-public void AddPalette(Claw.Graphics.Sprite palette, Claw.Vector2 gridSize, int margin, int spacing) { }
+public Claw.Maps.TilePalette AddPalette(Claw.Graphics.Sprite palette, Claw.Vector2 gridSize, int margin, int spacing) { }
 ```
 Adiciona uma paleta ao [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
-## AddLayer
-```csharp
-public int AddLayer(string name, float opacity, Claw.Color color) { }
-```
-Adiciona uma layer nova.<br />
-**Retorna**: O index da layer.<br />
-## AddLayer
-```csharp
-public int AddLayer(string name, bool visible, float opacity, Claw.Color color, int[] data) { }
-```
-Adiciona uma layer nova e já insere os tiles dela.<br />
-**Retorna**: O index da layer.<br />
-## Addlayer
-```csharp
-public int Addlayer(Claw.Maps.TileLayer layer) { }
-```
-Adiciona uma layer.<br />
-**Retorna**: O index da layer.<br />
-## RemoveLayer
-```csharp
-public void RemoveLayer(int index) { }
-```
-Remove uma layer.<br />
-## RemoveLayer
-```csharp
-public void RemoveLayer(string name) { }
-```
-Remove uma layer.<br />
-## LayerExists
-```csharp
-public bool LayerExists(int index) { }
-```
-Verifica se a layer existe.<br />
-## LayerExists
-```csharp
-public bool LayerExists(string name) { }
-```
-Verifica se a layer existe.<br />
 ## GetTileset
 ```csharp
 public Claw.Maps.TilePalette GetTileset(int tile) { }
@@ -126,3 +82,23 @@ Transforma uma posição livre em uma posição em grid centralizada.<br />
 public abstract void Render(Claw.Maps.TileLayer layer) { }
 ```
 Renderiza uma layer neste mapa.<br />
+# TileChangeEvent
+```csharp
+public sealed class TileChangeEvent : System.MulticastDelegate
+```
+## TileChangeEvent
+```csharp
+public TileChangeEvent(object object, System.IntPtr method) { }
+```
+## Invoke
+```csharp
+public virtual void Invoke(int newTile, Claw.Maps.TileLayer layer, Claw.Vector2 position) { }
+```
+## BeginInvoke
+```csharp
+public virtual System.IAsyncResult BeginInvoke(int newTile, Claw.Maps.TileLayer layer, Claw.Vector2 position, System.AsyncCallback callback, object object) { }
+```
+## EndInvoke
+```csharp
+public virtual void EndInvoke(System.IAsyncResult result) { }
+```

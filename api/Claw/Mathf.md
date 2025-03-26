@@ -79,6 +79,11 @@ Transforma uma posição em uma posição em grid.<br />
 public static int Get1DIndex(Claw.Vector2 index, float width) { }
 ```
 Transforma um index 2D em um index 1D.<br />
+## Get1DIndex
+```csharp
+public static int Get1DIndex(float x, float y, float width) { }
+```
+Transforma um index 2D em um index 1D.<br />
 ## Get2DIndex
 ```csharp
 public static Claw.Vector2 Get2DIndex(int index, float width) { }

@@ -1,8 +1,13 @@
 # TileLayer
 ```csharp
-public sealed class TileLayer : Claw.Modules.Module
+public sealed class TileLayer : Claw.Modules.ModuleLayer
 ```
-Representa uma camada dentro do [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Camada de [Module](/api/Claw/Modules/Module.md#Module) s, anexado à um [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+## TileLayer
+```csharp
+public TileLayer(string name, bool triggersInitialize, Claw.Maps.Tilemap map, Claw.Vector2 size) { }
+```
+Cria uma camada de tiles e anexa ela à um [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## Opacity
 ```csharp
 public float Opacity;
@@ -11,38 +16,45 @@ public float Opacity;
 ```csharp
 public Claw.Color Color;
 ```
-## Name
+## Map
 ```csharp
-public string Name { get; set; } 
+public Claw.Maps.Tilemap Map { get; set; } 
 ```
-## TileLayer[int index]
+## GetTile
 ```csharp
-public int TileLayer[int index] { get; set; } 
+public int GetTile(int index) { }
 ```
-Retorna/altera um tile da layer.<br />
-## TileLayer[Claw.Vector2 cell]
+Retorna um tile da layer.<br />
+## SetTile
 ```csharp
-public int TileLayer[Claw.Vector2 cell] { get; set; } 
+public int SetTile(int index, int tile) { }
 ```
-Retorna/altera um tile da layer.<br />
-## TileLayer[int x, int y]
+Altera um tile da layer.<br />
+## GetTile
 ```csharp
-public int TileLayer[int x, int y] { get; set; } 
+public int GetTile(Claw.Vector2 cell) { }
 ```
-Retorna/altera um tile da layer.<br />
-## Length
+Retorna um tile da layer.<br />
+## SetTile
 ```csharp
-public int Length { get; } 
+public int SetTile(Claw.Vector2 cell, int tile) { }
 ```
-Retorna o número de tiles da layer.<br />
-## Initialize
+Altera um tile da layer.<br />
+## GetTile
 ```csharp
-public virtual void Initialize() { }
+public int GetTile(float x, float y) { }
 ```
-## Step
+Retorna um tile da layer.<br />
+## SetTile
 ```csharp
-public virtual void Step() { }
+public int SetTile(float x, float y, int tile) { }
 ```
+Altera um tile da layer.<br />
+## CountTiles
+```csharp
+public int CountTiles() { }
+```
+Retorna o número de tiles.<br />
 ## SetMultipleTiles
 ```csharp
 public void SetMultipleTiles(int[] mapData) { }
@@ -53,19 +65,9 @@ Muda vários tiles de uma layer. Este método não chama o [Tilemap.OnTileChange
 public void SetChunkTiles(Claw.Rectangle chunk, int[] chunkData) { }
 ```
 Muda vários tiles de um chunk imaginário. Este método não chama o [Tilemap.OnTileChange](/api/Claw/Maps/Tilemap.md#OnTileChange) !<br />
-## Clear
-```csharp
-public void Clear() { }
-```
-Muda cada tile da layer para 0 (vazio).<br />
 ## CheckCollision
 ```csharp
 public bool CheckCollision(Claw.Vector2 position, out int tile) { }
-```
-Checa se um ponto está dentro de uma célula com tile.<br />
-## CheckCollision
-```csharp
-public bool CheckCollision(Claw.Vector2 position, int[] filterTiles, out int tile) { }
 ```
 Checa se um ponto está dentro de uma célula com tile.<br />
 ## Render
