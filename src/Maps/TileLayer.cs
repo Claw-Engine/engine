@@ -8,7 +8,7 @@ namespace Claw.Maps;
 public sealed class TileLayer : ModuleLayer
 {
 	public float Opacity = 1;
-	public Color Color;
+	public Color Color = Color.White;
 	public Tilemap Map
 	{
 		get => _map;
