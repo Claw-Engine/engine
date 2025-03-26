@@ -5,7 +5,7 @@ namespace Claw.Modules;
 /// <summary>
 /// Camada de <see cref="Module"/>s.
 /// </summary>
-public sealed class ModuleLayer : Collection<Module>
+public class ModuleLayer : Collection<Module>
 {
 	/// <summary>
 	/// Define se o método <see cref="Module.Initialize"/> será acionado ao inserir módulos.
@@ -81,5 +81,21 @@ public sealed class ModuleLayer : Collection<Module>
 		module.Layer = null;
 
 		OnRemoved?.Invoke(module);
+	}
+
+	public virtual void Step()
+	{
+		for (int i = 0; i < Count; i++)
+		{
+			if (this[i].Enabled) this[i].Step();
+		}
+	}
+
+	public virtual void Render()
+	{
+		for (int i = 0; i < Count; i++)
+		{
+			if (this[i].Visible) this[i].Render();
+		}
 	}
 }

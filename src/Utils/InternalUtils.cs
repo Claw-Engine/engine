@@ -10,7 +10,7 @@ internal static class InternalUtils
 	/// </summary>
 	public static List<List<T>> List1DTo2D<T>(List<T> list, Vector2 size)
 	{
-		List<List<T>> listG = new List<List<T>>();
+		List<List<T>> listG = new();
 
 		for (int y = 0; y < size.Y; y++)
 		{
@@ -26,7 +26,7 @@ internal static class InternalUtils
 	/// </summary>
 	public static List<T> List2DTo1D<T>(List<List<T>> list)
 	{
-		List<T> listG = new List<T>();
+		List<T> listG = new();
 
 		for (int y = 0; y < list.Count; y++)
 		{
@@ -42,7 +42,7 @@ internal static class InternalUtils
 	public static List<T> ResizeList<T>(List<T> list, Vector2 newSize, Vector2 oldSize)
 	{
 		Vector2 add = newSize - oldSize;
-		var result = InternalUtils.List1DTo2D(list, oldSize);
+		List<List<T>> result = InternalUtils.List1DTo2D(list, oldSize);
 		int start = result.Count;
 
 		if (add.Y < 0) result.RemoveRange(result.Count + (int)add.Y, (int)Math.Abs(add.Y));

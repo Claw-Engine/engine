@@ -53,7 +53,7 @@ public sealed class RayCaster
 	/// </param>
 	public static void Cast(Line ray, float maxDistance, Func<Vector2, bool> onMove, out Vector2? hitPoint, Vector2 cellSize)
 	{
-		RayCaster caster = new RayCaster(ray, maxDistance, onMove, cellSize);
+		RayCaster caster = new(ray, maxDistance, onMove, cellSize);
 
 		while (!caster.Ended) caster.Move();
 

@@ -3,78 +3,89 @@ using Claw.Modules;
 namespace Claw.Maps;
 
 /// <summary>
-/// Representa uma camada dentro do <see cref="Tilemap"/>.
+/// Camada de <see cref="Module"/>s, anexado à um <see cref="Tilemap"/>.
 /// </summary>
-public sealed class TileLayer : Module
+public sealed class TileLayer : ModuleLayer
 {
 	public float Opacity = 1;
-	public string Name = string.Empty;
 	public Color Color;
-	public Tilemap Map => _map;
-	internal int index;
-	internal Tilemap _map;
+	public Tilemap Map
+	{
+		get => _map;
+		set
+		{
+			if (_map != null) _map.layers.Remove(this);
+
+			_map = value;
+
+			if (_map != null) _map.layers.Add(this);
+		}
+	}
+	private Tilemap _map;
 	internal List<int> data = new();
 
 	/// <summary>
-	/// Retorna/altera um tile da layer.
+	/// Cria uma camada de tiles e anexa ela à um <see cref="Tilemap"/>.
 	/// </summary>
-	public int this[int index]
-	{
-		get => data[index];
-		set
-		{
-			data[index] = value;
-
-			_map.OnTileChange?.Invoke(value, this, Mathf.Get2DIndex(index, (int)_map.Size.X));
-		}
-	}
-	/// <summary>
-	/// Retorna/altera um tile da layer.
-	/// </summary>
-	public int this[Vector2 cell]
-	{
-		get => data[Mathf.Get1DIndex(cell, _map.Size.X)];
-		set
-		{
-			data[Mathf.Get1DIndex(cell, _map.Size.X)] = value;
-
-			_map.OnTileChange?.Invoke(value, this, cell);
-		}
-	}
-	/// <summary>
-	/// Retorna/altera um tile da layer.
-	/// </summary>
-	public int this[float x, float y]
-	{
-		get => data[Mathf.Get1DIndex(x, y, _map.Size.X)];
-		set
-		{
-			Vector2 position = new(x, y);
-			data[Mathf.Get1DIndex(position, _map.Size.X)] = value;
-
-			_map.OnTileChange?.Invoke(value, this, position);
-		}
-	}
-	/// <summary>
-	/// Retorna o número de tiles da layer.
-	/// </summary>
-	public int Length => data.Count;
-
-	internal TileLayer(int index, string name, Tilemap map, Vector2 size)
+	public TileLayer(string name, bool triggersInitialize, Tilemap map, Vector2 size) : base(name, triggersInitialize)
 	{
 		for (int x = 0; x < size.X; x++)
 		{
 			for (int y = 0; y < size.Y; y++) data.Add(0);
 		}
 
-		this.index = index;
-		Name = name;
-		this._map = map;
+		Map = map;
 	}
-	internal TileLayer(int index, string name, Tilemap map) : this(index, name, map, Vector2.Zero){}
 
-	public override void Initialize(){}
-	public override void Step(){}
+	/// <summary>
+	/// Retorna um tile da layer.
+	/// </summary>
+	public int GetTile(int index) => data[index];
+	/// <summary>
+	/// Altera um tile da layer.
+	/// </summary>
+	public int SetTile(int index, int tile)
+	{
+		data[index] = tile;
+
+		_map.OnTileChange?.Invoke(tile, this, Mathf.Get2DIndex(index, (int)_map.Size.X));
+
+		return tile;
+	}
+	/// <summary>
+	/// Retorna um tile da layer.
+	/// </summary>
+	public int GetTile(Vector2 cell) => data[Mathf.Get1DIndex(cell, _map.Size.X)];
+	/// <summary>
+	/// Altera um tile da layer.
+	/// </summary>
+	public int SetTile(Vector2 cell, int tile)
+	{
+		data[Mathf.Get1DIndex(cell, _map.Size.X)] = tile;
+
+		_map.OnTileChange?.Invoke(tile, this, cell);
+
+		return tile;
+	}
+	/// <summary>
+	/// Retorna um tile da layer.
+	/// </summary>
+	public int GetTile(float x, float y) => data[Mathf.Get1DIndex(x, y, _map.Size.X)];
+	/// <summary>
+	/// Altera um tile da layer.
+	/// </summary>
+	public int SetTile(float x, float y, int tile)
+	{
+		data[Mathf.Get1DIndex(x, y, _map.Size.X)] = tile;
+
+		_map.OnTileChange?.Invoke(tile, this, new Vector2(x, y));
+
+		return tile;
+	}
+	/// <summary>
+	/// Retorna o número de tiles.
+	/// </summary>
+	public int CountTiles() => data.Count;
 
 	/// <summary>
 	/// Muda vários tiles de uma layer. Este método não chama o <see cref="Tilemap.OnTileChange"/>!
@@ -104,13 +115,6 @@ public sealed class TileLayer : Module
 			}
 		}
 	}
-	/// <summary>
-	/// Muda cada tile da layer para 0 (vazio).
-	/// </summary>
-	public void Clear()
-	{
-		for (int i = 0; i < data.Count; i++) data[i] = 0;
-	}
 
 	/// <summary>
 	/// Checa se um ponto está dentro de uma célula com tile.
@@ -122,7 +126,7 @@ public sealed class TileLayer : Module
 
 		if (check.X < 0 || check.Y < 0 || check.X >= _map.Size.X || check.Y >= _map.Size.Y) return false;
 
-		tile = this[check];
+		tile = GetTile(check);
 
 		return tile > 0;
 	}
@@ -130,5 +134,7 @@ public sealed class TileLayer : Module
 	public override void Render()
 	{
 		if (_map != null && Color.A != 0 && Opacity > 0) _map.Render(this);
+
+		base.Render();
 	}
 }

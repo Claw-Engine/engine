@@ -32,7 +32,7 @@ public abstract class Tilemap
 	/// </summary>
 	public TileChangeEvent OnTileChange;
 	private Vector2 _size = Vector2.Zero;
-	private List<TileLayer> layers = new();
+	internal List<TileLayer> layers = new();
 	internal List<TilePalette> tileSets = new();
 
 	public int Count => layers.Count;
@@ -55,21 +55,21 @@ public abstract class Tilemap
 	/// <summary>
 	/// Adiciona uma paleta ao <see cref="Tilemap"/>.
 	/// </summary>
-	public void AddPalette(Sprite palette, int margin = 0, int spacing = 0) => AddPalette(palette, GridSize, margin, spacing);
+	public TilePalette AddPalette(Sprite palette, int margin = 0, int spacing = 0) => AddPalette(palette, GridSize, margin, spacing);
 	/// <summary>
 	/// Adiciona uma paleta ao <see cref="Tilemap"/>.
 	/// </summary>
-	public void AddPalette(Sprite palette, Vector2 gridSize, int margin = 0, int spacing = 0)
+	public TilePalette AddPalette(Sprite palette, Vector2 gridSize, int margin = 0, int spacing = 0)
 	{
 		int firstIndex = 1;
 
 		if (tileSets.Count > 0)
 		{
-			var last = tileSets[tileSets.Count - 1];
+			TilePalette last = tileSets[tileSets.Count - 1];
 			firstIndex = last.FirstIndex + last.TileCount;
 		}
 
-		var tileset = new TilePalette() { Index = tileSets.Count, FirstIndex = firstIndex, Texture = palette, GridSize = gridSize, Margin = margin, Spacing = spacing };
+		TilePalette tileset = new() { Index = tileSets.Count, FirstIndex = firstIndex, Texture = palette, GridSize = gridSize, Margin = margin, Spacing = spacing };
 
 		if (palette != null)
 		{
@@ -79,69 +79,14 @@ public abstract class Tilemap
 
 		if (tileSets.Count != 0)
 		{
-			var previous = tileSets[tileSets.Count - 1];
+			TilePalette previous = tileSets[tileSets.Count - 1];
 			tileset.Sub = previous.Sub + previous.TileCount;
 		}
 
 		tileSets.Add(tileset);
+
+		return tileset;
 	}
-
-	/// <summary>
-	/// Adiciona uma layer nova.
-	/// </summary>
-	/// <returns>O index da layer.</returns>
-	public int AddLayer(string name, float opacity, Color color)
-	{
-		TileLayer layer = new(layers.Count, name, this, Size) { Color = color, Opacity = opacity };
-
-		layers.Add(layer);
-
-		return layer.index;
-	}
-	/// <summary>
-	/// Adiciona uma layer nova e já insere os tiles dela.
-	/// </summary>
-	/// <returns>O index da layer.</returns>
-	public int AddLayer(string name, bool visible, float opacity, Color color, int[] data)
-	{
-		TileLayer layer = new(layers.Count, name, this) { Color = color, Opacity = opacity };
-		layer.data = data.ToList();
-
-		layers.Add(layer);
-
-		return layers.Count - 1;
-	}
-	/// <summary>
-	/// Adiciona uma layer.
-	/// </summary>
-	/// <returns>O index da layer.</returns>
-	public int Addlayer(TileLayer layer)
-	{
-		if (layer._map == null)
-		{
-			layers.Add(layer);
-
-			layer.index = layers.Count - 1;
-			layer._map = this;
-
-			return layer.index;
-		}
-		else throw new ArgumentException("Essa layer pertence à um mapa!");
-	}
-	/// <summary>
-	/// Remove uma layer.
-	/// </summary>
-	public void RemoveLayer(int index)
-	{
-		layers[index]._map = null;
-
-		layers.RemoveAt(index);
-	}
-
-	/// <summary>
-	/// Verifica se a layer existe.
-	/// </summary>
-	public bool LayerExists(int index) => layers.Count > index;
 
 	/// <summary>
 	/// Retorna um tileset.

@@ -27,23 +27,11 @@ public sealed class ModuleManager
 
 	public void Step()
 	{
-		foreach (ModuleLayer layer in Layers)
-		{
-			for (int i = 0; i < layer.Count; i++)
-			{
-				if (layer[i].Enabled) layer[i].Step();
-			}
-		}
+		foreach (ModuleLayer layer in Layers) layer.Step();
 	}
 
 	public void Render()
 	{
-		foreach (ModuleLayer layer in Layers)
-		{
-			for (int i = 0; i < layer.Count; i++)
-			{
-				if (layer[i].Visible) layer[i].Render();
-			}
-		}
+		foreach (ModuleLayer layer in Layers) layer.Render();
 	}
 }
