@@ -18,23 +18,32 @@ public sealed class TileLayer : ModuleLayer
 
 			_map = value;
 
-			if (_map != null) _map.layers.Add(this);
+			if (_map != null)
+			{
+				if (_map.Size != size) Resize();
+
+				_map.layers.Add(this);
+			}
 		}
 	}
 	private Tilemap _map;
-	internal List<int> data = new();
+	private Vector2 size;
+	private int[] data;
 
 	/// <summary>
 	/// Cria uma camada de tiles e anexa ela à um <see cref="Tilemap"/>.
 	/// </summary>
-	public TileLayer(string name, bool triggersInitialize, Tilemap map, Vector2 size) : base(name, triggersInitialize)
+	public TileLayer(string name, bool triggersInitialize, Tilemap map) : base(name, triggersInitialize)
 	{
-		for (int x = 0; x < size.X; x++)
+		if (map != null)
 		{
-			for (int y = 0; y < size.Y; y++) data.Add(0);
-		}
+			_map = map;
+			size = map.Size;
+			data = new int[(int)(size.X * size.Y)];
 
-		Map = map;
+			_map.layers.Add(this);
+		}
+		else data = new int[0];
 	}
 
 	/// <summary>
@@ -85,7 +94,7 @@ public sealed class TileLayer : ModuleLayer
 	/// <summary>
 	/// Retorna o número de tiles.
 	/// </summary>
-	public int CountTiles() => data.Count;
+	public int CountTiles() => data.Length;
 
 	/// <summary>
 	/// Muda vários tiles de uma layer. Este método não chama o <see cref="Tilemap.OnTileChange"/>!
@@ -94,7 +103,7 @@ public sealed class TileLayer : ModuleLayer
 	{
 		for (int i = 0; i < mapData.Length; i++)
 		{
-			if (i >= data.Count) break;
+			if (i >= data.Length) break;
 
 			data[i] = mapData[i];
 		}
@@ -136,5 +145,34 @@ public sealed class TileLayer : ModuleLayer
 		if (_map != null && Color.A != 0 && Opacity > 0) _map.Render(this);
 
 		base.Render();
+	}
+
+	internal void Resize()
+	{
+		data = Array2DTo1D(Array1DTo2D(data, size, _map.Size), _map.Size);
+		size = _map.Size;
+	}
+	private static int[,] Array1DTo2D(int[] array, Vector2 oldSize, Vector2 newSize)
+	{
+		int[,] result = new int[(int)newSize.Y, (int)newSize.X];
+		Vector2 minSize = Vector2.Min(oldSize, newSize);
+
+		for (int y = 0; y < minSize.Y; y++)
+		{
+			for (int x = 0; x < minSize.X; x++) result[y, x] = array[Mathf.Get1DIndex(x, y, oldSize.X)];
+		}
+
+		return result;
+	}
+	public static int[] Array2DTo1D(int[,] array, Vector2 newSize)
+	{
+		int[] result = new int[(int)(newSize.Y * newSize.X)];
+
+		for (int y = 0; y < newSize.Y; y++)
+		{
+			for (int x = 0; x < newSize.X; x++) result[Mathf.Get1DIndex(x, y, newSize.X)] = array[y, x];
+		}
+
+		return result;
 	}
 }

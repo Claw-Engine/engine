@@ -1,4 +1,4 @@
-namespace Claw.Utils;
+namespace Claw;
 
 /// <summary>
 /// Calculador de raycast.

@@ -1,5 +1,4 @@
 using Claw.Graphics;
-using Claw.Utils;
 
 namespace Claw.Maps;
 
@@ -19,11 +18,11 @@ public abstract class Tilemap
 		get => _size;
 		set
 		{
-			if (value.Y >= 0 && value.X >= 0)
+			if (_size != value && value.X >= 0 && value.Y >= 0)
 			{
-				for (int layerIndex = 0; layerIndex < Count; layerIndex++) this[layerIndex].data = InternalUtils.ResizeList(this[layerIndex].data, value, _size);
-
 				_size = value;
+
+				for (int layerIndex = 0; layerIndex < Count; layerIndex++) this[layerIndex].Resize();
 			}
 		}
 	}
