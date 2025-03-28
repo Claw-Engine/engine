@@ -1,17 +1,19 @@
 using System.Collections.ObjectModel;
+using Claw.Maps;
 
 namespace Claw.Modules;
 
 /// <summary>
 /// Camada de <see cref="Module"/>s.
 /// </summary>
-public class ModuleLayer : Collection<Module>
+public sealed class ModuleLayer : Collection<Module>
 {
 	/// <summary>
 	/// Define se o método <see cref="Module.Initialize"/> será acionado ao inserir módulos.
 	/// </summary>
 	public readonly bool TriggersInitialize;
 	public readonly string Name;
+	public TileLayer Tiles;
 	public event Action<Module> OnAdded, OnRemoved;
 	public event Action OnCleared;
 
@@ -83,7 +85,7 @@ public class ModuleLayer : Collection<Module>
 		OnRemoved?.Invoke(module);
 	}
 
-	public virtual void Step()
+	public void Step()
 	{
 		for (int i = 0; i < Count; i++)
 		{
@@ -91,8 +93,10 @@ public class ModuleLayer : Collection<Module>
 		}
 	}
 
-	public virtual void Render()
+	public void Render()
 	{
+		Tiles?.Render();
+
 		for (int i = 0; i < Count; i++)
 		{
 			if (this[i].Visible) this[i].Render();

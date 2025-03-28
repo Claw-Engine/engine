@@ -49,7 +49,7 @@ public class IsometricTilemap : Tilemap
 			{
 				for (int x = (int)start.X; x < end.X; x++)
 				{
-					int tile = layer.GetTile(x, y);
+					int tile = layer[x, y];
 
 					if (tile >= 1)
 					{
