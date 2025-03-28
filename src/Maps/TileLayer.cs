@@ -7,6 +7,7 @@ public sealed class TileLayer
 {
 	public float Opacity = 1;
 	public Color Color = Color.White;
+	public Vector2 Size => _size;
 	public Tilemap Map
 	{
 		get => _map;
@@ -18,7 +19,7 @@ public sealed class TileLayer
 
 			if (_map != null)
 			{
-				if (_map.Size != size) Resize();
+				if (_map.Size != _size) Resize();
 
 				_map.layers.Add(this);
 			}
@@ -59,7 +60,7 @@ public sealed class TileLayer
 	/// </summary>
 	public int Length => data.Length;
 	private Tilemap _map;
-	private Vector2 size;
+	private Vector2 _size;
 	private int[] data;
 
 	/// <summary>
@@ -70,8 +71,8 @@ public sealed class TileLayer
 		if (map != null)
 		{
 			_map = map;
-			size = map.Size;
-			data = new int[(int)(size.X * size.Y)];
+			_size = map.Size;
+			data = new int[(int)(_size.X * _size.Y)];
 
 			_map.layers.Add(this);
 		}
@@ -129,8 +130,8 @@ public sealed class TileLayer
 
 	internal void Resize()
 	{
-		data = Array2DTo1D(Array1DTo2D(data, size, _map.Size), _map.Size);
-		size = _map.Size;
+		data = Array2DTo1D(Array1DTo2D(data, _size, _map.Size), _map.Size);
+		_size = _map.Size;
 	}
 	private static int[,] Array1DTo2D(int[] array, Vector2 oldSize, Vector2 newSize)
 	{
