@@ -8,6 +8,7 @@ public abstract class Module
 	public bool Enabled = true, Visible = true;
 	public readonly Transform Transform;
 	public ModuleLayer Layer { get; internal set; }
+	protected Game Game => Game.Instance;
 
 	public Module() => Transform = new(this);
 
