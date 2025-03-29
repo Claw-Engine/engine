@@ -19,5 +19,5 @@ public abstract class Module
 	/// <summary>
 	/// Remove este módulo de <see cref="Layer" />.
 	/// </summary>
-	public void Delete() => Layer?.Remove(this);
+	public virtual void Delete() => Layer?.Remove(this);
 }
