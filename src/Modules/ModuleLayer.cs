@@ -6,7 +6,7 @@ namespace Claw.Modules;
 /// <summary>
 /// Camada de <see cref="Module"/>s.
 /// </summary>
-public sealed class ModuleLayer : Collection<Module>
+public class ModuleLayer : Collection<Module>
 {
 	/// <summary>
 	/// Define se o método <see cref="Module.Initialize"/> será acionado ao inserir módulos.
