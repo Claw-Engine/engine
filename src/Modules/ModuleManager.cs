@@ -25,6 +25,14 @@ public sealed class ModuleManager
 		return null;
 	}
 
+	/// <summary>
+	/// Limpa todas as camadas.
+	/// </summary>
+	public void ClearLayers()
+	{
+		foreach (ModuleLayer layer in Layers) layer.Clear();
+	}
+
 	public void Step()
 	{
 		foreach (ModuleLayer layer in Layers) layer.Step();
