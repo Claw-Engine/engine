@@ -17,7 +17,7 @@ public sealed class TaggedInput
 	/// </summary>
 	public IBaseTag this[string playerName, string tagName] => players[playerName][tagName];
 
-	public TaggedInput() { }
+	public TaggedInput(){}
 	
 	/// <summary>
 	/// Adiciona um player.
@@ -34,7 +34,7 @@ public sealed class TaggedInput
 	public void RemovePlayer(string playerName) => players.Remove(playerName);
 
 	/// <summary>
-	/// Realiza o update dos players.
+	/// Executa <see cref="TaggedPlayer.Update"/> em todos os players.
 	/// </summary>
 	public void Update()
 	{

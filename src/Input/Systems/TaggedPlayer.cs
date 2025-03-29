@@ -31,7 +31,7 @@ public sealed class TaggedPlayer
 	public T GetTag<T>(string tagName) where T : IBaseTag => (T)tags[tagName];
 
 	/// <summary>
-	/// Realiza o Update das tags.
+	/// Executa <see cref="IBaseTag.Update"/> em todas as tags.
 	/// </summary>
 	public void Update()
 	{

@@ -93,6 +93,15 @@ public class Container : Element
 
 		elements.Remove(element);
 	}
+	/// <summary>
+	/// Limpa o Contêiner.
+	/// </summary>
+	public void Clear()
+	{
+		needUpdate = true;
+
+		elements.Clear();
+	}
 
 	/// <summary>
 	/// Atualiza a posição e tamanho dos elementos internos.
