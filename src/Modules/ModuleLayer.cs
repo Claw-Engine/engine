@@ -85,7 +85,7 @@ public class ModuleLayer : Collection<Module>
 		OnRemoved?.Invoke(module);
 	}
 
-	public void Step()
+	public virtual void Step()
 	{
 		for (int i = 0; i < Count; i++)
 		{
@@ -93,7 +93,7 @@ public class ModuleLayer : Collection<Module>
 		}
 	}
 
-	public void Render()
+	public virtual void Render()
 	{
 		Tiles?.Render();
 
