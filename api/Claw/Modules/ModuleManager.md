@@ -20,6 +20,11 @@ public Claw.Modules.ModuleLayer ModuleManager[int index] { get; set; }
 public Claw.Modules.ModuleLayer FindLayer(string name) { }
 ```
 Procura por uma camada com determinado nome.<br />
+## ClearLayers
+```csharp
+public void ClearLayers() { }
+```
+Limpa todas as camadas.<br />
 ## Step
 ```csharp
 public void Step() { }

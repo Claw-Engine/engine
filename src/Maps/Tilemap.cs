@@ -27,7 +27,7 @@ public abstract class Tilemap
 		}
 	}
 	/// <summary>
-	/// É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).
+	/// É executado quando um tile é mudado.
 	/// </summary>
 	public TileChangeEvent OnTileChange;
 	private Vector2 _size = Vector2.Zero;
@@ -45,6 +45,21 @@ public abstract class Tilemap
 	}
 
 	public delegate void TileChangeEvent(int newTile, TileLayer layer, Vector2 position);
+
+	/// <summary>
+	/// Remove todas as camadas.
+	/// </summary>
+	/// <param name="silent">Quando true, <see cref="TileLayer.Map"/> não é atualizado!</param>
+	public void Clear(bool silent = true)
+	{
+		if (silent) layers.Clear();
+		else for (int i = layers.Count - 1; i >= 0; i--)
+		{
+			layers[i].Map = null;
+
+			layers.RemoveAt(i);
+		}
+	}
 
 	/// <summary>
 	/// Transforma um index 2D em um index 1D.

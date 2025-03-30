@@ -23,6 +23,10 @@ public readonly Claw.Modules.Transform Transform;
 ```csharp
 public Claw.Modules.ModuleLayer Layer { get; internal set; } 
 ```
+## Game
+```csharp
+protected Claw.Game Game { protected get; } 
+```
 ## Initialize
 ```csharp
 public abstract void Initialize() { }
@@ -37,6 +41,6 @@ public abstract void Render() { }
 ```
 ## Delete
 ```csharp
-public void Delete() { }
+public virtual void Delete() { }
 ```
 Remove este módulo de [Module.Layer](/api/Claw/Modules/Module.md#Layer) .<br />

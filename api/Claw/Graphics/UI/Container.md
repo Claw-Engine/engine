@@ -64,6 +64,11 @@ Insere um elemento no Contêiner.<br />
 public void Remove(Claw.Graphics.UI.Element element) { }
 ```
 Remove um elemento do Contêiner.<br />
+## Clear
+```csharp
+public void Clear() { }
+```
+Limpa o Contêiner.<br />
 ## Step
 ```csharp
 public virtual bool Step(Claw.Vector2 relativeCursor) { }

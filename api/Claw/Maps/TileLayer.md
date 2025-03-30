@@ -1,11 +1,11 @@
 # TileLayer
 ```csharp
-public sealed class TileLayer : Claw.Modules.ModuleLayer
+public sealed class TileLayer
 ```
-Camada de [Module](/api/Claw/Modules/Module.md#Module) s, anexado à um [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
+Camada tiles de um [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## TileLayer
 ```csharp
-public TileLayer(string name, bool triggersInitialize, Claw.Maps.Tilemap map, Claw.Vector2 size) { }
+public TileLayer(Claw.Maps.Tilemap map) { }
 ```
 Cria uma camada de tiles e anexa ela à um [Tilemap](/api/Claw/Maps/Tilemap.md#Tilemap) .<br />
 ## Opacity
@@ -16,43 +16,29 @@ public float Opacity;
 ```csharp
 public Claw.Color Color;
 ```
+## Size
+```csharp
+public Claw.Vector2 Size { get; } 
+```
 ## Map
 ```csharp
 public Claw.Maps.Tilemap Map { get; set; } 
 ```
-## GetTile
+## TileLayer[int index]
 ```csharp
-public int GetTile(int index) { }
+public int TileLayer[int index] { get; set; } 
 ```
-Retorna um tile da layer.<br />
-## SetTile
+## TileLayer[Claw.Vector2 cell]
 ```csharp
-public int SetTile(int index, int tile) { }
+public int TileLayer[Claw.Vector2 cell] { get; set; } 
 ```
-Altera um tile da layer.<br />
-## GetTile
+## TileLayer[float x, float y]
 ```csharp
-public int GetTile(Claw.Vector2 cell) { }
+public int TileLayer[float x, float y] { get; set; } 
 ```
-Retorna um tile da layer.<br />
-## SetTile
+## Length
 ```csharp
-public int SetTile(Claw.Vector2 cell, int tile) { }
-```
-Altera um tile da layer.<br />
-## GetTile
-```csharp
-public int GetTile(float x, float y) { }
-```
-Retorna um tile da layer.<br />
-## SetTile
-```csharp
-public int SetTile(float x, float y, int tile) { }
-```
-Altera um tile da layer.<br />
-## CountTiles
-```csharp
-public int CountTiles() { }
+public int Length { get; } 
 ```
 Retorna o número de tiles.<br />
 ## SetMultipleTiles
@@ -72,5 +58,9 @@ public bool CheckCollision(Claw.Vector2 position, out int tile) { }
 Checa se um ponto está dentro de uma célula com tile.<br />
 ## Render
 ```csharp
-public virtual void Render() { }
+public void Render() { }
+```
+## Array2DTo1D
+```csharp
+public static int[] Array2DTo1D(int[,] array, Claw.Vector2 newSize) { }
 ```

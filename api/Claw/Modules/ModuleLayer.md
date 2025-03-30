@@ -16,6 +16,10 @@ Define se o método [Module.Initialize](/api/Claw/Modules/Module.md#Initialize) 
 ```csharp
 public readonly string Name;
 ```
+## Tiles
+```csharp
+public Claw.Maps.TileLayer Tiles;
+```
 ## OnAdded
 ```csharp
 public event System.Action<Claw.Modules.Module> OnAdded;

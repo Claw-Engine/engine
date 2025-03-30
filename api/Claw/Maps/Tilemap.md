@@ -19,7 +19,7 @@ public Claw.Vector2 GridSize;
 ```csharp
 public TileChangeEvent OnTileChange;
 ```
-É executado quando um tile é mudado ([novo tile], [layer], [posição do tile]).<br />
+É executado quando um tile é mudado.<br />
 ## OutOfView
 ```csharp
 public static int OutOfView;
@@ -42,6 +42,12 @@ public Claw.Maps.TileLayer Tilemap[int layerIndex] { get; }
 public abstract Claw.Vector2 PixelSize { get; } 
 ```
 Tamanho do mapa (em pixels).<br />
+## Clear
+```csharp
+public void Clear(bool silent) { }
+```
+Remove todas as camadas.<br />
+**silent**: Quando true, [TileLayer.Map](/api/Claw/Maps/TileLayer.md#Map) não é atualizado!<br />
 ## GetTileIndex
 ```csharp
 public int GetTileIndex(int palette, Claw.Vector2 index) { }

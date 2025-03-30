@@ -31,4 +31,4 @@ Retorna uma tag.<br />
 ```csharp
 public void Update() { }
 ```
-Realiza o Update das tags.<br />
+Executa [IBaseTag.Update](/api/Claw/Input/Systems/IBaseTag.md#Update) em todas as tags.<br />

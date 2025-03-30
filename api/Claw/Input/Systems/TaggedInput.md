@@ -35,4 +35,4 @@ Remove um player.<br />
 ```csharp
 public void Update() { }
 ```
-Realiza o update dos players.<br />
+Executa [TaggedPlayer.Update](/api/Claw/Input/Systems/TaggedPlayer.md#Update) em todos os players.<br />
