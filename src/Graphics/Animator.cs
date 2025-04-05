@@ -20,6 +20,7 @@ public sealed class Animator : IDisposable
 	{
 		for (int i = 0; i < animations.Length; i++) AddAnimation(animations[i]);
 	}
+	public Animator(IAnimatable animatable, params Animation[] animations) : this(animations) => Animatable = animatable;
 	~Animator() => Dispose();
 
 	public void Dispose()
