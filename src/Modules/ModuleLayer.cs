@@ -48,13 +48,20 @@ public class ModuleLayer : Collection<Module>
 	/// <summary>
 	/// Remove um <see cref="Module"/> e insere outro no mesmo index.
 	/// </summary>
-	protected override void SetItem(int index, Module newModule)
+	/// <remarks>
+	/// Este método não realiza a chamada de nenhum evento. Para isso, use <see cref="Set"/>.
+	/// </remarks>
+	protected override void SetItem(int index, Module newModule) => base.SetItem(index, newModule);
+	/// <summary>
+	/// Remove um <see cref="Module"/> e insere outro no mesmo index, acionando os eventos adequados.
+	/// </summary>
+	public virtual void Set(int index, Module newModule)
 	{
 		Module oldModule = this[index];
 
 		if (oldModule != null) HandleRemoved(oldModule);
 
-		base.SetItem(index, newModule);
+		this.SetItem(index, newModule);
 		
 		if (newModule != null) HandleAdded(newModule);
 	}
