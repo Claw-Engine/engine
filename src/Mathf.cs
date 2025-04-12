@@ -126,12 +126,12 @@ public static class Mathf
 	/// <summary>
 	/// Retorna um ponto numa curva de Bézier.
 	/// </summary>
-	internal static Vector2 CalculateBezierPoint(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+	public static Vector2 CalculateBezierPoint(float theta, Vector2 point0, Vector2 point1, Vector2 point2, Vector2 point3)
 	{
 		//(1–t)³P0+3(1–t)²tP1+3(1–t)t²P2+t³P3
-		float u = 1 - t, uSquared = u * u, uCubic = uSquared * u,
-			tSquared = t * t, tCubic = tSquared * t;
-		Vector2 position = uCubic * p0 + 3 * uSquared * t * p1 + 3 * u * tSquared * p2 + tCubic * p3;
+		float u = 1 - theta, uSquared = u * u, uCubic = uSquared * u,
+			tSquared = theta * theta, tCubic = tSquared * theta;
+		Vector2 position = uCubic * point0 + 3 * uSquared * theta * point1 + 3 * u * tSquared * point2 + tCubic * point3;
 
 		return position;
 	}
