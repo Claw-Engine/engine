@@ -141,9 +141,11 @@ public sealed class Animator : IDisposable
 					if (Frame < animations[Animation].Frames.Count - 1) Frame++;
 					else
 					{
+						int previousFrame = Frame;
+
 						OnAnimationEnd?.Invoke();
 
-						if (!Stop) Frame = 0;
+						if (!Stop && previousFrame == Frame) Frame = 0;
 					}
 				}
 				else
@@ -151,9 +153,11 @@ public sealed class Animator : IDisposable
 					if (Frame > 0) Frame--;
 					else
 					{
+						int previousFrame = Frame;
+
 						OnAnimationEnd?.Invoke();
 
-						if (!Stop) Frame = animations[Animation].Frames.Count - 1;
+						if (!Stop && previousFrame == Frame) Frame = animations[Animation].Frames.Count - 1;
 					}
 				}
 
