@@ -79,9 +79,9 @@ public class ModuleLayer : Collection<Module>
 
 	private void HandleAdded(Module module)
 	{
-		if (TriggersInitialize) module.Initialize();
-
 		module.Layer = this;
+
+		if (TriggersInitialize) module.Initialize();
 
 		OnAdded?.Invoke(module);
 	}
