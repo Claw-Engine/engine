@@ -113,15 +113,15 @@ public static class Mathf
 	/// </summary>
 	public static Vector2[] GetBezierPath(int segments, Vector2 point0, Vector2 point1, Vector2 point2, Vector2 point3)
 	{
-		List<Vector2> points = new List<Vector2>();
+		Vector2[] points = new Vector2[segments];
 
 		for (int i = 0; i < segments; i++)
 		{
 			float t = (float)i / segments;
-			points.Add(Mathf.CalculateBezierPoint(t, point0, point1, point2, point3));
+			points[i] = Mathf.CalculateBezierPoint(t, point0, point1, point2, point3);
 		}
 
-		return points.ToArray();
+		return points;
 	}
 	/// <summary>
 	/// Retorna um ponto numa curva de Bézier.
