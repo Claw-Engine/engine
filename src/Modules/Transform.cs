@@ -63,7 +63,7 @@ public sealed class Transform
 		set => _scale = value;
 	}
 
-	public Vector2 Facing => Vector2.FindFacing(Rotation);
+	public Vector2 Facing => Vector2.GetFacing(Rotation);
 	public readonly Module Module;
 	private float _rotation = 0;
 	private Vector2 _position = Vector2.Zero, _scale = new Vector2(1);

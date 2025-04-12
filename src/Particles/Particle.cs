@@ -134,7 +134,7 @@ internal class Particle
 
 		if (partVel.HasValue)
 		{
-			Vector2 dir = Vector2.FindFacing(partDir ?? 0);
+			Vector2 dir = Vector2.GetFacing(partDir ?? 0);
 			dir.Y = -dir.Y;
 
 			position += dir * partVel.Value * Time.DeltaTime;

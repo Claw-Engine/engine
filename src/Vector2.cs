@@ -217,7 +217,7 @@ public struct Vector2
 	/// Transforma um ângulo em um <see cref="Vector2"/>.
 	/// </summary>
 	/// <param name="angle">Graus.</param>
-	public static Vector2 FindFacing(float angle)
+	public static Vector2 GetFacing(float angle)
 	{
 		float r = Mathf.ToRadians(angle) + (float)Math.PI / 2;
 		Vector2 v = new Vector2(0, -1);
