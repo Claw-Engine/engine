@@ -25,21 +25,21 @@ public System.Collections.Generic.List<Claw.Graphics.Frame> Frames;
 ```
 ## GenerateHorizontal
 ```csharp
-public static Animation[] GenerateHorizontal(Claw.Graphics.Sprite spriteSheet, int amount, int[] frames, int[] animationFPS, string[] names, Claw.Vector2[] origins, Claw.Vector2 cellSize, Claw.Vector2 offset) { }
+public static Animation[] GenerateHorizontal(Claw.Graphics.Sprite spriteSheet, int amount, int[] frames, int[] animationFPS, string[] names, Claw.Vector2[] origins, Claw.Vector2 cellSize, Claw.Vector2 offset, Claw.Vector2 margin) { }
 ```
 Gera animação com um spritesheet horizontal.<br />
 ## GenerateHorizontal
 ```csharp
-public static Animation[] GenerateHorizontal(Claw.Graphics.Sprite spriteSheet, int amount, int frames, int animationFPS, Claw.Vector2 origin, Claw.Vector2 cellSize, Claw.Vector2 offset, string[] names) { }
+public static Animation[] GenerateHorizontal(Claw.Graphics.Sprite spriteSheet, int amount, int frames, int animationFPS, Claw.Vector2 origin, Claw.Vector2 cellSize, Claw.Vector2 offset, Claw.Vector2 margin, string[] names) { }
 ```
 Gera animação com um spritesheet horizontal.<br />
 ## GenerateVertical
 ```csharp
-public static Animation[] GenerateVertical(Claw.Graphics.Sprite spriteSheet, int amount, int[] frames, int[] animationFPS, string[] names, Claw.Vector2[] origins, Claw.Vector2 cellSize, Claw.Vector2 offset) { }
+public static Animation[] GenerateVertical(Claw.Graphics.Sprite spriteSheet, int amount, int[] frames, int[] animationFPS, string[] names, Claw.Vector2[] origins, Claw.Vector2 cellSize, Claw.Vector2 offset, Claw.Vector2 margin) { }
 ```
 Gera animação com um spritesheet vertical.<br />
 ## GenerateVertical
 ```csharp
-public static Animation[] GenerateVertical(Claw.Graphics.Sprite spriteSheet, int amount, int frames, int animationFPS, Claw.Vector2 origin, Claw.Vector2 cellSize, Claw.Vector2 offset, string[] names) { }
+public static Animation[] GenerateVertical(Claw.Graphics.Sprite spriteSheet, int amount, int frames, int animationFPS, Claw.Vector2 origin, Claw.Vector2 cellSize, Claw.Vector2 offset, Claw.Vector2 margin, string[] names) { }
 ```
 Gera animação com um spritesheet vertical.<br />

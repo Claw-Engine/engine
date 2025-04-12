@@ -11,6 +11,10 @@ public Animator() { }
 ```csharp
 public Animator(Claw.Graphics.Animation[] animations) { }
 ```
+## Animator
+```csharp
+public Animator(Claw.Graphics.IAnimatable animatable, Claw.Graphics.Animation[] animations) { }
+```
 ## Animation
 ```csharp
 public int Animation;

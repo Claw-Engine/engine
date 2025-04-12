@@ -47,6 +47,13 @@ Remove um [Module](/api/Claw/Modules/Module.md#Module) da camada e aciona o even
 protected virtual void SetItem(int index, Claw.Modules.Module newModule) { }
 ```
 Remove um [Module](/api/Claw/Modules/Module.md#Module) e insere outro no mesmo index.<br />
+### Observações
+Este método não realiza a chamada de nenhum evento. Para isso, use [ModuleLayer.Set](/api/Claw/Modules/ModuleLayer.md#Set) .<br />
+## Set
+```csharp
+public virtual void Set(int index, Claw.Modules.Module newModule) { }
+```
+Remove um [Module](/api/Claw/Modules/Module.md#Module) e insere outro no mesmo index, acionando os eventos adequados.<br />
 ## ClearItems
 ```csharp
 protected virtual void ClearItems() { }

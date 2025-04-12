@@ -155,9 +155,9 @@ Retorna o módulo horizontal do vetor determinado pelo comprimento e direção i
 public static Vector2 Transform(Vector2 value, Claw.Quaternion rotation) { }
 ```
 Cria um novo [Vector2](/api/Claw/Vector2.md#Vector2) que contém a transformação do vetor 2d pelo [Quaternion](/api/Claw/Quaternion.md#Quaternion) especificado, representando a rotação.<br />
-## FindFacing
+## GetFacing
 ```csharp
-public static Vector2 FindFacing(float angle) { }
+public static Vector2 GetFacing(float angle) { }
 ```
 Transforma um ângulo em um [Vector2](/api/Claw/Vector2.md#Vector2) .<br />
 **angle**: Graus.<br />
