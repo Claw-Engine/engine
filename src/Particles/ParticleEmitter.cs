@@ -15,6 +15,10 @@ public sealed class ParticleEmitter : Module
 	/// Configuração da emissão de partículas.
 	/// </summary>
 	public ParticleEmitterConfig Config;
+	/// <summary>
+	/// Retorna a quantidade de partículas deste <see cref="ParticleEmitter"/>.
+	/// </summary>
+	public int Count => particles.Count;
 	private float spawnCounter = 0;
 	internal Random random = new Random();
 	internal List<Particle> particles = new List<Particle>();
@@ -33,10 +37,6 @@ public sealed class ParticleEmitter : Module
 	/// </summary>
 	public static void ClearPool() => Particle.Pool.Clear();
 
-	/// <summary>
-	/// Retorna a quantidade de partículas deste <see cref="ParticleEmitter"/>.
-	/// </summary>
-	public int Count() => particles.Count;
 	/// <summary>
 	/// Elimina todas as partículas.
 	/// </summary>
