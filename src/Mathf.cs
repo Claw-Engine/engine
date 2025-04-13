@@ -109,29 +109,38 @@ public static class Mathf
 	public static Vector2 Get2DIndex(int index, float width) => new Vector2((int)Math.Floor((double)index % width), (int)(index / width));
 
 	/// <summary>
-	/// Retorna uma lista de pontos de uma curva de Bézier.
+	/// Retorna um array de pontos de uma curva de Bézier.
 	/// </summary>
 	public static Vector2[] GetBezierPath(int segments, Vector2 point0, Vector2 point1, Vector2 point2, Vector2 point3)
 	{
 		Vector2[] points = new Vector2[segments];
 
-		for (int i = 0; i < segments; i++)
-		{
-			float t = (float)i / segments;
-			points[i] = Mathf.CalculateBezierPoint(t, point0, point1, point2, point3);
-		}
+		GetBezierPath(points, point0, point1, point2, point3);
 
 		return points;
 	}
 	/// <summary>
-	/// Retorna um ponto numa curva de Bézier.
+	/// Retorna um array de pontos de uma curva de Bézier.
+	/// </summary>
+	/// <param name="fill">Um array com o número de segmentos da curva.</param>
+	public static void GetBezierPath(Vector2[] fill, Vector2 point0, Vector2 point1, Vector2 point2, Vector2 point3)
+	{
+		for (int i = 0; i < fill.Length; i++)
+		{
+			float t = (float)i / fill.Length;
+			fill[i] = Mathf.CalculateBezierPoint(t, point0, point1, point2, point3);
+		}
+	}
+	/// <summary>
+	/// Calcula um ponto numa curva de Bézier.
 	/// </summary>
 	public static Vector2 CalculateBezierPoint(float theta, Vector2 point0, Vector2 point1, Vector2 point2, Vector2 point3)
 	{
 		//(1–t)³P0+3(1–t)²tP1+3(1–t)t²P2+t³P3
 		float u = 1 - theta, uSquared = u * u, uCubic = uSquared * u,
 			tSquared = theta * theta, tCubic = tSquared * theta;
-		Vector2 position = uCubic * point0 + 3 * uSquared * theta * point1 + 3 * u * tSquared * point2 + tCubic * point3;
+		Vector2 position = new Vector2(uCubic * point0.X + 3 * uSquared * theta * point1.X + 3 * u * tSquared * point2.X + tCubic * point3.X,
+			uCubic * point0.Y + 3 * uSquared * theta * point1.Y + 3 * u * tSquared * point2.Y + tCubic * point3.Y);
 
 		return position;
 	}

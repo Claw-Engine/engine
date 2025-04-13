@@ -93,4 +93,15 @@ Transforma um index 1D em um index 2D.<br />
 ```csharp
 public static Claw.Vector2[] GetBezierPath(int segments, Claw.Vector2 point0, Claw.Vector2 point1, Claw.Vector2 point2, Claw.Vector2 point3) { }
 ```
-Retorna uma lista de pontos de uma curva de Bézier.<br />
+Retorna um array de pontos de uma curva de Bézier.<br />
+## GetBezierPath
+```csharp
+public static void GetBezierPath(Claw.Vector2[] fill, Claw.Vector2 point0, Claw.Vector2 point1, Claw.Vector2 point2, Claw.Vector2 point3) { }
+```
+Retorna um array de pontos de uma curva de Bézier.<br />
+**fill**: Um array com o número de segmentos da curva.<br />
+## CalculateBezierPoint
+```csharp
+public static Claw.Vector2 CalculateBezierPoint(float theta, Claw.Vector2 point0, Claw.Vector2 point1, Claw.Vector2 point2, Claw.Vector2 point3) { }
+```
+Calcula um ponto numa curva de Bézier.<br />
