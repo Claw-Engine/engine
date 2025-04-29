@@ -5,7 +5,7 @@ namespace Claw.Modules;
 /// <summary>
 /// Comportamento para renderização de sprites animadas.
 /// </summary>
-public class SpriteRenderer : IAnimatable, IBehaviour
+public class SpriteRenderer : IAnimatable
 {
 	public float Opacity = 1;
 	public Color Color = Color.White;
