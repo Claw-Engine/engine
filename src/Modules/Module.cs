@@ -19,5 +19,14 @@ public abstract class Module
 	/// <summary>
 	/// Remove este módulo de <see cref="Layer" />.
 	/// </summary>
-	public virtual void Delete() => Layer?.Remove(this);
+	/// <param name="deleteChildren">Se verdadeiro, também deleta os filhos de <see cref="Transform" /> (o parâmetro também é passado para os filhos).</param>
+	public virtual void Delete(bool deleteChildren = true)
+	{
+		Layer?.Remove(this);
+
+		if (deleteChildren)
+		{
+			foreach (Transform child in Transform.children) child.Module.Delete(deleteChildren);
+		}
+	}
 }
