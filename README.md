@@ -3,7 +3,7 @@ Claw Engine é uma engine 2D para a criação de jogos com .NET, utilizando SDL 
 Este é um projeto pessoal e contribuições de código não são aceitas.
 
 # Estado da Engine
-Atualmente, a engine está na versão 3.0, e não há planos para nenhuma grande atualização.
+Atualmente, a engine está na versão 3, e não há planos para nenhuma grande atualização.
 Se a Claw fizer sentido para você, é recomendável que você faça um fork do último release e bagunce da forma que quiser.
 
 # Como Utilizar
