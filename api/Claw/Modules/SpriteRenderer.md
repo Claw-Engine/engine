@@ -37,5 +37,5 @@ public Claw.Graphics.Animator Animator { get; set; }
 ```
 ## Run
 ```csharp
-public virtual void Run(Claw.Modules.Module module) { }
+public void Run(Claw.Modules.Module module) { }
 ```

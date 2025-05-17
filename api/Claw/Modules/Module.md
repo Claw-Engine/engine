@@ -41,6 +41,7 @@ public abstract void Render() { }
 ```
 ## Delete
 ```csharp
-public virtual void Delete() { }
+public virtual void Delete(bool deleteChildren) { }
 ```
 Remove este módulo de [Module.Layer](/api/Claw/Modules/Module.md#Layer) .<br />
+**deleteChildren**: Se verdadeiro, também deleta os filhos de [Module.Transform](/api/Claw/Modules/Module.md#Transform) (o parâmetro também é passado para os filhos).<br />

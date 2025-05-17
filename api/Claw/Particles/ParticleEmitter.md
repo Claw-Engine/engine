@@ -32,6 +32,11 @@ public bool PauseParticles;
 public Claw.Particles.ParticleEmitterConfig Config;
 ```
 Configuração da emissão de partículas.<br />
+## Count
+```csharp
+public int Count { get; } 
+```
+Retorna a quantidade de partículas deste [ParticleEmitter](/api/Claw/Particles/ParticleEmitter.md#ParticleEmitter) .<br />
 ## Initialize
 ```csharp
 public virtual void Initialize() { }
@@ -46,11 +51,6 @@ Retorna a quantidade de partículas que estão esperando na pool.<br />
 public static void ClearPool() { }
 ```
 Limpa a lista de partículas que estão esperando na pool.<br />
-## Count
-```csharp
-public int Count() { }
-```
-Retorna a quantidade de partículas deste [ParticleEmitter](/api/Claw/Particles/ParticleEmitter.md#ParticleEmitter) .<br />
 ## Clear
 ```csharp
 public void Clear() { }

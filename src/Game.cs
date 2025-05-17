@@ -69,6 +69,7 @@ public class Game : IDisposable
 
 		if (isRunning)
 		{
+			Display.SetDisplays();
 			Input.Input.SetControllers();
 
 			if (Texture.Pixel == null) Texture.Pixel = new Texture(1, 1, 0xffffffff);
@@ -197,6 +198,8 @@ public class Game : IDisposable
 						Input.Input.TriggerText(Encoding.UTF8.GetString(sdlEvent.text.text, 32)[0]);
 					}
 					break;
+				case (uint)SDL_EventType.SDL_EVENT_DISPLAY_ADDED: Display.AddDisplay(sdlEvent.display.displayID); break;
+				case (uint)SDL_EventType.SDL_EVENT_DISPLAY_REMOVED: Display.RemoveDisplay(sdlEvent.display.displayID); break;
 			}
 
 			SDL_PumpEvents();

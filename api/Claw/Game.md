@@ -7,6 +7,10 @@ Classe responsável por controlar o jogo.<br />
 ```csharp
 public Game() { }
 ```
+## OpenWindows
+```csharp
+public readonly System.Collections.ObjectModel.ReadOnlyCollection<Claw.Window> OpenWindows;
+```
 ## Instance
 ```csharp
 public static Game Instance { get; private set; } 
@@ -15,10 +19,12 @@ public static Game Instance { get; private set; }
 ```csharp
 public Claw.Window Window { get; private set; } 
 ```
+Janela em que o jogo está sendo renderizado no momento.<br />
 ## Renderer
 ```csharp
-public Claw.Graphics.Renderer Renderer { get; private set; } 
+public Claw.Graphics.Renderer Renderer { get; } 
 ```
+Atalho para [Window.Renderer](/api/Claw/Window.md#Renderer) .<br />
 ## Audio
 ```csharp
 public Claw.Audio.AudioManager Audio { get; private set; } 
@@ -56,7 +62,9 @@ protected virtual void Initialize() { }
 ```csharp
 protected virtual void Step() { }
 ```
+Roda uma vez para cada janela ativa, antes de [Game.Render](/api/Claw/Game.md#Render) .<br />
 ## Render
 ```csharp
 protected virtual void Render() { }
 ```
+Roda uma vez para cada janela ativa, depois de [Game.Step](/api/Claw/Game.md#Step) .<br />

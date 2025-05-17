@@ -3,11 +3,32 @@
 public sealed class Window
 ```
 Representa a janela do jogo.<br />
+## Window
+```csharp
+public Window(string title, Claw.Vector2 size) { }
+```
+## Enabled
+```csharp
+public bool Enabled;
+```
+Define se esta janela faz parte do loop de [Game](/api/Claw/Game.md#Game) .<br />
 ## OnResize
 ```csharp
 public System.Action OnResize;
 ```
 É executado sempre que o tamanho da janela é alterado.<br />
+## OnClose
+```csharp
+public System.Action OnClose;
+```
+É executado quando a janela é fechada.<br />
+### Observações
+Este evento não é chamado caso esta seja a única janela.<br />
+## Renderer
+```csharp
+public readonly Claw.Graphics.Renderer Renderer;
+```
+Rendereizador ligado à esta janela.<br />
 ## MouseVisible
 ```csharp
 public bool MouseVisible { get; set; } 
