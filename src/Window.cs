@@ -1,4 +1,5 @@
 using static Claw.SDL;
+using Claw.Graphics;
 
 namespace Claw;
 
@@ -7,6 +8,10 @@ namespace Claw;
 /// </summary>
 public sealed class Window : IDisposable
 {
+	/// <summary>
+	/// Define se esta janela faz parte do loop de <see cref="Game"/>.
+	/// </summary>
+	public bool Enabled = true;
 	public bool MouseVisible
 	{
 		get => SDL_CursorVisible()? true : false;
@@ -93,14 +98,44 @@ public sealed class Window : IDisposable
 	/// É executado sempre que o tamanho da janela é alterado.
 	/// </summary>
 	public Action OnResize;
-	private IntPtr id;
+	/// <summary>
+	/// É executado quando a janela é fechada.
+	/// </summary>
+	/// <remarks>
+	/// Este evento não é chamado caso esta seja a única janela.
+	/// </remarks>
+	public Action OnClose;
+	/// <summary>
+	/// Rendereizador ligado à esta janela.
+	/// </summary>
+	public readonly Renderer Renderer;
+	internal IntPtr id { get; private set; }
 
-	internal Window(IntPtr window) => id = window;
+	internal Window(IntPtr window, IntPtr renderer)
+	{
+		id = window;
+		Renderer = new(renderer);
+	}
+	public Window(string title, Vector2 size)
+	{
+		bool result = SDL_CreateWindowAndRenderer(title, (int)size.X, (int)size.Y, 0, out IntPtr window, out IntPtr renderer);
+
+		if (result)
+		{
+			id = window;
+			Renderer = new(renderer);
+			Renderer.ClearColor = Color.CornflowerBlue;
+
+			Game.Instance._openWindows.Add(this);
+		}
+		else throw new Exception("Não foi possível criar a janela!");
+	}
 	~Window() => Dispose();
 
 	public void Dispose()
 	{
 		SDL_DestroyWindow(id);
+        Renderer?.Dispose();
 
 		id = IntPtr.Zero;
 	}

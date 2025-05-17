@@ -1,4 +1,5 @@
 using System.Text;
+using System.Collections.ObjectModel;
 using Claw.Graphics;
 using Claw.Audio;
 using Claw.Modules;
@@ -12,23 +13,29 @@ namespace Claw;
 public class Game : IDisposable
 {
 	public static Game Instance { get; private set; }
+	/// <summary>
+	/// Janela em que o jogo está sendo renderizado no momento.
+	/// </summary>
 	public Window Window { get; private set; }
-	public Renderer Renderer { get; private set; }
+	/// <summary>
+	/// Atalho para <see cref="Window.Renderer"/>.
+	/// </summary>
+	public Renderer Renderer => Window.Renderer;
 	public AudioManager Audio { get; private set; }
 	public ModuleManager Modules { get; private set; }
+	public readonly ReadOnlyCollection<Window> OpenWindows;
 	private bool isRunning;
+	internal readonly List<Window> _openWindows = new(1);
 
-	public Game(){}
+	public Game() => OpenWindows = new(_openWindows);
 	~Game() => Dispose();
 
 	public void Dispose()
 	{
 		Window?.Dispose();
-        Renderer?.Dispose();
 		Audio?.Dispose();
 
 		Window = null;
-		Renderer = null;
 		Audio = null;
 		Modules = null;
 		Instance = null;
@@ -51,11 +58,12 @@ public class Game : IDisposable
 			{
 				isRunning = true;
 				Instance = this;
-				Window = new(window);
-				Renderer = new(renderer);
+				Window = new(window, renderer);
 				Audio = new();
 				Modules = new();
 				Renderer.ClearColor = Color.CornflowerBlue;
+
+				_openWindows.Add(Window);
 			}
 		}
 
@@ -79,7 +87,13 @@ public class Game : IDisposable
 
 	protected virtual void OnClose(){}
 	protected virtual void Initialize(){}
+	/// <summary>
+	/// Roda uma vez para cada janela ativa, antes de <see cref="Render"/>.
+	/// </summary>
 	protected virtual void Step() => Modules.Step();
+	/// <summary>
+	/// Roda uma vez para cada janela ativa, depois de <see cref="Step"/>.
+	/// </summary>
 	protected virtual void Render() => Modules.Render();
 
 	private void GameLoop()
@@ -91,11 +105,19 @@ public class Game : IDisposable
 			frameStart = SDL_GetTicks();
 
 			Input.Input.Update();
-			Step();
-			Renderer.Clear();
-			Draw.UpdateCamera();
-			Render();
-			Renderer.Present();
+
+			for (int i = 0; i < _openWindows.Count; i++)
+			{
+				if (!_openWindows[i].Enabled) continue;
+
+				Window = _openWindows[i];
+
+				Step();
+				Renderer.Clear();
+				Draw.UpdateCamera();
+				Render();
+				Renderer.Present();
+			}
 
 			frameTime = (uint)(SDL_GetTicks() - frameStart);
 
@@ -125,7 +147,32 @@ public class Game : IDisposable
 					Instance = null;
 
 					return;
-				case (uint)SDL_EventType.SDL_EVENT_WINDOW_RESIZED: Window.OnResize?.Invoke(); break;
+				case (uint)SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+					for (int i = _openWindows.Count - 1; i >= 0; i--)
+					{
+						if (SDL_GetWindowID(_openWindows[i].id) == sdlEvent.window.windowID)
+						{
+							_openWindows[i].OnClose?.Invoke();
+							_openWindows[i].Dispose();
+							_openWindows.RemoveAt(i);
+
+							break;
+						}
+					}
+
+					if (Window.id == sdlEvent.window.windowID) Window = _openWindows[0];
+					break;
+				case (uint)SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+					for (int i = _openWindows.Count - 1; i >= 0; i--)
+					{
+						if (SDL_GetWindowID(_openWindows[i].id) == sdlEvent.window.windowID)
+						{
+							_openWindows[i].OnResize?.Invoke();
+
+							break;
+						}
+					}
+					break;
 				case (uint)SDL_EventType.SDL_EVENT_MOUSE_WHEEL:
 					Input.Input.UpdateScroll(sdlEvent.wheel);
 
