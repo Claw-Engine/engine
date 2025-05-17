@@ -50,6 +50,10 @@ public bool CanUserResize { get; set; }
 public bool RelativeMouseMode { get; set; } 
 ```
 Se verdadeiro, o cursor ficará escondido e limitado as bordas da janela.<br />
+## AlwaysOnTop
+```csharp
+public bool AlwaysOnTop { get; set; } 
+```
 ## IsActive
 ```csharp
 public bool IsActive { get; } 

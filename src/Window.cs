@@ -44,6 +44,11 @@ public sealed class Window : IDisposable
 		get => SDL_GetWindowRelativeMouseMode(id);
 		set => SDL_SetWindowRelativeMouseMode(id, value);
 	}
+	public bool AlwaysOnTop
+	{
+		get => (SDL_GetWindowFlags(id) & SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP) == SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
+		set => SDL_SetWindowAlwaysOnTop(id, value);
+	}
 	private static Dictionary<Cursor, IntPtr> systemCursors;
 
 	/// <summary>
