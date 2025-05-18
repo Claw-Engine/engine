@@ -146,6 +146,23 @@ public sealed class Window : IDisposable
 	}
 
 	/// <summary>
+	/// Fecha esta janela.
+	/// </summary>
+	/// <remarks>
+	/// Se esta for a única janela existente, fecha o jogo.
+	/// </remarks>
+	public void Close()
+	{
+		if (Game.Instance._openWindows.Count > 1)
+		{
+			Game.Instance._openWindows.Remove(this);
+			OnClose?.Invoke();
+			Dispose();
+		}
+		else Game.Instance.Close();
+	}
+
+	/// <summary>
 	/// Centraliza a janela.
 	/// </summary>
 	public void Centralize()

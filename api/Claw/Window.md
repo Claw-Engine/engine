@@ -93,6 +93,13 @@ protected virtual void Finalize() { }
 ```csharp
 public virtual void Dispose() { }
 ```
+## Close
+```csharp
+public void Close() { }
+```
+Fecha esta janela.<br />
+### Observações
+Se esta for a única janela existente, fecha o jogo.<br />
 ## Centralize
 ```csharp
 public void Centralize() { }
