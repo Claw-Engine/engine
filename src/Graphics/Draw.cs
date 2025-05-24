@@ -131,30 +131,27 @@ public static class Draw
 			{
 				char glyphChar = text[i];
 
+				if (font.Glyphs.TryGetValue(glyphChar, out Glyph glyph))
+				{
+					charHeight = Math.Max(charHeight, glyph.Area.Height);
+
+					if (i > 0) basePos.X += glyph.KerningPair.Get(text[i - 1], 0);
+					
+					Draw.Sprite(font.Sprite, Vector2.Rotate(basePos * scale + position, center, rotation) - measure * origin, glyph.Area, color, rotation, Vector2.Zero, scale, 0);
+
+					basePos.X += glyph.Area.Width;
+
+					if (i != text.Length - 1) basePos.X += font.Spacing.X;
+				}
+				else if (glyphChar == ' ') basePos.X += font.Spacing.X;
+
 				switch (glyphChar)
 				{
-					case '\r': continue;
+					case '\r': basePos.X = 0; break;
 					case '\n':
 						basePos.X = 0;
 						basePos.Y += charHeight + font.Spacing.Y;
 						charHeight = 0;
-						break;
-					case ' ':
-						if (font.Glyphs.ContainsKey(glyphChar)) goto default;
-
-						basePos.X += font.Spacing.X;
-						break;
-					default:
-						charHeight = Math.Max(charHeight, font.Glyphs[glyphChar].Area.Height);
-						Glyph glyph = font.Glyphs[glyphChar];
-
-						if (i > 0) basePos.X += glyph.KerningPair.Get(text[i - 1], 0);
-						
-						Draw.Sprite(font.Sprite, Vector2.Rotate(basePos * scale + position, center, rotation) - measure * origin, glyph.Area, color, rotation, Vector2.Zero, scale, 0);
-
-						basePos.X += glyph.Area.Width;
-
-						if (i != text.Length - 1) basePos.X += font.Spacing.X;
 						break;
 				}
 			}

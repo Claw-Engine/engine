@@ -323,55 +323,52 @@ public sealed class TextRenderer : Module
 
 					char glyphChar = text[j];
 
+					if (font.Glyphs.TryGetValue(glyphChar, out Glyph glyph))
+					{
+						Vector2 charMeasure = font.MeasureChar(glyphChar);
+
+						float charAngle = rotation;
+						Vector2 charPos = basePos;
+						Vector2 addToPos = Vector2.Zero, charScale = scale;
+
+						switch (effect)
+						{
+							case TextEffect.Rotation: charAngle = rotationEffect; break;
+							case TextEffect.Pulsate:
+								charScale *= scaleEffect;
+								charPos.Y += measure.Y * (1 - charScale.Y) * origin.Y;
+								break;
+							case TextEffect.Wave:
+								float so = theta + j;
+								addToPos.Y = (float)Math.Sin(so * Math.PI * WaveSpeed) * (charMeasure.Y * WaveAmplitude);
+								break;
+							case TextEffect.Scream: addToPos = new Vector2(random.Next(-(int)ScreamOffset.X, (int)ScreamOffset.X), random.Next(-(int)ScreamOffset.Y, (int)ScreamOffset.Y)); break;
+							case TextEffect.MovingHorizontal: charPos += new Vector2((float)Math.Sin(theta * Math.PI * MovingSpeed.X) * measure.X / MovingAmplitude.X, 0); break;
+							case TextEffect.MovingVertical: charPos += new Vector2(0, (float)Math.Sin(theta * Math.PI * MovingSpeed.Y) * measure.Y / MovingAmplitude.Y); break;
+						}
+
+						charPos = Vector2.Rotate(charPos, center, charAngle) + addToPos;
+						charPos = Vector2.Rotate(charPos * Transform.Scale + Transform.Position, Transform.Position, Transform.Rotation);
+
+						Draw.Sprite(font.Sprite, charPos, glyph.Area, color, charAngle + Transform.Rotation, Vector2.Zero, charScale * Transform.Scale, 0);
+						
+						charHeight = Math.Max(charHeight, charMeasure.Y * charScale.Y);
+
+						if (j > 0) basePos.X += glyph.KerningPair.Get(text[j - 1], 0) * charScale.X;
+
+						basePos.X += glyph.Area.Width * charScale.X;
+
+						if (j != text.Length - 1) basePos.X += font.Spacing.X * charScale.X;
+					}
+					else if (glyphChar == ' ') basePos.X += font.Spacing.X * scale.X;
+
 					switch (glyphChar)
 					{
-						case '\r': continue;
+						case '\r': basePos.X = 0; break;
 						case '\n':
 							basePos.X = 0;
 							basePos.Y += charHeight + font.Spacing.Y * scale.Y;
 							charHeight = 0;
-							break;
-						case ' ':
-							if (font.Glyphs.ContainsKey(glyphChar)) goto default;
-
-							basePos.X += font.Spacing.X * scale.X;
-							break;
-						default:
-							Glyph glyph = font.Glyphs[glyphChar];
-							Vector2 charMeasure = font.MeasureChar(glyphChar);
-
-							float charAngle = rotation;
-							Vector2 charPos = basePos;
-							Vector2 addToPos = Vector2.Zero, charScale = scale;
-
-							switch (effect)
-							{
-								case TextEffect.Rotation: charAngle = rotationEffect; break;
-								case TextEffect.Pulsate:
-									charScale *= scaleEffect;
-									charPos.Y += measure.Y * (1 - charScale.Y) * origin.Y;
-									break;
-								case TextEffect.Wave:
-									float so = theta + j;
-									addToPos.Y = (float)Math.Sin(so * Math.PI * WaveSpeed) * (charMeasure.Y * WaveAmplitude);
-									break;
-								case TextEffect.Scream: addToPos = new Vector2(random.Next(-(int)ScreamOffset.X, (int)ScreamOffset.X), random.Next(-(int)ScreamOffset.Y, (int)ScreamOffset.Y)); break;
-								case TextEffect.MovingHorizontal: charPos += new Vector2((float)Math.Sin(theta * Math.PI * MovingSpeed.X) * measure.X / MovingAmplitude.X, 0); break;
-								case TextEffect.MovingVertical: charPos += new Vector2(0, (float)Math.Sin(theta * Math.PI * MovingSpeed.Y) * measure.Y / MovingAmplitude.Y); break;
-							}
-
-							charPos = Vector2.Rotate(charPos, center, charAngle) + addToPos;
-							charPos = Vector2.Rotate(charPos * Transform.Scale + Transform.Position, Transform.Position, Transform.Rotation);
-
-							Draw.Sprite(font.Sprite, charPos, glyph.Area, color, charAngle + Transform.Rotation, Vector2.Zero, charScale * Transform.Scale, 0);
-							
-							charHeight = Math.Max(charHeight, charMeasure.Y * charScale.Y);
-
-							if (j > 0) basePos.X += glyph.KerningPair.Get(text[j - 1], 0) * charScale.X;
-
-							basePos.X += glyph.Area.Width * charScale.X;
-
-							if (j != text.Length - 1) basePos.X += font.Spacing.X * charScale.X;
 							break;
 					}
 

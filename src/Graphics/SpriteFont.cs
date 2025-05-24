@@ -83,11 +83,14 @@ public sealed class SpriteFont
 
 			switch (glyphChar)
 			{
-				case '\r': continue;
 				case '\n':
 					measure.Y += Spacing.Y + lineSize.Y;
 					measure.X = Math.Max(measure.X, lineSize.X);
 					lineSize = Vector2.Zero;
+					break;
+				case '\r':
+					measure.X = Math.Max(measure.X, lineSize.X);
+					lineSize.X = 0;
 					break;
 				case ' ':
 					if (hasChar) goto default;
@@ -106,7 +109,6 @@ public sealed class SpriteFont
 
 						if (i > 0) lineSize.X += glyph.KerningPair.Get(text[i - 1], 0);
 					}
-					else throw new ArgumentException(string.Format("Este SpriteFont não possui suporte para o caractere \"{0}\"!", glyphChar));
 					break;
 			}
 		}
