@@ -51,7 +51,7 @@ public sealed class SpriteFont
 			currentGlyph = new(new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32()));
 			pairLength = file.ReadInt32();
 
-			for (int j = 0; j < pairLength; j++) currentGlyph.KerningPair.Add(file.ReadChar(), file.ReadSingle());
+			for (int j = 0; j < pairLength; j++) currentGlyph.KerningPair.Add((char)file.ReadInt32(), file.ReadSingle());
 
 			font.Glyphs.Add(currentChar, currentGlyph);
 		}
