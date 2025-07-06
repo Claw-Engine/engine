@@ -75,7 +75,12 @@ public static class NineSlice
 
 		for (float x = destinationRectangle.X; x < destinationRectangle.End.X; x += source.Width)
 		{
-			for (float y = destinationRectangle.Y; y < destinationRectangle.End.Y; y += source.Height) Graphics.Draw.Sprite(piece.texture, new Vector2(x, y), source, color, 0, Vector2.Zero, 1, 0);
+			for (float y = destinationRectangle.Y; y < destinationRectangle.End.Y; y += source.Height)
+			{
+				Vector2 clamped = new(Math.Min(destinationRectangle.Right - x, source.Width), Math.Min(destinationRectangle.Bottom - y, source.Height));
+
+				Graphics.Draw.Sprite(piece.texture, new Vector2(x, y), new Rectangle(source.Location, clamped), color, 0, Vector2.Zero, 1, 0);
+			}
 		}
 	}
 	/// <summary>
